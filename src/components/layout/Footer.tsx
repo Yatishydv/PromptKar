@@ -34,7 +34,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-4 lg:col-span-5 space-y-6">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="PromptKar" className="h-24 w-auto object-contain" />
+              <img src="/logo.png" alt="PromptKar" className="h-7 w-auto object-contain" />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed max-w-sm">
               Empowering creators and engineers to build the future with AI. Join the world's most innovative prompt engineering community.

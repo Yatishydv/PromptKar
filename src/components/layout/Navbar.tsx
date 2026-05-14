@@ -212,7 +212,7 @@ const Navbar = () => {
         {/* Brand — LEFT */}
         <div className="flex-none">
           <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="PromptKar" className="h-10 w-auto object-contain" />
+            <img src="/logo.png" alt="PromptKar" className="h-6.5 w-auto object-contain" />
           </Link>
         </div>
 

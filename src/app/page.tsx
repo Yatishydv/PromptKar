@@ -320,49 +320,53 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.isArray(liveBlogs) ? (
-              liveBlogs.map((b: IBlog) => (
-                <Link key={b.slug} href={`/blog/${b.slug}`}>
-                  <div className="bg-white border border-slate-100 rounded-[1.5rem] overflow-hidden shadow-soft group hover:shadow-premium transition-all duration-300 h-full flex flex-col cursor-pointer">
-                    <div
-                      className="overflow-hidden relative bg-slate-100 transition-all duration-500"
-                      style={{ height: b.coverHeight ? `${Math.min(Math.max(b.coverHeight * 0.45, 140), 250)}px` : '176px' }}
-                    >
-                      <img src={b.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={b.title} />
-                      <div className="absolute top-4 left-4">
-                        <span className="bg-white/90 backdrop-blur-sm text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest text-indigo-600 shadow-sm">
-                          {b.category}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="font-black text-[16px] text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2 mb-3">
-                        {b.title}
-                      </h3>
-                      <p className="text-[12.5px] font-bold text-slate-400 leading-relaxed line-clamp-2 mb-4">
-                        {b.excerpt}
-                      </p>
-                      <div className="mt-auto flex items-center justify-between pt-5 border-t border-slate-50">
-                        <div className="flex items-center gap-2">
-                          <AuthorAvatar
-                            name={b.author}
-                            avatar={b.authorAvatar}
-                            className="w-5 h-5"
-                          />
-                          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{b.readTime}</span>
-                        </div>
-                        <span className="text-[10px] font-black text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
-                          READ <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))
+            {!liveBlogs ? (
+               [1, 2, 3].map(i => (
+                 <div key={i} className="bg-slate-50 border border-slate-100 rounded-[1.5rem] h-[350px] animate-pulse" />
+               ))
+            ) : Array.isArray(liveBlogs) && liveBlogs.length > 0 ? (
+               liveBlogs.map((b: IBlog) => (
+                 <Link key={b.slug} href={`/blog/${b.slug}`}>
+                   <div className="bg-white border border-slate-100 rounded-[1.5rem] overflow-hidden shadow-soft group hover:shadow-premium transition-all duration-300 h-full flex flex-col cursor-pointer">
+                     <div
+                       className="overflow-hidden relative bg-slate-100 transition-all duration-500"
+                       style={{ height: b.coverHeight ? `${Math.min(Math.max(b.coverHeight * 0.45, 140), 250)}px` : '176px' }}
+                     >
+                       <img src={b.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={b.title} />
+                       <div className="absolute top-4 left-4">
+                         <span className="bg-white/90 backdrop-blur-sm text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest text-indigo-600 shadow-sm">
+                           {b.category}
+                         </span>
+                       </div>
+                     </div>
+                     <div className="p-6 flex-1 flex flex-col">
+                       <h3 className="font-black text-[16px] text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2 mb-3">
+                         {b.title}
+                       </h3>
+                       <p className="text-[12.5px] font-bold text-slate-400 leading-relaxed line-clamp-2 mb-4">
+                         {b.excerpt}
+                       </p>
+                       <div className="mt-auto flex items-center justify-between pt-5 border-t border-slate-50">
+                         <div className="flex items-center gap-2">
+                           <AuthorAvatar
+                             name={b.author}
+                             avatar={b.authorAvatar}
+                             className="w-5 h-5"
+                           />
+                           <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{b.readTime}</span>
+                         </div>
+                         <span className="text-[10px] font-black text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                           READ <ArrowRight className="w-3 h-3" />
+                         </span>
+                       </div>
+                     </div>
+                   </div>
+                 </Link>
+               ))
             ) : (
-              <div className="col-span-full py-12 text-center text-slate-400 font-bold italic">
-                No articles found.
-              </div>
+               <div className="col-span-full py-12 text-center text-slate-400 font-bold italic">
+                 No articles found.
+               </div>
             )}
           </div>
         </section>

@@ -35,12 +35,12 @@ export async function GET(request: Request) {
       return { ...p, likes };
     }));
 
-    return new NextResponse(JSON.stringify(enrichedPosts), {
+    return NextResponse.json({ success: true, data: enrichedPosts }, {
       status: 200,
       headers: { "Cache-Control": "no-store, max-age=0" },
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 

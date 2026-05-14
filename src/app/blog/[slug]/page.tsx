@@ -155,8 +155,13 @@ const BlogPostPage = () => {
         const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) { setNotFound(true); return; }
         const data = await res.json();
-        setPost(data);
-        setLikeCount(data.likes || 0);
+        if (data.success && data.data) {
+          setPost(data.data);
+          setLikeCount(data.data.likes || 0);
+        } else {
+          setNotFound(true);
+          return;
+        }
 
         // Fetch user engagement from new interaction logic
         if (user) {
@@ -175,7 +180,9 @@ const BlogPostPage = () => {
         const rel = await fetch(`/api/blogs?category=${encodeURIComponent(data.category)}&limit=4`);
         if (rel.ok) {
           const relData = await rel.json();
-          setRelated(relData.filter((p: any) => p.slug !== slug).slice(0, 3));
+          if (relData.success && Array.isArray(relData.data)) {
+            setRelated(relData.data.filter((p: any) => p.slug !== slug).slice(0, 3));
+          }
         }
       } catch { setNotFound(true); }
       finally { setLoading(false); }

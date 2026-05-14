@@ -141,7 +141,8 @@ export default function ProfilePage() {
   const [modalState, setModalState] = useState<{ open: boolean, title: string, userIds: string[] }>({ open: false, title: "", userIds: [] });
   
   const { data: profileData, error, isLoading, mutate: mutateProfile } = useSWR(username ? `/api/users/${username}` : null, fetcher);
-  const { data: promptsData, isLoading: promptsLoading } = useSWR(profileData?.firebaseUid ? `/api/prompts?authorId=${profileData.firebaseUid}` : null, fetcher);
+  const { data: promptsRaw, isLoading: promptsLoading } = useSWR(profileData?.firebaseUid ? `/api/prompts?authorId=${profileData.firebaseUid}` : null, fetcher);
+  const promptsData = Array.isArray(promptsRaw) ? promptsRaw : promptsRaw?.data || [];
 
   useEffect(() => {
     if (profileData && currentUser) {

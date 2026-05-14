@@ -109,14 +109,15 @@ export default function Home() {
 
   useEffect(() => {
     if (rawTrending || trendingError) {
-      if (Array.isArray(rawTrending)) {
-        const trendingList = rawTrending.map((data: IPrompt) => {
-          const meta = CATEGORY_METADATA[data.category] || DEFAULT_META;
+      const data = Array.isArray(rawTrending) ? rawTrending : rawTrending?.data;
+      if (Array.isArray(data)) {
+        const trendingList = data.map((d: IPrompt) => {
+          const meta = CATEGORY_METADATA[d.category] || DEFAULT_META;
           return {
-            ...data,
-            id: data._id || data.slug,
-            authorAvatar: data.authorAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.authorName}`,
-            icon: data.toolIcon || "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+            ...d,
+            id: d._id || d.slug,
+            authorAvatar: d.authorAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${d.authorName}`,
+            icon: d.toolIcon || "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
             color: meta.color,
             tagColor: meta.color,
           };
@@ -125,12 +126,13 @@ export default function Home() {
       }
       setLoading(false);
     }
-  }, [rawTrending]);
+  }, [rawTrending, trendingError]);
 
   useEffect(() => {
-    if (Array.isArray(allPrompts)) {
+    const data = Array.isArray(allPrompts) ? allPrompts : allPrompts?.data;
+    if (Array.isArray(data)) {
       const counts: Record<string, number> = {};
-      allPrompts.forEach((doc: IPrompt) => {
+      data.forEach((doc: IPrompt) => {
         const rawCat = doc.category || "Other";
         const cat = rawCat.trim();
         counts[cat] = (counts[cat] || 0) + 1;

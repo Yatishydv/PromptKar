@@ -26,22 +26,53 @@ const categoryColors: Record<string, string> = {
 
 // Render markdown-ish content: headings, code blocks, paragraphs
 // Render native HTML content with professional typography
-function renderContent(content: string) {
-  if (!content) return null;
+// Isolated renderer for Blogger content using Shadow DOM or Iframe to prevent CSS leakage
+const BloggerRenderer = ({ content }: { content: string }) => {
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+  // Auto-resize iframe to content height
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const handleResize = () => {
+      if (iframe.contentWindow?.document.body) {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+      }
+    };
+
+    iframe.onload = () => {
+      // Inject some base styles to ensure links open in top window
+      const doc = iframe.contentWindow?.document;
+      if (doc) {
+        const base = doc.createElement('base');
+        base.target = '_top';
+        doc.head.appendChild(base);
+        
+        // Hide scrollbars in the iframe
+        doc.body.style.overflow = 'hidden';
+        doc.body.style.margin = '0';
+        doc.body.style.padding = '0';
+        
+        handleResize();
+      }
+    };
+
+    // Poll for height changes (images loading etc)
+    const interval = setInterval(handleResize, 1000);
+    return () => clearInterval(interval);
+  }, [content]);
+
   return (
-    <div 
-      className="prose prose-slate max-w-none 
-        prose-headings:font-black prose-headings:text-slate-900 prose-headings:tracking-tight
-        prose-p:text-slate-600 prose-p:leading-[1.8] prose-p:text-[16px]
-        prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline prose-a:font-bold
-        prose-img:rounded-[2.5rem] prose-img:shadow-2xl prose-img:border-8 prose-img:border-slate-50
-        prose-blockquote:border-l-4 prose-blockquote:border-indigo-600 prose-blockquote:bg-indigo-50/50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:italic
-        prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-indigo-600 prose-code:before:content-none prose-code:after:content-none
-        prose-pre:bg-slate-900 prose-pre:rounded-3xl prose-pre:p-8 prose-pre:shadow-xl prose-pre:border-2 prose-pre:border-slate-800"
-      dangerouslySetInnerHTML={{ __html: content }} 
+    <iframe
+      ref={iframeRef}
+      srcDoc={content}
+      className="w-full border-none transition-all duration-500"
+      title="Blog Content"
+      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
     />
   );
-}
+};
 
 const BlogPostPage = () => {
   const { slug } = useParams();
@@ -391,7 +422,9 @@ const BlogPostPage = () => {
           </div>
 
           {/* Content */}
-          <div className="prose-like">{renderContent(post.content)}</div>
+          <div className="min-h-[200px]">
+             <BloggerRenderer content={post.content} />
+          </div>
 
           {/* Tags */}
           {post.tags?.length > 0 && (

@@ -35,16 +35,19 @@ const PromptsContent = () => {
   );
 
   useEffect(() => {
-    if (rawPrompts && Array.isArray(rawPrompts)) {
-      setPrompts(rawPrompts);
-      setLoading(false);
-      
-      if (activeCategory === "All") {
-        const foundCategories = new Set<string>();
-        rawPrompts.forEach((p: any) => {
-          if (p.category) foundCategories.add(p.category);
-        });
-        setCategories(["All", ...Array.from(foundCategories).sort()]);
+    if (rawPrompts) {
+      const data = Array.isArray(rawPrompts) ? rawPrompts : rawPrompts.data;
+      if (Array.isArray(data)) {
+        setPrompts(data);
+        setLoading(false);
+        
+        if (activeCategory === "All") {
+          const foundCategories = new Set<string>();
+          data.forEach((p: any) => {
+            if (p.category) foundCategories.add(p.category);
+          });
+          setCategories(["All", ...Array.from(foundCategories).sort()]);
+        }
       }
     }
   }, [rawPrompts, activeCategory]);

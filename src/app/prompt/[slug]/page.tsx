@@ -19,7 +19,7 @@ import { getRankBadge, getRankTitle } from "@/lib/permissions";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 import { useAuth } from "@/lib/auth-context";
 import { likePrompt, bookmarkPrompt, trackView } from "@/lib/engagement";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { formatDateTime } from "@/lib/utils";
 
 const PromptDetailPage = () => {

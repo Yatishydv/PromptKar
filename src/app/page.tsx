@@ -120,7 +120,7 @@ export default function Home() {
             color: meta.color,
             tagColor: meta.color,
           };
-        }) as unknown as IPrompt[];
+        }) as IPrompt[];
         setTrendingPrompts(trendingList);
       }
       setLoading(false);
@@ -235,10 +235,10 @@ export default function Home() {
                     <div className="bg-white border border-slate-100 p-5 rounded-[1.5rem] shadow-soft hover:shadow-premium transition-all duration-300 group h-full flex flex-col relative">
                       <div className="absolute top-4 right-4 z-10">
                         <button
-                          onClick={(e) => handleSave(e, p.slug, p.savedBy?.includes(user?.uid))}
+                          onClick={(e) => handleSave(e, p.slug, p.savedBy?.includes(user?.uid || ""))}
                           className="p-1 hover:scale-110 transition-all group/btn"
                         >
-                          <Bookmark className={`w-4 h-4 transition-all ${p.savedBy?.includes(user?.uid) ? "text-indigo-600 fill-indigo-600" : "text-slate-300 hover:text-slate-400"
+                          <Bookmark className={`w-4 h-4 transition-all ${p.savedBy?.includes(user?.uid || "") ? "text-indigo-600 fill-indigo-600" : "text-slate-300 hover:text-slate-400"
                             }`} />
                         </button>
                       </div>
@@ -260,10 +260,10 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <button
-                              onClick={(e) => handleLike(e, p.slug, p.likedBy?.includes(user?.uid))}
+                              onClick={(e) => handleLike(e, p.slug, p.likedBy?.includes(user?.uid || ""))}
                               className="flex items-center gap-1.5 text-[10.5px] font-black text-slate-400 hover:text-slate-900 transition-all"
                             >
-                              <Heart className={`w-3.5 h-3.5 transition-all ${p.likedBy?.includes(user?.uid) ? "text-red-500 fill-red-500" : "text-slate-300 hover:text-red-500"
+                              <Heart className={`w-3.5 h-3.5 transition-all ${p.likedBy?.includes(user?.uid || "") ? "text-red-500 fill-red-500" : "text-slate-300 hover:text-red-500"
                                 }`} /> {p.likes}
                             </button>
                             <div className="flex items-center gap-1.5 text-[10.5px] font-black text-slate-400">
@@ -272,7 +272,7 @@ export default function Home() {
                           </div>
                           <AuthorAvatar
                             userId={p.authorId}
-                            name={p.author}
+                            name={p.authorName}
                             username={p.authorUsername}
                             avatar={p.authorAvatar}
                             streak={p.authorStreak}

@@ -9,7 +9,7 @@ import {
   Lock, X, Loader2, ArrowLeft, Image as ImageIcon,
   Save, UserCircle, Palette, Upload, ShieldCheck,
   Check, RefreshCcw, Cpu, Ghost, Cat, Skull, 
-  User as UserIcon, Zap, Smile, Bug, Alien, Coffee, 
+  User as UserIcon, Zap, Smile, Bug, Coffee, 
   ArrowRight, Flag, Trophy, Target, Star, Award,
   Milestone, Zap as ZapIcon, BadgeCheck, Palette as PaletteIcon,
   Crown, Verified, Flame

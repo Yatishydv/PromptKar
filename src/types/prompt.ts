@@ -24,4 +24,11 @@ export interface IPrompt {
   history: IPromptHistory[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  // UI Specific Properties
+  id?: string;
+  tagColor?: string;
+  color?: string;
+  icon?: string;
+  authorStreak?: number;
+  authorUsername?: string;
 }

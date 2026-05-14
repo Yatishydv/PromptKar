@@ -883,17 +883,12 @@ const AIEnhancerContent = () => {
   );
 };
 
-export default function AIEnhancerPage() {
+const AIEnhancerPage = () => {
   return (
-    <Suspense fallback={
-      <div className="h-[600px] w-full flex items-center justify-center bg-white border border-slate-100 rounded-[2rem] animate-pulse">
-        <div className="flex flex-col items-center gap-4">
-          <Sparkles className="w-10 h-10 text-indigo-100 animate-spin-slow" />
-          <span className="text-[11px] font-black text-slate-200 uppercase tracking-[0.2em]">Initializing Lab...</span>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<div className="p-20 text-center font-black text-slate-400 animate-pulse">CALIBRATING NEURAL LINK...</div>}>
       <AIEnhancerContent />
     </Suspense>
   );
-}
+};
+
+export default AIEnhancerPage;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/Card";
 import { Search, Filter, SlidersHorizontal, Eye, Heart, Bookmark, ArrowRight, Grid, List as ListIcon, Loader2, Copy } from "lucide-react";
@@ -13,7 +13,7 @@ import { formatDateTime } from "@/lib/utils";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const PromptsPage = () => {
+const PromptsContent = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   
@@ -142,6 +142,14 @@ const PromptsPage = () => {
         </div>
       )}
     </div>
+  );
+};
+
+const PromptsPage = () => {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-slate-200" /></div>}>
+      <PromptsContent />
+    </Suspense>
   );
 };
 

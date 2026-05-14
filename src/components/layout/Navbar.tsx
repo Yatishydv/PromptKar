@@ -212,7 +212,7 @@ const Navbar = () => {
         {/* Brand — LEFT */}
         <div className="flex-none">
           <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="PromptKar" className="h-10 w-auto mix-blend-multiply" />
+            <img src="/logo.png" alt="PromptKar" className="h-10 w-auto object-contain" />
           </Link>
         </div>
 
@@ -379,7 +379,7 @@ const Navbar = () => {
             >
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                 <Link href="/" onClick={() => setShowMobileMenu(false)} className="flex items-center">
-                  <img src="/logo.png" alt="PromptKar" className="h-8 w-auto mix-blend-multiply" />
+                  <img src="/logo.png" alt="PromptKar" className="h-12 w-auto object-contain" />
                 </Link>
                 <button onClick={() => setShowMobileMenu(false)} className="p-2 text-slate-400 hover:text-indigo-600">
                   <X className="w-5 h-5" />

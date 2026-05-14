@@ -168,7 +168,7 @@ export default function CommunityPage() {
                   <Search className="w-6 h-6" />
                </div>
                <p className="text-sm font-black text-slate-900">No creators matched your search</p>
-               <Button onClick={() => setSearchTerm("")} variant="link" className="text-indigo-600 font-bold text-xs uppercase">Clear search</Button>
+               <Button onClick={() => setSearchTerm("")} variant="ghost" className="text-indigo-600 font-bold text-xs uppercase">Clear search</Button>
             </div>
           )}
         </AnimatePresence>

@@ -42,7 +42,11 @@ const BlogPage = () => {
       const res = await fetch("/api/blogs");
       if (res.ok) {
         const data = await res.json();
-        setPosts(Array.isArray(data) ? data : []);
+        if (data.success && Array.isArray(data.data)) {
+          setPosts(data.data);
+        } else {
+          setPosts([]);
+        }
       }
     } catch { /* silent */ }
     finally { setLoading(false); }

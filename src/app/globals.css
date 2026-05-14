@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: var(--bg-nexus);
-  --color-foreground: var(--fg-nexus);
-  --color-primary: var(--primary-nexus);
+  --color-background: var(--bg-app);
+  --color-foreground: var(--fg-app);
+  --color-primary: var(--primary-app);
   --color-primary-foreground: #FFFFFF;
   --color-secondary: #EC4899;
   --color-accent: #F59E0B;
-  --color-border: var(--border-nexus);
-  --color-card: var(--card-nexus);
+  --color-border: var(--border-app);
+  --color-card: var(--card-app);
   
-  --color-slate-50: var(--slate-50-nexus);
-  --color-slate-100: var(--slate-100-nexus);
-  --color-slate-900: var(--slate-900-nexus);
+  --color-slate-50: var(--slate-50-app);
+  --color-slate-100: var(--slate-100-app);
+  --color-slate-900: var(--slate-900-app);
 
-  --color-indigo-50: var(--indigo-50-nexus);
-  --color-indigo-600: var(--primary-nexus);
+  --color-indigo-50: var(--indigo-50-app);
+  --color-indigo-600: var(--primary-app);
 
   --color-emerald-50: #ECFDF5;
   --color-emerald-500: #10B981;
@@ -41,39 +41,39 @@
 
 @layer base {
   :root {
-    --primary-nexus: #4F46E5;
-    --bg-nexus: #FFFFFF;
-    --fg-nexus: #0F172A;
-    --card-nexus: #FFFFFF;
-    --border-nexus: #F1F5F9;
-    --slate-50-nexus: #F8FAFC;
-    --slate-100-nexus: #F1F5F9;
-    --slate-900-nexus: #0F172A;
-    --indigo-50-nexus: #EEF2FF;
+    --primary-app: #4F46E5;
+    --bg-app: #FFFFFF;
+    --fg-app: #0F172A;
+    --card-app: #FFFFFF;
+    --border-app: #F1F5F9;
+    --slate-50-app: #F8FAFC;
+    --slate-100-app: #F1F5F9;
+    --slate-900-app: #0F172A;
+    --indigo-50-app: #EEF2FF;
   }
 
-  [data-nexus-theme="Midnight"] {
-    --primary-nexus: #8B5CF6;
-    --bg-nexus: #020617;
-    --fg-nexus: #F8FAFC;
-    --card-nexus: #0F172A;
-    --border-nexus: #1E293B;
-    --slate-50-nexus: #0F172A;
-    --slate-100-nexus: #1E293B;
-    --slate-900-nexus: #F8FAFC;
-    --indigo-50-nexus: #1E1B4B;
+  [data-app-theme="Midnight"] {
+    --primary-app: #8B5CF6;
+    --bg-app: #020617;
+    --fg-app: #F8FAFC;
+    --card-app: #0F172A;
+    --border-app: #1E293B;
+    --slate-50-app: #0F172A;
+    --slate-100-app: #1E293B;
+    --slate-900-app: #F8FAFC;
+    --indigo-50-app: #1E1B4B;
   }
 
-  [data-nexus-theme="Matrix"] {
-    --primary-nexus: #10B981;
-    --bg-nexus: #061713;
-    --fg-nexus: #ECFDF5;
-    --card-nexus: #064E3B;
-    --border-nexus: #065F46;
-    --slate-50-nexus: #062C25;
-    --slate-100-nexus: #064E3B;
-    --slate-900-nexus: #D1FAE5;
-    --indigo-50-nexus: #064E3B;
+  [data-app-theme="Matrix"] {
+    --primary-app: #10B981;
+    --bg-app: #061713;
+    --fg-app: #ECFDF5;
+    --card-app: #064E3B;
+    --border-app: #065F46;
+    --slate-50-app: #062C25;
+    --slate-100-app: #064E3B;
+    --slate-900-app: #D1FAE5;
+    --indigo-50-app: #064E3B;
   }
 
   body {

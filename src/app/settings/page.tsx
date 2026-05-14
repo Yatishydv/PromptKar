@@ -59,8 +59,8 @@ const ROADMAP_MILESTONES = [
   { days: 60, id: "glow", label: "Identity Glow", reward: "Avatar Aura", icon: Sparkles, tab: "appearance" },
   { days: 90, id: "featured", label: "Featured Prompt", reward: "Main Grid Slot", icon: Flag, tab: "basic" },
   { days: 180, id: "theme", label: "Custom Theme", reward: "Dashboard Skins", icon: PaletteIcon, tab: "appearance" },
-  { days: 270, id: "verified", label: "Verified Tick", reward: "Nexus Verification", icon: BadgeCheck, tab: "basic" },
-  { days: 365, id: "upload", label: "Custom PFP Upload", reward: "File Nexus", icon: Camera, tab: "appearance" },
+  { days: 270, id: "verified", label: "Verified Tick", reward: "Verified Status", icon: BadgeCheck, tab: "basic" },
+  { days: 365, id: "upload", label: "Custom PFP Upload", reward: "Profile Sync", icon: Camera, tab: "appearance" },
   { days: 500, id: "master", label: "Master Engineer", reward: "Global Admin Powers", icon: Crown, tab: "basic" },
 ];
 
@@ -180,7 +180,7 @@ const SettingsPage = () => {
       return;
     }
     if (file.size > 2 * 1024 * 1024) { // 2MB limit for Base64 MongoDB storage
-      toast.error("File exceeds 2MB limit for Nexus sync.");
+      toast.error("File exceeds 2MB limit for cloud sync.");
       return;
     }
 
@@ -192,13 +192,13 @@ const SettingsPage = () => {
       reader.onloadend = () => {
         const base64String = reader.result as string;
         setFormData(prev => ({ ...prev, [type]: base64String }));
-        toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} synchronized to Nexus!`);
+        toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} synchronized to profile!`);
         if (type === 'avatar') setUploadingAvatar(false);
         else setUploadingBanner(false);
       };
       reader.readAsDataURL(file);
     } catch (err) {
-      toast.error(`Nexus link failed for ${type}.`);
+      toast.error(`Profile link failed for ${type}.`);
       if (type === 'avatar') setUploadingAvatar(false);
       else setUploadingBanner(false);
     }
@@ -210,7 +210,7 @@ const SettingsPage = () => {
   // Validation
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = "Architect identity required";
+    if (!formData.name.trim()) newErrors.name = "Profile name required";
     if (!/^[a-z0-9_]{3,15}$/.test(formData.username)) {
       newErrors.username = "Handle must be 3-15 chars (lowercase/numbers/_)";
     }
@@ -240,10 +240,10 @@ const SettingsPage = () => {
         await refreshUserData();
       } else {
         const errData = await res.json();
-        toast.error(errData.error || "Nexus Sync Failed");
+        toast.error(errData.error || "Profile Sync Failed");
       }
     } catch (err) {
-      toast.error("Critical Nexus Link Failure");
+      toast.error("Critical Connection Failure");
     } finally {
       setIsSaving(false);
     }
@@ -275,7 +275,7 @@ const SettingsPage = () => {
     { id: "links", label: "Social Links", icon: Globe },
   ];
 
-  if (!mounted || authLoading) return <div className="p-20 text-center font-black text-slate-400 animate-pulse">ESTABLISHING NEXUS LINK...</div>;
+  if (!mounted || authLoading) return <div className="p-20 text-center font-black text-slate-400 animate-pulse">ESTABLISHING CONNECTION...</div>;
   if (!user) return <div className="p-20 text-center font-black text-slate-400">UNAUTHORIZED ACCESS</div>;
 
   return (
@@ -284,13 +284,13 @@ const SettingsPage = () => {
       <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8 pt-8">
         <div className="space-y-2">
           <button onClick={() => router.back()} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" /> Return to Nexus
+            <ArrowLeft className="w-3.5 h-3.5" /> Return to Home
           </button>
           <div className="flex items-center gap-4">
             <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">Identity <span className="text-indigo-600">Vault</span></h1>
             {isDirty && <span className="bg-amber-100 text-amber-600 text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest animate-bounce">Unsaved Logic</span>}
           </div>
-          <p className="text-slate-400 font-bold text-sm sm:text-base">Engineering Status: {streakStatus.streak} Day Architectural Streak</p>
+          <p className="text-slate-400 font-bold text-sm sm:text-base">Community Status: {streakStatus.streak} Day Active Streak</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -351,7 +351,7 @@ const SettingsPage = () => {
                    <Card className="border-slate-100 shadow-soft rounded-[3rem] p-10">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                          <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Architect Full Name</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Creator Full Name</label>
                             <input 
                               type="text" 
                               value={formData.name} 
@@ -361,7 +361,7 @@ const SettingsPage = () => {
                             {errors.name && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest ml-1">{errors.name}</p>}
                          </div>
                          <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nexus Handle (@username)</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Profile Handle (@username)</label>
                             <input 
                               type="text" 
                               value={formData.username} 
@@ -377,7 +377,7 @@ const SettingsPage = () => {
                               value={formData.bio} 
                               onChange={e => setFormData({ ...formData, bio: e.target.value })} 
                               className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-indigo-600/30 transition-all resize-none" 
-                              placeholder="Tell the nexus about your engineering philosophy..."
+                              placeholder="Tell the community about your engineering philosophy..."
                             />
                          </div>
                          <div className="md:col-span-2 space-y-2">
@@ -405,7 +405,7 @@ const SettingsPage = () => {
                                     <Flag className="w-6 h-6 text-indigo-600" />
                                     Featured Directive
                                  </h4>
-                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pin a masterwork to the top of your nexus feed</p>
+                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pin a masterwork to the top of your profile feed</p>
                               </div>
                            </div>
                            <select 
@@ -429,7 +429,7 @@ const SettingsPage = () => {
                            <div className="space-y-2">
                               <h4 className="text-xl font-black text-slate-900 flex items-center gap-3">
                                  <BadgeCheck className="w-6 h-6 text-emerald-600" />
-                                 Nexus Verification
+                                 Profile Verification
                               </h4>
                               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Toggle your permanent engineering credentials</p>
                            </div>
@@ -439,7 +439,7 @@ const SettingsPage = () => {
                                formData.isVerifiedActive ? "bg-emerald-600 text-white shadow-xl shadow-emerald-100" : "bg-white border border-emerald-200 text-emerald-600 hover:bg-emerald-50"
                              }`}
                            >
-                              {formData.isVerifiedActive ? "Nexus Active" : "Initiate Verification"}
+                              {formData.isVerifiedActive ? "Verified" : "Initiate Verification"}
                            </button>
                         </div>
                      </Card>
@@ -524,10 +524,10 @@ const SettingsPage = () => {
                                  isAdmin={effectiveIsAdmin}
                                />
                                {uploadingAvatar && <p className="text-[10px] font-black text-indigo-600 animate-pulse">SYNCING MASTER FILE...</p>}
-                               <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mt-2">Active Nexus Identity</p>
+                               <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mt-2">Active Platform Identity</p>
                             </div>
                             <div className="space-y-4">
-                               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Architectural Set</label>
+                               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Avatar & Profile Image</label>
                                <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                   {AVATAR_SECTIONS.map((s) => {
                                      const threshold = STREAK_THRESHOLDS[s.id] || 0;
@@ -635,7 +635,7 @@ const SettingsPage = () => {
                    <Card className="border-slate-100 shadow-soft rounded-[3rem] p-10">
                       <div className="space-y-10">
                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                            <div className="space-y-1"><h4 className="text-xl font-black text-slate-900 tracking-tight">Nexus Theme Studio</h4><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global platform skins</p></div>
+                            <div className="space-y-1"><h4 className="text-xl font-black text-slate-900 tracking-tight">Platform Theme Studio</h4><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global platform skins</p></div>
                             <span className={`text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest ${streakStatus.streak >= 180 || effectiveIsAdmin ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-slate-50 text-slate-400 border border-slate-100"}`}>{streakStatus.streak >= 180 || effectiveIsAdmin ? "Milestone Unlocked" : "Locked: 180D Streak"}</span>
                          </div>
                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -677,7 +677,7 @@ const SettingsPage = () => {
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-12">
                    <div className="space-y-8">
                       <div className="flex items-center justify-between px-2">
-                        <div className="space-y-1"><h2 className="text-3xl font-black text-slate-900 tracking-tight">Engineering <span className="text-indigo-600">Roadmap</span></h2><p className="text-xs font-black text-slate-400 uppercase tracking-widest">Architecture Progress</p></div>
+                        <div className="space-y-1"><h2 className="text-3xl font-black text-slate-900 tracking-tight">Creator <span className="text-indigo-600">Roadmap</span></h2><p className="text-xs font-black text-slate-400 uppercase tracking-widest">Growth Progress</p></div>
                         <Milestone className="w-8 h-8 text-indigo-100" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -698,7 +698,7 @@ const SettingsPage = () => {
                                           )}
                                         </div>
                                         <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">{ms.label}</p>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{isAchieved ? "Architectural Mastered" : `${ms.days - streakStatus.streak} to reach`}</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{isAchieved ? "Milestone Mastered" : `${ms.days - streakStatus.streak} to reach`}</p>
                                      </div>
                                   </div>
                                 </div>

@@ -30,8 +30,8 @@ export async function updateStreak(firebaseUid: string) {
       newStreak = user.currentStreak + 1;
     }
 
-    // Keep only the last 30 days of activity to keep document small
-    const updatedActivityDates = [...user.activityDates, today].slice(-30);
+    // Preserve full activity history
+    const updatedActivityDates = [...user.activityDates, today];
 
     const updatedUser = await User.findOneAndUpdate(
       { firebaseUid },
@@ -49,5 +49,37 @@ export async function updateStreak(firebaseUid: string) {
   } catch (error) {
     console.error("Streak Update Error:", error);
     return null;
+  }
+}
+
+/**
+ * Validates a user's streak and resets it if they missed a day.
+ * Does NOT increment the streak, just ensures it's not stale.
+ */
+export async function validateStreak(firebaseUid: string) {
+  try {
+    await dbConnect();
+    const user = await User.findOne({ firebaseUid });
+    if (!user || user.currentStreak === 0) return 0;
+
+    const now = new Date();
+    const today = now.toISOString().split("T")[0];
+    
+    const yesterdayDate = new Date(now);
+    yesterdayDate.setDate(now.getDate() - 1);
+    const yesterday = yesterdayDate.toISOString().split("T")[0];
+
+    // If active today or yesterday, streak is still alive
+    if (user.activityDates.includes(today) || user.activityDates.includes(yesterday)) {
+      return user.currentStreak;
+    }
+
+    // Missed more than 1 day -> Reset to 0
+    console.log(`[STREAK] Resetting streak for ${firebaseUid} (missed yesterday)`);
+    await User.updateOne({ firebaseUid }, { $set: { currentStreak: 0 } });
+    return 0;
+  } catch (error) {
+    console.error("Streak Validation Error:", error);
+    return 0;
   }
 }

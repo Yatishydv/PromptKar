@@ -24,8 +24,15 @@ export async function GET(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log(`[API] Resolved identity: ${user.username} (${user.firebaseUid})`);
-    return NextResponse.json(user);
+    // Passive Streak Validation: Reset to 0 if they missed a day
+    const { validateStreak } = await import("@/lib/streak");
+    await validateStreak(user.firebaseUid);
+
+    // Re-fetch to get updated streak if it was reset
+    const refreshedUser = await User.findOne({ firebaseUid: user.firebaseUid }).lean();
+
+    console.log(`[API] Resolved identity: ${refreshedUser?.username} (${refreshedUser?.firebaseUid})`);
+    return NextResponse.json(refreshedUser);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

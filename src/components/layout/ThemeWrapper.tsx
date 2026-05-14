@@ -8,22 +8,22 @@ export const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   
   useEffect(() => {
     const theme = userData?.selectedTheme || "Standard";
-    document.documentElement.setAttribute("data-nexus-theme", theme);
+    document.documentElement.setAttribute("data-app-theme", theme);
     
     // Apply specific CSS variables based on theme
     const root = document.documentElement;
     if (theme === "Cyber") {
-      root.style.setProperty("--nexus-primary", "79, 70, 229"); // Indigo
-      root.style.setProperty("--nexus-bg", "248, 250, 252");
+      root.style.setProperty("--app-primary", "79, 70, 229"); // Indigo
+      root.style.setProperty("--app-bg", "248, 250, 252");
     } else if (theme === "Midnight") {
-      root.style.setProperty("--nexus-primary", "147, 51, 234"); // Purple
-      root.style.setProperty("--nexus-bg", "15, 23, 42");
+      root.style.setProperty("--app-primary", "147, 51, 234"); // Purple
+      root.style.setProperty("--app-bg", "15, 23, 42");
     } else if (theme === "Matrix") {
-      root.style.setProperty("--nexus-primary", "16, 185, 129"); // Emerald
-      root.style.setProperty("--nexus-bg", "6, 78, 59");
+      root.style.setProperty("--app-primary", "16, 185, 129"); // Emerald
+      root.style.setProperty("--app-bg", "6, 78, 59");
     } else {
-      root.style.setProperty("--nexus-primary", "79, 70, 229");
-      root.style.setProperty("--nexus-bg", "248, 250, 252");
+      root.style.setProperty("--app-primary", "79, 70, 229");
+      root.style.setProperty("--app-bg", "248, 250, 252");
     }
   }, [userData?.selectedTheme]);
 

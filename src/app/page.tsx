@@ -218,7 +218,7 @@ export default function Home() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-            <p className="text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Syncing Master Hub...</p>
+            <p className="text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Syncing Platform Data...</p>
           </div>
         ) : (
           <>

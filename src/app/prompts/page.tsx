@@ -36,7 +36,7 @@ const PromptsContent = () => {
 
   useEffect(() => {
     if (rawPrompts) {
-      const data = Array.isArray(rawPrompts) ? rawPrompts : (rawPrompts as any).data;
+      const data = Array.isArray(rawPrompts) ? rawPrompts : (rawPrompts as any)?.data;
       if (Array.isArray(data)) {
         setPrompts(data);
         setLoading(false);

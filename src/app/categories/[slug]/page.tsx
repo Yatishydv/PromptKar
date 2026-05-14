@@ -115,7 +115,8 @@ const CategoryDetailPage = () => {
       try {
         const queryParam = categoryName !== "All" ? `?category=${encodeURIComponent(categoryName)}` : "";
         const res = await fetch(`/api/prompts${queryParam}`);
-        const data = await res.json();
+        const rawData = await res.json();
+        const data = Array.isArray(rawData) ? rawData : (rawData as any)?.data;
         
         if (Array.isArray(data)) {
           setPrompts(data.map(p => ({ ...p, id: p._id || p.slug })));

@@ -457,7 +457,7 @@ const AIEnhancerContent = () => {
               </span>
             </h4>
             <p className="text-[11px] font-bold text-slate-400">
-              {chatMode ? "Free-flowing conversation and general assistance." : "Architecting professional directives and structured inputs."}
+              {chatMode ? "Free-flowing conversation and general assistance." : "Crafting professional prompts and structured inputs."}
             </p>
           </div>
         </div>
@@ -467,7 +467,7 @@ const AIEnhancerContent = () => {
             onClick={() => setChatMode(false)}
             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!chatMode ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
           >
-            Architect
+            Professional
           </button>
           <button
             onClick={() => setChatMode(true)}

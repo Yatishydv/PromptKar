@@ -84,7 +84,7 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text"
-                placeholder="Search architects..."
+                placeholder="Search creators..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-4 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all"
@@ -96,7 +96,7 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
            {loading ? (
              <div className="py-20 flex flex-col items-center justify-center gap-4">
                 <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Scanning Nexus...</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading Community...</p>
              </div>
            ) : filteredUsers.length > 0 ? (
              <div className="grid gap-3">
@@ -122,7 +122,7 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
            ) : (
              <div className="py-20 text-center space-y-4">
                 <Users className="w-12 h-12 text-slate-100 mx-auto" />
-                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">No Architects Found</p>
+                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">No Creators Found</p>
              </div>
            )}
         </div>
@@ -154,7 +154,7 @@ export default function ProfilePage() {
   const isAdmin = profileData?.isAdmin || profileData?.username?.toLowerCase() === "yatishydv";
 
   const handleFollow = async () => {
-    if (!currentUser) return toast.error("Sign in to follow architects");
+    if (!currentUser) return toast.error("Sign in to follow creators");
     setFollowLoading(true);
     
     try {
@@ -195,7 +195,7 @@ export default function ProfilePage() {
         </div>
         <div className="space-y-2">
            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Identity Not Found</h1>
-           <p className="text-slate-400 font-bold">The architect profile you are looking for does not exist in our nexus.</p>
+           <p className="text-slate-400 font-bold">The profile you are looking for does not exist in our community.</p>
         </div>
         <Button onClick={() => router.push("/")} variant="outline" className="h-12 px-8 rounded-xl font-black text-xs uppercase tracking-widest">Return to Hub</Button>
       </div>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
                 />
               </div>
               {(isAdmin || profileData.isVerifiedActive) && (
-                 <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2.5 rounded-2xl shadow-xl border-4 border-indigo-500 z-20" title="Verified Architect">
+                 <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2.5 rounded-2xl shadow-xl border-4 border-indigo-500 z-20" title="Verified Creator">
                     <ShieldCheck className="w-6 h-6" />
                  </div>
               )}
@@ -280,7 +280,7 @@ export default function ProfilePage() {
                  }`}
                >
                  {followLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (isFollowing ? <UserCheck className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />)}
-                 {isFollowing ? "Following" : "Follow Architect"}
+                 {isFollowing ? "Following" : "Follow Creator"}
                </Button>
              )}
              <button className="w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
@@ -299,7 +299,7 @@ export default function ProfilePage() {
               <div className="space-y-4">
                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Mission Statement</h3>
                  <p className="text-[14px] font-bold text-slate-600 leading-relaxed italic">
-                   "{profileData.bio || "This architect has not yet defined their mission in the nexus."}"
+                   "{profileData.bio || "This creator has not yet defined their mission in the community."}"
                  </p>
               </div>
 
@@ -330,7 +330,7 @@ export default function ProfilePage() {
               <div className="space-y-4 pt-4 border-t border-slate-50">
                  <div className="flex items-center gap-3 text-slate-500">
                     <MapPin className="w-4.5 h-4.5 text-indigo-600/50" />
-                    <span className="text-xs font-bold">{profileData.location || "Nexus Digital Space"}</span>
+                    <span className="text-xs font-bold">{profileData.location || "Global Workspace"}</span>
                  </div>
                  <div className="flex items-center gap-3 text-slate-500">
                     <Calendar className="w-4.5 h-4.5 text-indigo-600/50" />
@@ -452,7 +452,7 @@ export default function ProfilePage() {
                          </div>
                          <div className="space-y-1">
                             <p className="font-black text-slate-900 uppercase tracking-widest text-sm">No Active Directives</p>
-                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">This architect has not yet published intelligence.</p>
+                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">This creator has not yet published any prompts.</p>
                          </div>
                          {isOwnProfile && (
                            <Link href="/create" className="mt-8 inline-block">

@@ -18,14 +18,14 @@ export const checkPermission = (userStreak: number, tier: keyof typeof STREAK_TI
 export const getRankTitle = (streak: number, isAdmin?: boolean, customTitle?: string) => {
   if (customTitle) return customTitle;
   if (isAdmin) return "Founder & Owner";
-  if (streak >= 365) return "Master Platform Engineer";
-  if (streak >= 270) return "Platform Architect";
-  if (streak >= 180) return "Principal Engineer";
-  if (streak >= 90) return "Elite Architect";
-  if (streak >= 60) return "Lead Prompt Engineer";
-  if (streak >= 30) return "Senior Engineer";
-  if (streak >= 7) return "Active Creator";
-  return "New Creator";
+  if (streak >= 365) return "Legendary Creator";
+  if (streak >= 270) return "Master Creator";
+  if (streak >= 180) return "Principal Creator";
+  if (streak >= 90) return "Elite Creator";
+  if (streak >= 60) return "Lead Creator";
+  if (streak >= 30) return "Senior Creator";
+  if (streak >= 7) return "Active Member";
+  return "New Member";
 };
 
 export const getRankBadge = (streak: number, isAdmin?: boolean, customBadge?: string) => {

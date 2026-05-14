@@ -70,9 +70,9 @@ export const CreatorsWidget = () => {
                />
                <div className="flex flex-col">
                  <Link href={`/profile/${c.username}`} className="text-[11px] font-black text-slate-700 hover:text-indigo-600 truncate max-w-[80px]">
-                    @{c.username}
+                    {c.name || "Anonymous"}
                  </Link>
-                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{c.name || c.username}</span>
+                 <span className="text-[9px] font-medium text-slate-400 lowercase">@{c.username}</span>
                </div>
              </div>
              <div className="flex items-center gap-3">
@@ -98,9 +98,9 @@ export const CommunityWidget = () => (
     <p className="text-xs text-indigo-100 mb-4 leading-relaxed">
       Share prompts, climb the leaderboard, and learn from 25K+ members.
     </p>
-    <Link href="/login">
+    <Link href="/community">
       <Button className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-none font-bold">
-        Get Started
+        Explore Community
       </Button>
     </Link>
   </div>

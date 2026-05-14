@@ -23,7 +23,7 @@ export async function GET(
     // Fetch user details for those who liked
     const users = await User.find({
       firebaseUid: { $in: prompt.likedBy }
-    }).select("name username avatar firebaseUid").lean();
+    }).select("name username avatar firebaseUid isGlowActive isVerifiedActive isAdmin").lean();
 
     return NextResponse.json({ users });
   } catch (error: any) {

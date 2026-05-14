@@ -54,22 +54,34 @@
 
   [data-app-theme="Midnight"] {
     --primary-app: #8B5CF6;
-    --bg-app: #020617;
-    --fg-app: #F8FAFC;
-    --card-app: #0F172A;
-    --border-app: #1E293B;
-    --slate-50-app: #0F172A;
-    --slate-100-app: #1E293B;
-    --slate-900-app: #F8FAFC;
+    --bg-app: #030712;
+    --fg-app: #F9FAFB;
+    --card-app: #111827;
+    --border-app: #1F2937;
+    --slate-50-app: #111827;
+    --slate-100-app: #1F2937;
+    --slate-900-app: #F9FAFB;
     --indigo-50-app: #1E1B4B;
+  }
+
+  [data-app-theme="Cyber"] {
+    --primary-app: #6366F1;
+    --bg-app: #F8FAFC;
+    --fg-app: #0F172A;
+    --card-app: #FFFFFF;
+    --border-app: #F1F5F9;
+    --slate-50-app: #F8FAFC;
+    --slate-100-app: #F1F5F9;
+    --slate-900-app: #0F172A;
+    --indigo-50-app: #EEF2FF;
   }
 
   [data-app-theme="Matrix"] {
     --primary-app: #10B981;
-    --bg-app: #061713;
+    --bg-app: #020617;
     --fg-app: #ECFDF5;
-    --card-app: #064E3B;
-    --border-app: #065F46;
+    --card-app: #064E3B20;
+    --border-app: #065F4640;
     --slate-50-app: #062C25;
     --slate-100-app: #064E3B;
     --slate-900-app: #D1FAE5;
@@ -134,6 +146,18 @@
 
 .premium-glow-indigo {
   box-shadow: 0 0 20px rgba(79, 70, 229, 0.4), 0 0 40px rgba(79, 70, 229, 0.2);
+  animation: identity-glow-flow 3s ease-in-out infinite;
+}
+
+@keyframes identity-glow-flow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.3), 0 0 40px rgba(79, 70, 229, 0.1), inset 0 0 10px rgba(79, 70, 229, 0.05); 
+    filter: brightness(1);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(79, 70, 229, 0.4), 0 0 50px rgba(79, 70, 229, 0.2), inset 0 0 15px rgba(79, 70, 229, 0.1); 
+    filter: brightness(1.05);
+  }
 }
 
 .premium-glow-emerald {
@@ -144,10 +168,19 @@
 .reward-glow-active::after {
   content: ''; position: absolute; inset: -15px;
   background: radial-gradient(circle, rgba(79, 70, 229, 0.5) 0%, transparent 75%);
-  border-radius: inherit; z-index: -1; animation: reward-pulse 3s ease-in-out infinite;
+  border-radius: inherit; z-index: -1; animation: reward-pulse 2s ease-in-out infinite;
 }
 
 @keyframes reward-pulse {
   0%, 100% { opacity: 0.4; transform: scale(0.95); }
   50% { opacity: 0.7; transform: scale(1.15); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.9); }
 }

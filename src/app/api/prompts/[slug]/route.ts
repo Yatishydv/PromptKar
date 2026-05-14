@@ -25,7 +25,7 @@ export async function GET(
     // Fetch author details for latest avatar and badge
     if (prompt.authorId) {
       const author = await User.findOne({ firebaseUid: prompt.authorId })
-        .select('email avatar name username currentStreak isAdmin customBadge customTitle')
+        .select('email avatar name username currentStreak isAdmin customBadge customTitle isGlowActive isVerifiedActive')
         .lean() as any;
       if (author) {
         prompt.authorEmail = author.email;
@@ -36,6 +36,8 @@ export async function GET(
         prompt.authorIsAdmin = author.isAdmin || false;
         prompt.authorCustomBadge = author.customBadge || "";
         prompt.authorCustomTitle = author.customTitle || "";
+        prompt.authorIsGlowActive = author.isGlowActive || false;
+        prompt.authorIsVerifiedActive = author.isVerifiedActive || false;
       }
     }
 

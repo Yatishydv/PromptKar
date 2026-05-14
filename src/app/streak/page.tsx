@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { Flame, Trophy, Calendar, Zap, Star, ChevronRight, Share2, Sparkles, Medal, Palette, CheckCircle2, Camera, Check, Clock, Layout, ArrowUpRight } from "lucide-react";
+import { Flame, Trophy, Calendar, Zap, Star, ChevronRight, Share2, Sparkles, Medal, CheckCircle2, Clock, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 const StreakPage = () => {
@@ -167,10 +167,10 @@ const StreakPage = () => {
                       day.active 
                         ? "bg-white border-slate-200 shadow-sm" 
                         : "bg-white border-slate-100 hover:border-slate-200"
-                    } ${isToday ? "scale-110 z-10 border-slate-300 shadow-md" : ""}`}>
-                      {day.active && <Flame className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 animate-pulse-slow" />}
+                    } ${isToday ? "scale-110 z-10 border-indigo-600 shadow-lg shadow-indigo-100 ring-2 ring-indigo-600/20" : ""}`}>
+                      {day.active && <Flame className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 animate-pulse-slow fill-yellow-500/20" />}
                       <span className={`text-[10px] md:text-xs font-black mt-1 ${
-                        isToday ? "text-indigo-600" : day.active ? "text-slate-900" : "text-slate-400"
+                        isToday ? "text-indigo-700" : day.active ? "text-slate-900" : "text-slate-400"
                       }`}>{day.date.getDate()}</span>
                     </div>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-slate-900 text-white text-[9px] font-black rounded-xl opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap z-30 pointer-events-none uppercase tracking-widest shadow-xl translate-y-1 group-hover:translate-y-0">

@@ -88,6 +88,10 @@ export async function PATCH(
     if (updateData.role !== undefined) allowedUpdates.role = updateData.role;
     if (updateData.customBadge !== undefined) allowedUpdates.customBadge = updateData.customBadge;
     if (updateData.customTitle !== undefined) allowedUpdates.customTitle = updateData.customTitle;
+    if (updateData.selectedTheme !== undefined) allowedUpdates.selectedTheme = updateData.selectedTheme;
+    if (updateData.featuredPromptId !== undefined) allowedUpdates.featuredPromptId = updateData.featuredPromptId;
+    if (updateData.isVerifiedActive !== undefined) allowedUpdates.isVerifiedActive = updateData.isVerifiedActive;
+    if (updateData.isGlowActive !== undefined) allowedUpdates.isGlowActive = updateData.isGlowActive;
 
     const user = await User.findOneAndUpdate(
       { firebaseUid: id },

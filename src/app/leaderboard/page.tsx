@@ -23,11 +23,12 @@ const LeaderboardPage = () => {
 
         if (usersRes.status === "fulfilled" && usersRes.value.ok) {
           const d = await usersRes.value.json();
-          setTopUsers(Array.isArray(d) ? d : d.users || []);
+          // The users API returns an array directly, but prompts use the success wrapper
+          setTopUsers(Array.isArray(d) ? d : d.data || []);
         }
         if (promptsRes.status === "fulfilled" && promptsRes.value.ok) {
           const d = await promptsRes.value.json();
-          setTopPrompts(Array.isArray(d) ? d : []);
+          setTopPrompts(Array.isArray(d) ? d : d.data || []);
         }
       } catch (error) {
         console.error("Leaderboard Fetch Error:", error);
@@ -113,8 +114,8 @@ const LeaderboardPage = () => {
 
               {/* Info */}
               <div className="flex-1 min-w-0 cursor-pointer" onClick={() => window.location.href = `/profile/${user.username}`}>
-                <p className="font-black text-slate-900 truncate">@{user.username}</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{user.name || user.username}</p>
+                <p className="font-black text-slate-900 truncate">{user.name || "Anonymous"}</p>
+                <p className="text-[10px] text-slate-400 font-medium lowercase">@{user.username}</p>
               </div>
 
               {/* Stats */}

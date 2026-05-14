@@ -17,6 +17,8 @@ interface AuthorAvatarProps {
   username?: string;
   isGlowActive?: boolean;
   isVerifiedActive?: boolean;
+  customBadge?: string;
+  customTitle?: string;
 }
 
 export const AuthorAvatar = ({ 
@@ -30,7 +32,9 @@ export const AuthorAvatar = ({
   streak = 0,
   username,
   isGlowActive = false,
-  isVerifiedActive = false
+  isVerifiedActive = false,
+  customBadge,
+  customTitle
 }: AuthorAvatarProps) => {
   const router = useRouter();
   
@@ -55,7 +59,7 @@ export const AuthorAvatar = ({
     }
   };
 
-  const showGlow = isAdmin || isGlowActive;
+  const showGlow = isGlowActive || (isAdmin && isGlowActive === undefined);
   const showVerified = isAdmin || isVerifiedActive;
 
   return (
@@ -63,7 +67,7 @@ export const AuthorAvatar = ({
       className={`flex items-center gap-2 ${username ? "cursor-pointer group/avatar" : ""}`}
       onClick={handleClick}
     >
-      <div className={`relative ${className} rounded-full border border-slate-100 bg-white transition-all z-10 ${username ? "group-hover/avatar:border-indigo-600" : ""} ${showGlow ? "ring-4 ring-indigo-600/40 premium-glow-indigo animate-pulse" : ""}`}>
+      <div className={`relative ${className} rounded-full border border-slate-200/50 bg-white transition-all z-10 ${username ? "group-hover/avatar:border-indigo-600" : ""} ${showGlow ? "ring-4 ring-indigo-600/40 premium-glow-indigo" : ""}`}>
         <div className="w-full h-full rounded-full overflow-hidden">
           {hasAvatar ? (
             <img 
@@ -79,20 +83,32 @@ export const AuthorAvatar = ({
             </div>
           )}
         </div>
+        {/* Identity Badge Overlays */}
+        {showVerified && (
+          <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm z-20">
+            <div className="bg-indigo-600 rounded-full p-0.5">
+              <ShieldCheck className="w-2.5 h-2.5 text-white" />
+            </div>
+          </div>
+        )}
+        {!showVerified && (isAdmin || streak >= 7) && (
+          <div className="absolute -bottom-1 -right-1 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm z-20 text-[10px]">
+            {getRankBadge(streak, isAdmin, customBadge)}
+          </div>
+        )}
       </div>
       
       {showName && (
         <div className="flex flex-col min-w-0">
           <div className={`${nameClassName} flex items-center gap-1 text-slate-900 leading-none`}>
-            <span className="font-bold truncate group-hover/avatar:text-indigo-600">@{username || name}</span>
-            {showVerified && (
-               <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
-            )}
+            <span className="font-bold truncate group-hover/avatar:text-indigo-600">{name}</span>
+            {isAdmin && <span className="text-[8px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-tighter">Owner</span>}
           </div>
+          <span className="text-[10px] font-medium text-slate-400 lowercase">@{username}</span>
           {streak > 0 && (
             <div className="flex items-center gap-1 mt-0.5">
-               <span className="text-[10px] font-bold text-orange-500 flex items-center gap-0.5">
-                 <Flame className="w-2.5 h-2.5 fill-orange-500" /> {streak}
+               <span className="text-[10px] font-bold text-yellow-500 flex items-center gap-0.5">
+                 <Flame className="w-2.5 h-2.5 fill-yellow-500/20" /> {streak}
                </span>
             </div>
           )}

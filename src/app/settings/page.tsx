@@ -12,7 +12,7 @@ import {
   User as UserIcon, Zap, Smile, Bug, Coffee, 
   ArrowRight, Flag, Trophy, Target, Star, Award,
   Milestone, Zap as ZapIcon, BadgeCheck, Palette as PaletteIcon,
-  Crown, Verified, Flame
+  Crown, Verified, Flame, Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
@@ -20,6 +20,7 @@ import { useAuth } from "@/lib/auth-context";
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import confetti from 'canvas-confetti';
 
 // ── Configuration ──────────────────────────────────────────────────
 const AVATAR_SECTIONS = [
@@ -166,6 +167,22 @@ const SettingsPage = () => {
   }, [userData]);
 
   useEffect(() => {
+    const fetchUserPrompts = async () => {
+      if (!user?.uid) return;
+      try {
+        const res = await fetch(`/api/prompts?authorId=${user.uid}`);
+        if (res.ok) {
+          const data = await res.json();
+          setUserPrompts(Array.isArray(data) ? data : data.data || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user prompts", err);
+      }
+    };
+    fetchUserPrompts();
+  }, [user]);
+
+  useEffect(() => {
     setSectionLoading(true);
     const timer = setTimeout(() => setSectionLoading(false), 500);
     return () => clearTimeout(timer);
@@ -238,6 +255,12 @@ const SettingsPage = () => {
       if (res.ok) {
         toast.success("Profile Studio Synchronized!");
         await refreshUserData();
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#6366F1', '#A855F7', '#EC4899']
+        });
       } else {
         const errData = await res.json();
         toast.error(errData.error || "Profile Sync Failed");
@@ -280,43 +303,104 @@ const SettingsPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto pb-24 px-4 sm:px-6">
-      {/* Header */}
-      <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8 pt-8">
-        <div className="space-y-2">
-          <button onClick={() => router.back()} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" /> Return to Home
-          </button>
-          <div className="flex items-center gap-4">
-            <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">Identity <span className="text-indigo-600">Vault</span></h1>
-            {isDirty && <span className="bg-amber-100 text-amber-600 text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest animate-bounce">Unsaved Logic</span>}
+      <div className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-8">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+             <button onClick={() => router.back()} className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+               <ArrowLeft className="w-5 h-5" />
+             </button>
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Identity Hub / Settings</span>
           </div>
-          <p className="text-slate-400 font-bold text-sm sm:text-base">Community Status: {streakStatus.streak} Day Active Streak</p>
+          <div className="space-y-1">
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none">Identity <span className="text-indigo-600">Vault</span></h1>
+            <p className="text-slate-400 font-bold text-sm">Configure your global presence and sync parameters.</p>
+          </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <Button onClick={handleUpdate} disabled={isSaving || !isDirty} className={`${isDirty ? "bg-indigo-600 shadow-indigo-100" : "bg-slate-300 shadow-none pointer-events-none opacity-50"} hover:bg-indigo-700 text-white h-16 px-12 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-xl flex items-center gap-3 transition-all active:scale-95`}>
+        <div className="flex items-center gap-4 bg-white p-2 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+          <button 
+            onClick={() => {
+              const text = `Check out my Identity Vault on PromptKar! I'm on a ${streakStatus.streak} day streak.`;
+              if (navigator.share) {
+                navigator.share({ title: 'PromptKar Identity', text, url: window.location.href });
+              } else {
+                navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                toast.success("Identity link copied!");
+              }
+            }}
+            className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all ml-2"
+          >
+            <Share2 className="w-5 h-5" />
+          </button>
+          <div className="px-6 py-2">
+             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Streak</p>
+             <p className="text-lg font-black text-slate-900">{streakStatus.streak} Days</p>
+          </div>
+          <Button 
+            onClick={handleUpdate} 
+            disabled={isSaving || !isDirty} 
+            className={`h-14 px-10 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center gap-3 ${
+              isDirty 
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700" 
+                : "bg-slate-100 text-slate-400 cursor-not-allowed"
+            }`}
+          >
             {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-            {isSaving ? "Syncing..." : "Sync Profile"}
+            {isSaving ? "Syncing..." : "Commit Changes"}
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Sidebar Nav */}
-        <aside className="lg:col-span-3 space-y-6">
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-4 shadow-soft space-y-2">
+        <aside className="lg:col-span-3 space-y-8">
+          <div className="bg-white border border-slate-100 rounded-[3rem] p-3 shadow-soft space-y-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-4 p-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
-                  activeTab === tab.id ? "bg-slate-900 text-white shadow-xl" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                className={`w-full flex items-center gap-4 p-5 rounded-[2rem] font-black text-[11px] uppercase tracking-widest transition-all ${
+                  activeTab === tab.id 
+                    ? "bg-slate-900 text-white shadow-2xl scale-[1.02] z-10" 
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
                 }`}
               >
-                <tab.icon className={`w-4.5 h-4.5 ${activeTab === tab.id ? "text-indigo-400" : ""}`} />
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeTab === tab.id ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-400"}`}>
+                  <tab.icon className="w-5 h-5" />
+                </div>
                 {tab.label}
               </button>
             ))}
+          </div>
+
+          {/* Profile Preview Card */}
+          <div className="bg-white border border-slate-100 rounded-[3rem] p-6 shadow-soft space-y-6">
+             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Live Identity Preview</p>
+             <div className="space-y-4">
+                <div className="relative h-24 w-full rounded-2xl overflow-hidden bg-slate-50">
+                   {formData.banner ? (
+                     <img src={formData.banner} className="w-full h-full object-cover" alt="Banner" />
+                   ) : (
+                     <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200" />
+                   )}
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                </div>
+                <div className="flex flex-col items-center -mt-12 relative z-10">
+                   <AuthorAvatar 
+                     avatar={formData.avatar} 
+                     name={formData.name} 
+                     username={formData.username}
+                     className="w-20 h-20 border-4 border-white shadow-xl" 
+                     isGlowActive={formData.isGlowActive}
+                     isVerifiedActive={formData.isVerifiedActive}
+                     isAdmin={effectiveIsAdmin}
+                   />
+                   <div className="text-center mt-3">
+                      <p className="font-black text-slate-900 leading-tight">@{formData.username || "username"}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{formData.name || "Full Name"}</p>
+                   </div>
+                </div>
+             </div>
           </div>
 
           {/* Admin Lab */}
@@ -331,12 +415,28 @@ const SettingsPage = () => {
                   <button onClick={() => setSimRegularUser(!simRegularUser)} className={`w-full p-3 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all ${simRegularUser ? "bg-amber-500" : "bg-indigo-600"}`}>
                     {simRegularUser ? "Simulate User" : "Real Admin Mode"}
                   </button>
-                  <div className="grid grid-cols-2 gap-2">
-                     {[0, 7, 60, 365].map(d => (
-                       <button key={d} onClick={() => setSimStreak(d)} className={`p-2 rounded-xl text-[9px] font-black border ${simStreak === d ? "bg-indigo-600 border-indigo-500" : "bg-white/5 border-white/10 text-slate-400"}`}>{d}D</button>
-                     ))}
-                     <button onClick={() => setSimStreak(null)} className="col-span-2 p-2 rounded-xl text-[8px] font-black bg-white/5 border border-white/10 text-slate-400 uppercase tracking-widest">Reset Simulation</button>
-                  </div>
+                   <div className="grid grid-cols-2 gap-2">
+                      {[0, 7, 60, 365].map(d => (
+                        <button 
+                          key={d} 
+                          onClick={() => {
+                            setSimStreak(d);
+                            if (d > 0) {
+                              confetti({
+                                particleCount: 80,
+                                spread: 50,
+                                origin: { y: 0.8 },
+                                colors: ['#6366F1', '#4F46E5']
+                              });
+                            }
+                          }} 
+                          className={`p-2 rounded-xl text-[9px] font-black border ${simStreak === d ? "bg-indigo-600 border-indigo-500" : "bg-white/5 border-white/10 text-slate-400"}`}
+                        >
+                          {d}D
+                        </button>
+                      ))}
+                      <button onClick={() => setSimStreak(null)} className="col-span-2 p-2 rounded-xl text-[8px] font-black bg-white/5 border border-white/10 text-slate-400 uppercase tracking-widest">Reset Simulation</button>
+                   </div>
                </div>
             </div>
           )}
@@ -371,17 +471,17 @@ const SettingsPage = () => {
                             {errors.username && <p className="text-[9px] font-bold text-red-500 uppercase tracking-widest ml-1">{errors.username}</p>}
                          </div>
                          <div className="md:col-span-2 space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Engineering Bio</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">My Story (Bio)</label>
                             <textarea 
                               rows={4} 
                               value={formData.bio} 
                               onChange={e => setFormData({ ...formData, bio: e.target.value })} 
                               className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-indigo-600/30 transition-all resize-none" 
-                              placeholder="Tell the community about your engineering philosophy..."
+                              placeholder="Tell the community about yourself and your creative journey..."
                             />
                          </div>
                          <div className="md:col-span-2 space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Geographic Node (Location)</label>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Current Location</label>
                             <div className="relative">
                               <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                               <input 
@@ -389,6 +489,7 @@ const SettingsPage = () => {
                                 value={formData.location} 
                                 onChange={e => setFormData({ ...formData, location: e.target.value })} 
                                 className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-14 pr-6 text-sm font-black focus:outline-none focus:border-indigo-600/30 transition-all" 
+                                placeholder="Where are you creating from?"
                               />
                             </div>
                          </div>
@@ -403,9 +504,9 @@ const SettingsPage = () => {
                               <div className="space-y-1">
                                  <h4 className="text-xl font-black text-slate-900 flex items-center gap-3">
                                     <Flag className="w-6 h-6 text-indigo-600" />
-                                    Featured Directive
+                                    Featured Prompt
                                  </h4>
-                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pin a masterwork to the top of your profile feed</p>
+                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pin your best work to the top of your profile</p>
                               </div>
                            </div>
                            <select 
@@ -576,12 +677,15 @@ const SettingsPage = () => {
                        </div>
                    </Card>
 
-                   {/* Cinematic Header */}
-                   <Card className="border-slate-100 shadow-soft rounded-[3rem] p-10">
-                      <div className="space-y-8">
-                          <div className="space-y-6">
-                             <div className="flex items-center justify-between">
-                                <h4 className="text-xl font-black text-slate-900 tracking-tight">Cinematic Header</h4>
+                    <Card className="border-slate-100 shadow-soft rounded-[3rem] p-12 space-y-10 relative overflow-hidden group">
+                       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/30 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-indigo-100/40 transition-colors" />
+                       <div className="relative z-10 space-y-8">
+                          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                             <div className="space-y-1">
+                                <h4 className="text-2xl font-black text-slate-900 tracking-tight">Cinematic Header</h4>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Define your visual atmosphere</p>
+                             </div>
+                             <div className="flex items-center gap-4">
                                 {(effectiveIsAdmin || streakStatus.streak >= 365) && (
                                   <div className="flex gap-2">
                                     <input 
@@ -594,42 +698,39 @@ const SettingsPage = () => {
                                     <button 
                                       onClick={() => bannerInputRef.current?.click()} 
                                       disabled={uploadingBanner}
-                                      className="flex items-center gap-2 text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-700 transition-colors"
+                                      className="h-11 px-6 rounded-xl bg-white border border-slate-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-sm flex items-center gap-2"
                                     >
                                       {uploadingBanner ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-                                      {uploadingBanner ? "Uploading..." : "Upload Master Header"}
+                                      {uploadingBanner ? "Processing..." : "Custom Header"}
                                     </button>
                                   </div>
                                 )}
                              </div>
-                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Banner Master Link</label>
-                                <input 
-                                  type="text" 
-                                  value={formData.banner} 
-                                  onChange={e => setFormData({ ...formData, banner: e.target.value })} 
-                                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-black focus:outline-none focus:border-indigo-600/30 transition-all" 
-                                  placeholder="https://your-image-url.com/banner.png"
-                                />
+                          </div>
+                          
+                          <div className="space-y-4">
+                             <div className="h-56 w-full rounded-[2.5rem] border-8 border-white shadow-2xl bg-slate-50 overflow-hidden relative">
+                                {formData.banner ? (
+                                  <img src={formData.banner} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Banner" />
+                                ) : (
+                                  <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200" />
+                                )}
+                             </div>
+                             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                {PREDEFINED_BANNERS.map((url, i) => (
+                                   <button 
+                                     key={i} 
+                                     onClick={() => setFormData({ ...formData, banner: url })} 
+                                     className={`h-24 rounded-2xl overflow-hidden border-4 transition-all relative group/item ${formData.banner === url ? "border-indigo-600 shadow-xl scale-95" : "border-transparent opacity-60 hover:opacity-100"}`}
+                                   >
+                                     <img src={url} className="w-full h-full object-cover" alt="Banner" />
+                                     {formData.banner === url && <div className="absolute inset-0 bg-indigo-600/10 flex items-center justify-center"><Check className="w-6 h-6 text-white" /></div>}
+                                   </button>
+                                ))}
                              </div>
                           </div>
-                         <div className="h-48 w-full rounded-[2.5rem] border-8 border-white shadow-2xl bg-slate-50 overflow-hidden relative">
-                            <img src={formData.banner} className="w-full h-full object-cover" alt="Banner" />
-
-                         </div>
-                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            {PREDEFINED_BANNERS.map((url, i) => (
-                               <button 
-                                 key={i} 
-                                 onClick={() => setFormData({ ...formData, banner: url })} 
-                                 className={`h-20 rounded-2xl overflow-hidden border-4 transition-all ${formData.banner === url ? "border-indigo-600 shadow-xl" : "border-transparent opacity-60 hover:opacity-100"}`}
-                               >
-                                 <img src={url} className="w-full h-full object-cover" alt="Banner" />
-                               </button>
-                            ))}
-                         </div>
-                      </div>
-                   </Card>
+                       </div>
+                    </Card>
 
                    {/* Themes */}
                    <Card className="border-slate-100 shadow-soft rounded-[3rem] p-10">
@@ -672,42 +773,83 @@ const SettingsPage = () => {
                 </motion.div>
              )}
 
-             {/* 3. Engineering Roadmap */}
-             {activeTab === "roadmap" && (
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-12">
-                   <div className="space-y-8">
-                      <div className="flex items-center justify-between px-2">
-                        <div className="space-y-1"><h2 className="text-3xl font-black text-slate-900 tracking-tight">Creator <span className="text-indigo-600">Roadmap</span></h2><p className="text-xs font-black text-slate-400 uppercase tracking-widest">Growth Progress</p></div>
-                        <Milestone className="w-8 h-8 text-indigo-100" />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                         {ROADMAP_MILESTONES.map((ms, i) => {
-                            const isAchieved = effectiveIsAdmin || streakStatus.streak >= ms.days;
-                            return (
-                               <div key={i} className={`p-6 rounded-[2rem] border transition-all relative group ${isAchieved ? "bg-white border-indigo-100 shadow-xl" : "bg-slate-50/50 border-slate-100 opacity-60"}`}>
-                                  {isAchieved && <div className="absolute top-0 right-0 w-2 h-full bg-indigo-600" />}
-                                  <div className="space-y-4">
-                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isAchieved ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100" : "bg-slate-100 text-slate-400"}`}><ms.icon className="w-6 h-6" /></div>
-                                     <div>
-                                        <div className="flex items-center justify-between mb-1">
-                                          <p className="text-lg font-black text-slate-900 tracking-tight">{ms.days}D</p>
-                                          {isAchieved && (
-                                            <button onClick={() => setActiveTab(ms.tab)} className="text-[8px] font-black bg-indigo-50 text-indigo-600 px-2 py-1 rounded-lg uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
-                                              Use Reward
-                                            </button>
-                                          )}
-                                        </div>
-                                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">{ms.label}</p>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{isAchieved ? "Milestone Mastered" : `${ms.days - streakStatus.streak} to reach`}</p>
+                   {/* 3. Engineering Roadmap */}
+                   {activeTab === "roadmap" && (
+                      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-12">
+                         <div className="space-y-12">
+                            {/* Roadmap Progress Overview */}
+                            <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl">
+                               <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full -mr-48 -mt-48 blur-3xl" />
+                               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+                                  <div className="space-y-2 text-center md:text-left">
+                                     <h2 className="text-3xl font-black tracking-tighter uppercase">Creator <span className="text-indigo-400">Roadmap</span></h2>
+                                     <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Your progression through the community ranks</p>
+                                  </div>
+                                  <div className="flex-1 w-full max-w-md space-y-4">
+                                     <div className="flex justify-between items-end">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Streak Progress</p>
+                                        <p className="text-2xl font-black tracking-tighter">{streakStatus.streak}<span className="text-xs text-slate-500 ml-1">/ 500 DAYS</span></p>
+                                     </div>
+                                     <div className="h-4 w-full bg-white/10 rounded-full overflow-hidden p-1 border border-white/5">
+                                        <motion.div 
+                                          initial={{ width: 0 }} 
+                                          animate={{ width: `${Math.min(100, (streakStatus.streak / 500) * 100)}%` }} 
+                                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-[0_0_15px_rgba(79,70,229,0.5)]" 
+                                        />
                                      </div>
                                   </div>
-                                </div>
-                            );
-                         })}
-                      </div>
-                   </div>
-                </motion.div>
-             )}
+                               </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                               {ROADMAP_MILESTONES.map((ms, i) => {
+                                  const isAchieved = effectiveIsAdmin || streakStatus.streak >= ms.days;
+                                  return (
+                                     <div 
+                                       key={i} 
+                                       className={`group p-8 rounded-[2.5rem] border transition-all relative overflow-hidden flex flex-col justify-between min-h-[220px] ${
+                                         isAchieved 
+                                           ? "bg-white border-indigo-100 shadow-xl hover:shadow-2xl hover:-translate-y-1" 
+                                           : "bg-slate-50/50 border-slate-100 opacity-60"
+                                       }`}
+                                     >
+                                        {isAchieved && <div className="absolute top-0 right-0 w-2 h-full bg-indigo-600 group-hover:w-4 transition-all" />}
+                                        
+                                        <div className="space-y-6">
+                                           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
+                                             isAchieved 
+                                               ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100 group-hover:scale-110" 
+                                               : "bg-slate-100 text-slate-400"
+                                           }`}>
+                                             <ms.icon className="w-7 h-7" />
+                                           </div>
+                                           <div className="space-y-1">
+                                              <p className="text-2xl font-black text-slate-900 tracking-tighter leading-none">{ms.days}D</p>
+                                              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{ms.label}</p>
+                                           </div>
+                                        </div>
+
+                                        <div className="pt-6 border-t border-slate-50 mt-4">
+                                           {isAchieved ? (
+                                             <button 
+                                               onClick={() => setActiveTab(ms.tab)} 
+                                               className="w-full py-3 rounded-xl bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-md active:scale-95"
+                                             >
+                                               Configure Reward
+                                             </button>
+                                           ) : (
+                                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                               <Lock className="w-3 h-3" /> {ms.days - streakStatus.streak} Days Remaining
+                                             </p>
+                                           )}
+                                        </div>
+                                     </div>
+                                  );
+                               })}
+                            </div>
+                         </div>
+                      </motion.div>
+                   )}
 
              {/* 4. Social Links */}
              {activeTab === "links" && (

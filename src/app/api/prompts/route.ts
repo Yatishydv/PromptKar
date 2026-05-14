@@ -35,14 +35,18 @@ export async function GET(request: Request) {
     // Enrich with latest User data
     const enrichedPrompts = await Promise.all(prompts.map(async (p: any) => {
       if (p.authorId) {
-        const author = await User.findOne({ firebaseUid: p.authorId }).select('avatar name username currentStreak').lean();
+        const author = await User.findOne({ firebaseUid: p.authorId }).select('avatar name username currentStreak isGlowActive isVerifiedActive customBadge customTitle').lean();
         if (author) {
           return {
             ...p,
             authorName: author.name || p.authorName,
             authorUsername: author.username || p.authorName,
             authorAvatar: author.avatar || p.authorAvatar,
-            authorStreak: author.currentStreak || 0
+            authorStreak: author.currentStreak || 0,
+            isGlowActive: author.isGlowActive || false,
+            isVerifiedActive: author.isVerifiedActive || false,
+            customBadge: author.customBadge,
+            customTitle: author.customTitle
           };
         }
       }

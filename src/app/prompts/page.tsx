@@ -134,6 +134,10 @@ const PromptsContent = () => {
                       username={p.authorUsername} 
                       avatar={p.authorAvatar} 
                       name={p.authorName}
+                      isGlowActive={p.isGlowActive}
+                      isVerifiedActive={p.isVerifiedActive}
+                      customBadge={p.customBadge}
+                      customTitle={p.customTitle}
                       showName={true}
                       nameClassName="text-xs font-bold"
                     />

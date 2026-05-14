@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUserData = async (uid: string) => {
     try {
-      const res = await fetch(`/api/users/${uid}`);
+      const res = await fetch(`/api/users/${uid}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setUserData(data);
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               const isAdminUser = firebaseUser.email === "yatishydv@gmail.com";
               
               // 1. Check existing
-              const checkRes = await fetch(`/api/users/${firebaseUser.uid}`);
+              const checkRes = await fetch(`/api/users/${firebaseUser.uid}`, { cache: 'no-store' });
               let existingMongoData = null;
               if (checkRes.ok) {
                 existingMongoData = await checkRes.json();

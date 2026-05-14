@@ -471,6 +471,11 @@ const PromptDetailPage = () => {
                   name={promptData.authorName}
                   username={promptData.authorUsername}
                   avatar={promptData.authorAvatar}
+                  isGlowActive={promptData.authorIsGlowActive}
+                  isVerifiedActive={promptData.authorIsVerifiedActive}
+                  isAdmin={promptData.authorIsAdmin}
+                  customBadge={promptData.authorCustomBadge}
+                  customTitle={promptData.authorCustomTitle}
                   className="w-14 h-14"
                 />
                 <div>
@@ -561,7 +566,14 @@ const LikersList = ({ slug }: { slug: string }) => {
       {users.map((u: any) => (
         <Link key={u.firebaseUid} href={`/profile/${u.username}`}>
           <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/50 transition-all group">
-            <AuthorAvatar name={u.name} avatar={u.avatar} className="w-8 h-8" />
+            <AuthorAvatar 
+              name={u.name} 
+              avatar={u.avatar} 
+              isGlowActive={u.isGlowActive}
+              isVerifiedActive={u.isVerifiedActive}
+              isAdmin={u.isAdmin}
+              className="w-8 h-8" 
+            />
             <div>
               <div className="text-[11px] font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{u.name}</div>
               <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">@{u.username}</div>

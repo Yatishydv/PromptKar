@@ -356,7 +356,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Main Profile Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-20 lg:mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-32 lg:mt-16">
         {/* Sidebar Info */}
         <div className="lg:col-span-4 space-y-8">
            {/* Bio & Stats */}
@@ -368,21 +368,23 @@ export default function ProfilePage() {
                  </p>
               </div>
 
-               <div className="grid grid-cols-3 gap-2 md:gap-4 pt-4">
-                  <div className="text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Followers", userIds: profileData.followers || [] })}>
-                     <p className="text-lg md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.followers?.length || 0}</p>
-                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Followers</p>
+               <div className="flex items-center gap-2 md:gap-3 pt-4">
+                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Followers", userIds: profileData.followers || [] })}>
+                     <p className="text-base md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.followers?.length || 0}</p>
+                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Followers</p>
                   </div>
-                  <div className="text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Following", userIds: profileData.following || [] })}>
-                     <p className="text-lg md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.following?.length || 0}</p>
-                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Following</p>
+                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Following", userIds: profileData.following || [] })}>
+                     <p className="text-base md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.following?.length || 0}</p>
+                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Following</p>
                   </div>
-                  <div className="text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-white hover:shadow-sm group">
-                     <div className="flex items-center justify-center gap-1">
-                        <Flame className="w-4 h-4 md:w-5 md:h-5 text-indigo-600" />
-                        <p className="text-lg md:text-xl font-black text-indigo-600">{profileData.currentStreak || 0}</p>
+                  <div className="flex-1 text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-white hover:shadow-sm group">
+                     <div className="flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-1">
+                           <Flame className="w-3.5 h-3.5 text-indigo-600" />
+                           <p className="text-base md:text-xl font-black text-indigo-600">{profileData.currentStreak || 0}</p>
+                        </div>
+                        <p className="text-[9px] font-black uppercase tracking-tighter text-indigo-400">Streak</p>
                      </div>
-                     <p className="text-[9px] font-black uppercase tracking-widest text-indigo-400">Streak</p>
                   </div>
                </div>
 

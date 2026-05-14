@@ -265,9 +265,13 @@ function PostCard({ post, isAdmin, deleting, onDelete, large }: {
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          <span className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${catCls}`}>
-            {post.category}
-          </span>
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[80%]">
+            {(post.tags && post.tags.length > 0 ? post.tags.slice(0, 3) : [post.category]).map((tag: string) => (
+              <span key={tag} className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${cats[tag] || catCls}`}>
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="p-5 flex flex-col flex-1">

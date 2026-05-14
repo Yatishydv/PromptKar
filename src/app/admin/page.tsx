@@ -117,16 +117,16 @@ const AdminPanel = () => {
       }
 
       if (pRes.ok) {
-        const data = await pRes.json();
-        setRecentPrompts(data.data || []);
+        const data = await pRes.ok ? await pRes.json() : { data: [] };
+        setRecentPrompts(Array.isArray(data) ? data : data.data || []);
       }
       if (uRes.ok) {
         const data = await uRes.json();
-        setRecentUsers(data.data || []);
+        setRecentUsers(Array.isArray(data) ? data : data.data || []);
       }
       if (bRes.ok) {
         const data = await bRes.json();
-        setBlogPosts(data.data || []);
+        setBlogPosts(Array.isArray(data) ? data : data.data || []);
       }
 
     } catch (err) {
@@ -556,8 +556,14 @@ const AdminPanel = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-black text-sm text-slate-900 truncate">{b.title}</h4>
-                          <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
-                            <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md">{b.category}</span>
+                          <div className="flex flex-wrap gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                            {b.tags?.length > 0 ? (
+                              b.tags.slice(0, 3).map((t: string) => (
+                                <span key={t} className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md">{t}</span>
+                              ))
+                            ) : (
+                              <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md">{b.category}</span>
+                            )}
                             <span>•</span>
                             <span>{new Date(b.createdAt).toLocaleDateString()}</span>
                             <span>•</span>

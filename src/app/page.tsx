@@ -109,7 +109,7 @@ export default function Home() {
 
   useEffect(() => {
     if (rawTrending || trendingError) {
-      const data = Array.isArray(rawTrending) ? rawTrending : rawTrending?.data;
+      const data = Array.isArray(rawTrending) ? rawTrending : (rawTrending as any)?.data;
       if (Array.isArray(data)) {
         const trendingList = data.map((d: IPrompt) => {
           const meta = CATEGORY_METADATA[d.category] || DEFAULT_META;
@@ -129,7 +129,7 @@ export default function Home() {
   }, [rawTrending, trendingError]);
 
   useEffect(() => {
-    const data = Array.isArray(allPrompts) ? allPrompts : allPrompts?.data;
+    const data = Array.isArray(allPrompts) ? allPrompts : (allPrompts as any)?.data;
     if (Array.isArray(data)) {
       const counts: Record<string, number> = {};
       data.forEach((doc: IPrompt) => {

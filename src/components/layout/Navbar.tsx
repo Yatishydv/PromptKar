@@ -211,11 +211,8 @@ const Navbar = () => {
 
         {/* Brand — LEFT */}
         <div className="flex-none">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-100">
-              <Sparkles className="text-white w-4 h-4" />
-            </div>
-            <span className="text-lg font-black tracking-tight text-[#0F172A]">PromptKar</span>
+          <Link href="/" className="flex items-center">
+            <img src="/logo.png" alt="PromptKar" className="h-10 w-auto" />
           </Link>
         </div>
 
@@ -381,11 +378,8 @@ const Navbar = () => {
               className="fixed inset-y-0 left-0 w-[280px] bg-white z-[101] lg:hidden shadow-2xl flex flex-col"
             >
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <Link href="/" onClick={() => setShowMobileMenu(false)} className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                    <Sparkles className="text-white w-4.5 h-4.5" />
-                  </div>
-                  <span className="text-lg font-black tracking-tight text-[#0F172A]">PromptKar</span>
+                <Link href="/" onClick={() => setShowMobileMenu(false)} className="flex items-center">
+                  <img src="/logo.png" alt="PromptKar" className="h-8 w-auto" />
                 </Link>
                 <button onClick={() => setShowMobileMenu(false)} className="p-2 text-slate-400 hover:text-indigo-600">
                   <X className="w-5 h-5" />

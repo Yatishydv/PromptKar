@@ -22,6 +22,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PromptKar | Discover, Share & Improve AI Prompts",
   description: "The ultimate social platform for AI prompt engineering. Share your best prompts for Midjourney, ChatGPT, and more.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

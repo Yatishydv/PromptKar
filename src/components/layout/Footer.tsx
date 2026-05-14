@@ -33,11 +33,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
           {/* Brand */}
           <div className="md:col-span-4 lg:col-span-5 space-y-6">
-            <Link href="/" className="flex items-center gap-2.5 w-fit">
-              <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-                <Sparkles className="text-white w-5 h-5" />
-              </div>
-              <span className="text-2xl font-black tracking-tight text-slate-900">PromptKar</span>
+            <Link href="/" className="flex items-center">
+              <img src="/logo.png" alt="PromptKar" className="h-12 w-auto" />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed max-w-sm">
               Empowering creators and engineers to build the future with AI. Join the world's most innovative prompt engineering community.

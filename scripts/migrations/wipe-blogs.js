@@ -1,0 +1,29 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const path = require('path');
+
+// Load env vars
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+
+async function wipeBlogs() {
+  try {
+    const MONGODB_URI = process.env.MONGODB_URI;
+    if (!MONGODB_URI) throw new Error('MONGODB_URI is not defined');
+
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB');
+
+    // We can use the collection name directly to avoid schema issues in a script
+    const db = mongoose.connection.db;
+    const result = await db.collection('blogs').deleteMany({});
+    
+    console.log(`Successfully deleted ${result.deletedCount} blogs.`);
+    
+    process.exit(0);
+  } catch (err) {
+    console.error('Wipe error:', err);
+    process.exit(1);
+  }
+}
+
+wipeBlogs();

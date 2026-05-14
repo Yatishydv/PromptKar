@@ -75,7 +75,7 @@ export default function Home() {
         if (p.slug === promptSlug) {
           return {
             ...p,
-            saves: isSaved ? Math.max(0, (parseInt(p.saves.toString()) || 1) - 1) : (parseInt(p.saves.toString()) || 0) + 1,
+            bookmarks: isSaved ? Math.max(0, (parseInt(p.bookmarks.toString()) || 1) - 1) : (parseInt(p.bookmarks.toString()) || 0) + 1,
             savedBy: isSaved ? p.savedBy.filter((id: string) => id !== user.uid) : [...(p.savedBy || []), user.uid]
           };
         }

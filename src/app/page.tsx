@@ -231,7 +231,7 @@ export default function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                 {trendingPrompts.map((p) => (
-                  <Link key={p.id} href={`/prompt/${p.slug}`}>
+                  <Link key={p._id || p.slug} href={`/prompt/${p.slug}`}>
                     <div className="bg-white border border-slate-100 p-5 rounded-[1.5rem] shadow-soft hover:shadow-premium transition-all duration-300 group h-full flex flex-col relative">
                       <div className="absolute top-4 right-4 z-10">
                         <button

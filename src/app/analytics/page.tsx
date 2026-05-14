@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
           { label: "Total Likes", value: stats.totalLikes, icon: Heart, color: "text-rose-500", bg: "bg-rose-50" },
           { label: "Total Saves", value: stats.totalSaves, icon: Bookmark, color: "text-indigo-500", bg: "bg-indigo-50" },
           { label: "Engage Rate", value: stats.engagementScore, suffix: "%", icon: Zap, color: "text-orange-500", bg: "bg-orange-50" },
-        ].map((stat, i) => (
+        ].map((stat, i: number) => (
           <motion.div 
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
@@ -176,7 +176,7 @@ export default function AnalyticsPage() {
                        </div>
                        
                        <div className="flex-1 flex items-end gap-3 md:gap-5 px-4 mb-6">
-                          {[30, 45, 25, 70, 40, 85, 35, 90, 55, 100, 65, 80].map((h, i) => (
+                          {[30, 45, 25, 70, 40, 85, 35, 90, 55, 100, 65, 80].map((h, i: number) => (
                              <div key={i} className="flex-1 flex flex-col items-center gap-4">
                                 <motion.div 
                                   initial={{ height: 0 }} 
@@ -200,7 +200,7 @@ export default function AnalyticsPage() {
                           <PieChart className="w-5 h-5 text-indigo-600" />
                        </div>
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {stats.topCategories.length > 0 ? stats.topCategories.map((cat, i) => (
+                          {stats.topCategories.length > 0 ? stats.topCategories.map((cat, i: number) => (
                             <div key={cat.name} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between group">
                                <div className="flex items-center gap-4">
                                   <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-xs font-black shadow-sm group-hover:scale-110 transition-transform">

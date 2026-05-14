@@ -114,7 +114,7 @@ export default function CommunityPage() {
               <div key={i} className="h-64 bg-slate-50 rounded-3xl animate-pulse border border-slate-100" />
             ))
           ) : filteredUsers.length > 0 ? (
-            filteredUsers.map((u: any, index) => (
+            filteredUsers.map((u: any, index: number) => (
               <motion.div
                 key={u.firebaseUid}
                 layout

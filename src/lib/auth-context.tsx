@@ -131,7 +131,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await signInWithPopup(auth, provider);
       toast.success("Signed in successfully!");
     } catch (error: any) {
-      toast.error("Failed to sign in.");
+      console.error("Google Sign-in Error:", error);
+      toast.error(error.message || "Failed to sign in. Check if pop-ups are blocked.");
     }
   };
 

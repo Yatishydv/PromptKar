@@ -23,7 +23,9 @@ export const metadata: Metadata = {
   title: "PromptKar | Discover, Share & Improve AI Prompts",
   description: "The ultimate social platform for AI prompt engineering. Share your best prompts for Midjourney, ChatGPT, and more.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/faviconlogo.png",
+    shortcut: "/faviconlogo.png",
+    apple: "/faviconlogo.png",
   },
 };
 

@@ -25,7 +25,16 @@ export const metadata: Metadata = {
     default: "PromptKar | Discover, Share & Improve AI Prompts",
   },
   description: "The ultimate social platform for AI prompt engineering. Discover, share, and improve your best prompts for ChatGPT, Midjourney, Claude, and more.",
-  keywords: ["AI prompts", "prompt engineering", "ChatGPT prompts", "Midjourney prompts", "AI community", "PromptKar", "share prompts"],
+  keywords: [
+    "prompt engineering",
+    "ai prompt engineering",
+    "ai prompts",
+    "prompt generator",
+    "best ai prompts",
+    "prompt engineering course",
+    "ai image generator prompts",
+    "ai writing prompts"
+  ],
   authors: [{ name: "PromptKar Team" }],
   creator: "PromptKar",
   publisher: "PromptKar",

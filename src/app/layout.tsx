@@ -20,8 +20,53 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PromptKar | Discover, Share & Improve AI Prompts",
-  description: "The ultimate social platform for AI prompt engineering. Share your best prompts for Midjourney, ChatGPT, and more.",
+  title: {
+    template: "%s | PromptKar",
+    default: "PromptKar | Discover, Share & Improve AI Prompts",
+  },
+  description: "The ultimate social platform for AI prompt engineering. Discover, share, and improve your best prompts for ChatGPT, Midjourney, Claude, and more.",
+  keywords: ["AI prompts", "prompt engineering", "ChatGPT prompts", "Midjourney prompts", "AI community", "PromptKar", "share prompts"],
+  authors: [{ name: "PromptKar Team" }],
+  creator: "PromptKar",
+  publisher: "PromptKar",
+  metadataBase: new URL("https://promptkar.site"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "PromptKar | Discover, Share & Improve AI Prompts",
+    description: "Join the ultimate community for AI prompt engineering. Share and discover the best prompts for AI models.",
+    url: "https://promptkar.site",
+    siteName: "PromptKar",
+    images: [
+      {
+        url: "/og-image.png", // Recommended: Create this image in public/
+        width: 1200,
+        height: 630,
+        alt: "PromptKar - AI Prompt Engineering Community",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PromptKar | Discover, Share & Improve AI Prompts",
+    description: "Join the ultimate community for AI prompt engineering. Share and discover the best prompts for AI models.",
+    images: ["/og-image.png"],
+    creator: "@promptkar",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: "/faviconlogo.png",
     shortcut: "/faviconlogo.png",

@@ -121,7 +121,7 @@ export const NotificationDropdown = () => {
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 top-full mt-2 w-[340px] bg-card border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute -right-2 sm:right-0 top-full mt-2 w-[300px] sm:w-[340px] bg-card border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-50">
             <div className="flex items-center gap-2">
               <h3 className="font-black text-sm text-slate-900">Notifications</h3>

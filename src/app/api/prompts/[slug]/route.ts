@@ -173,11 +173,28 @@ export async function DELETE(
   try {
     await dbConnect();
     const { slug } = await params;
-    const prompt = await Prompt.findOneAndDelete({ slug });
+    const prompt = await Prompt.findOne({ slug });
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt not found" }, { status: 404 });
     }
+
+    const likesCount = prompt.likes || 0;
+    const authorId = prompt.authorId;
+
+    // Delete the prompt
+    await Prompt.deleteOne({ slug });
+
+    // Subtract the deleted prompt's likes from the author's totalLikes
+    if (authorId && likesCount > 0) {
+      await User.findOneAndUpdate(
+        { firebaseUid: authorId },
+        { $inc: { totalLikes: -likesCount } }
+      );
+    }
+
+    // Clean up notifications related to this prompt
+    await Notification.deleteMany({ targetId: slug });
 
     return NextResponse.json({ message: "Prompt deleted successfully" });
   } catch (error: any) {

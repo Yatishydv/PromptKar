@@ -42,7 +42,7 @@ const LoginPage = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl shadow-xl shadow-indigo-100 mb-6">
             <Sparkles className="text-white w-8 h-8" />
           </div>
-          <h2 className="text-3xl font-black text-[#0F172A] tracking-tight">Welcome Back</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Welcome Back</h2>
           <p className="mt-2 text-sm text-slate-500 font-medium">
             Sign in to your account to continue
           </p>
@@ -61,7 +61,7 @@ const LoginPage = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="Email address"
                   />
                 </div>
@@ -74,7 +74,7 @@ const LoginPage = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="Password"
                   />
                 </div>
@@ -115,7 +115,7 @@ const LoginPage = () => {
                 <div className="w-full border-t border-slate-100"></div>
               </div>
               <div className="relative flex justify-center text-[11px] uppercase tracking-wider font-bold">
-                <span className="px-3 bg-white text-slate-400">Or continue with</span>
+                <span className="px-3 bg-card text-slate-400">Or continue with</span>
               </div>
             </div>
 

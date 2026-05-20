@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
 import confetti from 'canvas-confetti';
+import { useThemePreview } from "@/lib/theme-preview-context";
 
 // ── Configuration ──────────────────────────────────────────────────
 const AVATAR_SECTIONS = [
@@ -68,6 +69,12 @@ const ROADMAP_MILESTONES = [
 const SettingsPage = () => {
   const router = useRouter();
   const { user, userData, isAdmin, refreshUserData, loading: authLoading } = useAuth();
+  const { setPreviewTheme } = useThemePreview();
+
+  // Clear preview theme when leaving settings page
+  useEffect(() => {
+    return () => setPreviewTheme(null);
+  }, [setPreviewTheme]);
   
   const [simStreak, setSimStreak] = useState<number | null>(null);
   const [simRegularUser, setSimRegularUser] = useState(false);
@@ -254,6 +261,7 @@ const SettingsPage = () => {
       });
       if (res.ok) {
         toast.success("Profile Studio Synchronized!");
+        setPreviewTheme(null); // Clear preview — saved theme is now the real one
         await refreshUserData();
         confetti({
           particleCount: 150,
@@ -306,7 +314,7 @@ const SettingsPage = () => {
       <div className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-             <button onClick={() => router.back()} className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+             <button onClick={() => router.back()} className="w-10 h-10 rounded-xl bg-card border border-slate-100 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
                <ArrowLeft className="w-5 h-5" />
              </button>
              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Identity Hub / Settings</span>
@@ -317,7 +325,7 @@ const SettingsPage = () => {
           </div>
         </div>
         
-        <div className="flex items-center gap-4 bg-white p-2 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+        <div className="flex items-center gap-4 bg-card p-2 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
           <button 
             onClick={() => {
               const text = `Check out my Identity Vault on PromptKar! I'm on a ${streakStatus.streak} day streak.`;
@@ -354,7 +362,7 @@ const SettingsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Sidebar Nav */}
         <aside className="lg:col-span-3 space-y-8">
-          <div className="bg-white border border-slate-100 rounded-[3rem] p-3 shadow-soft space-y-1">
+          <div className="bg-card border border-slate-100 rounded-[3rem] p-3 shadow-soft space-y-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -374,7 +382,7 @@ const SettingsPage = () => {
           </div>
 
           {/* Profile Preview Card */}
-          <div className="bg-white border border-slate-100 rounded-[3rem] p-6 shadow-soft space-y-6">
+          <div className="bg-card border border-slate-100 rounded-[3rem] p-6 shadow-soft space-y-6">
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Live Identity Preview</p>
              <div className="space-y-4">
                 <div className="relative h-24 w-full rounded-2xl overflow-hidden bg-slate-50">
@@ -390,7 +398,7 @@ const SettingsPage = () => {
                      avatar={formData.avatar} 
                      name={formData.name} 
                      username={formData.username}
-                     className="w-20 h-20 border-4 border-white shadow-xl" 
+                     className="w-20 h-20 border-4 border-card shadow-xl" 
                      isGlowActive={formData.isGlowActive}
                      isVerifiedActive={formData.isVerifiedActive}
                      isAdmin={effectiveIsAdmin}
@@ -430,12 +438,12 @@ const SettingsPage = () => {
                               });
                             }
                           }} 
-                          className={`p-2 rounded-xl text-[9px] font-black border ${simStreak === d ? "bg-indigo-600 border-indigo-500" : "bg-white/5 border-white/10 text-slate-400"}`}
+                          className={`p-2 rounded-xl text-[9px] font-black border ${simStreak === d ? "bg-indigo-600 border-indigo-500" : "bg-card/5 border-white/10 text-slate-400"}`}
                         >
                           {d}D
                         </button>
                       ))}
-                      <button onClick={() => setSimStreak(null)} className="col-span-2 p-2 rounded-xl text-[8px] font-black bg-white/5 border border-white/10 text-slate-400 uppercase tracking-widest">Reset Simulation</button>
+                      <button onClick={() => setSimStreak(null)} className="col-span-2 p-2 rounded-xl text-[8px] font-black bg-card/5 border border-white/10 text-slate-400 uppercase tracking-widest">Reset Simulation</button>
                    </div>
                </div>
             </div>
@@ -498,7 +506,7 @@ const SettingsPage = () => {
 
                    {/* Featured Prompt Selection */}
                    {(effectiveIsAdmin || streakStatus.streak >= 90) && (
-                     <Card className="border-indigo-100 bg-white shadow-soft rounded-[3rem] p-10">
+                     <Card className="border-indigo-100 bg-card shadow-soft rounded-[3rem] p-10">
                         <div className="space-y-6">
                            <div className="flex items-center justify-between">
                               <div className="space-y-1">
@@ -537,7 +545,7 @@ const SettingsPage = () => {
                            <button 
                              onClick={() => setFormData({ ...formData, isVerifiedActive: !formData.isVerifiedActive })}
                              className={`px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                               formData.isVerifiedActive ? "bg-emerald-600 text-white shadow-xl shadow-emerald-100" : "bg-white border border-emerald-200 text-emerald-600 hover:bg-emerald-50"
+                               formData.isVerifiedActive ? "bg-emerald-600 text-white shadow-xl shadow-emerald-100" : "bg-card border border-emerald-200 text-emerald-600 hover:bg-emerald-50"
                              }`}
                            >
                               {formData.isVerifiedActive ? "Verified" : "Initiate Verification"}
@@ -565,7 +573,7 @@ const SettingsPage = () => {
                            <button 
                              onClick={() => setFormData({ ...formData, isGlowActive: !formData.isGlowActive })}
                              className={`px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                               formData.isGlowActive ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100" : "bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                               formData.isGlowActive ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100" : "bg-card border border-indigo-200 text-indigo-600 hover:bg-indigo-50"
                              }`}
                            >
                               {formData.isGlowActive ? "Glow Active" : "Ignite Aura"}
@@ -653,7 +661,7 @@ const SettingsPage = () => {
                             <div className="relative h-[550px] overflow-y-auto pr-4 custom-scrollbar">
                                <AnimatePresence mode="wait">
                                   {sectionLoading ? (
-                                     <motion.div key="loader" className="absolute inset-0 z-20 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center gap-4"><Loader2 className="w-8 h-8 text-indigo-600 animate-spin" /><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Calibrating sets...</p></motion.div>
+                                     <motion.div key="loader" className="absolute inset-0 z-20 bg-card/60 backdrop-blur-sm flex flex-col items-center justify-center gap-4"><Loader2 className="w-8 h-8 text-indigo-600 animate-spin" /><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Calibrating sets...</p></motion.div>
                                   ) : (
                                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-3 md:grid-cols-5 gap-4">
                                         {Array.from({ length: 30 }).map((_, i) => {
@@ -698,7 +706,7 @@ const SettingsPage = () => {
                                     <button 
                                       onClick={() => bannerInputRef.current?.click()} 
                                       disabled={uploadingBanner}
-                                      className="h-11 px-6 rounded-xl bg-white border border-slate-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-sm flex items-center gap-2"
+                                      className="h-11 px-6 rounded-xl bg-card border border-slate-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-sm flex items-center gap-2"
                                     >
                                       {uploadingBanner ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
                                       {uploadingBanner ? "Processing..." : "Custom Header"}
@@ -709,7 +717,7 @@ const SettingsPage = () => {
                           </div>
                           
                           <div className="space-y-4">
-                             <div className="h-56 w-full rounded-[2.5rem] border-8 border-white shadow-2xl bg-slate-50 overflow-hidden relative">
+                             <div className="h-56 w-full rounded-[2.5rem] border-8 border-card shadow-2xl bg-slate-50 overflow-hidden relative">
                                 {formData.banner ? (
                                   <img src={formData.banner} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Banner" />
                                 ) : (
@@ -732,46 +740,137 @@ const SettingsPage = () => {
                        </div>
                     </Card>
 
-                   {/* Themes */}
+                    {/* Themes */}
                    <Card className="border-slate-100 shadow-soft rounded-[3rem] p-10">
-                      <div className="space-y-10">
-                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                            <div className="space-y-1"><h4 className="text-xl font-black text-slate-900 tracking-tight">Platform Theme Studio</h4><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global platform skins</p></div>
-                            <span className={`text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest ${streakStatus.streak >= 180 || effectiveIsAdmin ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-slate-50 text-slate-400 border border-slate-100"}`}>{streakStatus.streak >= 180 || effectiveIsAdmin ? "Milestone Unlocked" : "Locked: 180D Streak"}</span>
-                         </div>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {[
-                              { id: "Standard", name: "Standard", color: "bg-slate-900" },
-                              { id: "Cyber", name: "Cyber-Luxe", color: "bg-indigo-600" },
-                              { id: "Midnight", name: "Midnight", color: "bg-purple-900" },
-                              { id: "Matrix", name: "Emerald", color: "bg-emerald-600" }
-                            ].map((t) => {
-                               const isThemeLocked = !effectiveIsAdmin && streakStatus.streak < 180 && t.id !== "Standard";
-                               return (
-                                 <button 
-                                   key={t.id} 
-                                   disabled={isThemeLocked} 
-                                   onClick={() => setFormData({ ...formData, selectedTheme: t.id })} 
-                                   className={`p-6 rounded-[2rem] border-4 transition-all relative group text-left ${isThemeLocked ? "opacity-40 cursor-not-allowed bg-slate-50 border-transparent" : formData.selectedTheme === t.id ? "border-indigo-600 bg-white shadow-xl scale-105" : "border-transparent bg-white shadow-soft hover:bg-slate-50"}`}
-                                 >
-                                   <div className="space-y-4">
-                                     <div className={`w-12 h-12 rounded-2xl ${t.color} flex items-center justify-center text-white shadow-lg`}>
-                                       {isThemeLocked ? <Lock className="w-5 h-5" /> : <PaletteIcon className="w-5 h-5" />}
-                                     </div>
-                                     <div>
-                                       <p className="text-[11px] font-black uppercase tracking-widest text-slate-900">{t.name}</p>
-                                       <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{isThemeLocked ? "Restricted" : "Active"}</p>
-                                     </div>
-                                   </div>
-                                   {formData.selectedTheme === t.id && !isThemeLocked && <div className="absolute top-4 right-4 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white"><Check className="w-3.5 h-3.5" /></div>}
-                                 </button>
-                               );
-                            })}
-                         </div>
-                      </div>
-                   </Card>
+                       <div className="space-y-10">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                             <div className="space-y-1"><h4 className="text-xl font-black text-slate-900 tracking-tight">Platform Theme Studio</h4><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Customize your dashboard experience</p></div>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                             {[
+                               { 
+                                 id: "Standard", name: "Clean Slate", 
+                                 desc: "Minimal and elegant light interface",
+                                 streakRequired: 0,
+                                 preview: { bg: "#f8fafc", sidebar: "#ffffff", accent: "#4f46e5", text: "#0f172a", card: "#ffffff", border: "#e2e8f0", secondaryText: "#94a3b8" }
+                               },
+                               { 
+                                 id: "Cyber", name: "Cyber-Luxe", 
+                                 desc: "Vibrant indigo-powered interface",
+                                 streakRequired: 0,
+                                 preview: { bg: "#eef2ff", sidebar: "#4f46e5", accent: "#6366f1", text: "#1e1b4b", card: "#ffffff", border: "#c7d2fe", secondaryText: "#6366f1" }
+                               },
+                               { 
+                                 id: "Midnight", name: "Midnight Pro", 
+                                 desc: "Deep dark mode for focused work",
+                                 streakRequired: 90,
+                                 preview: { bg: "#0f172a", sidebar: "#1e293b", accent: "#a78bfa", text: "#f1f5f9", card: "#1e293b", border: "#334155", secondaryText: "#94a3b8" }
+                               },
+                               { 
+                                 id: "Matrix", name: "Emerald Core", 
+                                 desc: "Nature-inspired dark elegance",
+                                 streakRequired: 180,
+                                 preview: { bg: "#022c22", sidebar: "#064e3b", accent: "#34d399", text: "#ecfdf5", card: "#064e3b", border: "#065f46", secondaryText: "#6ee7b7" }
+                               }
+                             ].map((t) => {
+                                const isThemeLocked = !effectiveIsAdmin && streakStatus.streak < t.streakRequired;
+                                const isSelected = formData.selectedTheme === t.id;
+                                return (
+                                  <button 
+                                    key={t.id} 
+                                    disabled={isThemeLocked} 
+                                    onClick={() => { setFormData({ ...formData, selectedTheme: t.id }); setPreviewTheme(t.id); }} 
+                                    className={`relative rounded-[2rem] border-4 transition-all text-left overflow-hidden group ${
+                                      isThemeLocked 
+                                        ? "opacity-50 cursor-not-allowed border-slate-200 bg-slate-50" 
+                                        : isSelected 
+                                          ? "border-indigo-600 shadow-2xl shadow-indigo-100 scale-[1.02]" 
+                                          : "border-slate-100 hover:border-slate-200 hover:shadow-lg bg-card"
+                                    }`}
+                                  >
+                                    {/* Theme Preview Mockup */}
+                                    <div className="p-4 pb-0">
+                                      <div 
+                                        className="w-full h-36 rounded-xl overflow-hidden border shadow-inner"
+                                        style={{ borderColor: t.preview.border, backgroundColor: t.preview.bg }}
+                                      >
+                                        <div className="flex h-full">
+                                          {/* Mini sidebar */}
+                                          <div className="w-10 h-full flex flex-col items-center pt-3 gap-2" style={{ backgroundColor: t.preview.sidebar }}>
+                                            <div className="w-5 h-5 rounded-md" style={{ backgroundColor: t.preview.accent, opacity: 0.8 }} />
+                                            <div className="w-4 h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.3 }} />
+                                            <div className="w-4 h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.3 }} />
+                                            <div className="w-4 h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.3 }} />
+                                          </div>
+                                          {/* Mini content area */}
+                                          <div className="flex-1 p-3 space-y-2">
+                                            <div className="flex items-center justify-between mb-2">
+                                              <div className="w-12 h-2 rounded-full" style={{ backgroundColor: t.preview.text, opacity: 0.6 }} />
+                                              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: t.preview.accent, opacity: 0.5 }} />
+                                            </div>
+                                            <div className="flex gap-1.5">
+                                              <div className="flex-1 h-14 rounded-lg p-2 space-y-1.5" style={{ backgroundColor: t.preview.card, borderWidth: 1, borderColor: t.preview.border }}>
+                                                <div className="w-8 h-1.5 rounded-full" style={{ backgroundColor: t.preview.accent, opacity: 0.7 }} />
+                                                <div className="w-full h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.3 }} />
+                                                <div className="w-3/4 h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.2 }} />
+                                              </div>
+                                              <div className="flex-1 h-14 rounded-lg p-2 space-y-1.5" style={{ backgroundColor: t.preview.card, borderWidth: 1, borderColor: t.preview.border }}>
+                                                <div className="w-6 h-1.5 rounded-full" style={{ backgroundColor: t.preview.accent, opacity: 0.7 }} />
+                                                <div className="w-full h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.3 }} />
+                                                <div className="w-2/3 h-1 rounded-full" style={{ backgroundColor: t.preview.secondaryText, opacity: 0.2 }} />
+                                              </div>
+                                            </div>
+                                            <div className="flex gap-1">
+                                              <div className="flex-1 h-6 rounded-md" style={{ backgroundColor: t.preview.accent, opacity: 0.15 }} />
+                                              <div className="flex-1 h-6 rounded-md" style={{ backgroundColor: t.preview.accent, opacity: 0.1 }} />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Theme Info */}
+                                    <div className="p-5 space-y-3">
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                          <div 
+                                            className="w-8 h-8 rounded-xl flex items-center justify-center shadow-md"
+                                            style={{ backgroundColor: t.preview.accent }}
+                                          >
+                                            {isThemeLocked ? <Lock className="w-4 h-4 text-white" /> : <PaletteIcon className="w-4 h-4 text-white" />}
+                                          </div>
+                                          <div>
+                                            <p className="text-[12px] font-black text-slate-900">{t.name}</p>
+                                            <p className="text-[10px] font-bold text-slate-400">{t.desc}</p>
+                                          </div>
+                                        </div>
+                                        {isSelected && !isThemeLocked && (
+                                          <div className="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-card">
+                                            <Check className="w-3.5 h-3.5" />
+                                          </div>
+                                        )}
+                                      </div>
+                                      {isThemeLocked && (
+                                        <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 rounded-xl p-2.5">
+                                          <Lock className="w-3 h-3" />
+                                          <span>Unlock at {t.streakRequired} Day Streak</span>
+                                        </div>
+                                      )}
+                                      {!isThemeLocked && t.streakRequired > 0 && (
+                                        <div className="flex items-center gap-2 text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 rounded-xl p-2.5">
+                                          <Flame className="w-3 h-3" />
+                                          <span>Unlocked — {t.streakRequired}D Milestone</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </button>
+                                );
+                             })}
+                          </div>
+                       </div>
+                    </Card>
                 </motion.div>
-             )}
+              )}
 
                    {/* 3. Engineering Roadmap */}
                    {activeTab === "roadmap" && (
@@ -790,7 +889,7 @@ const SettingsPage = () => {
                                         <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Streak Progress</p>
                                         <p className="text-2xl font-black tracking-tighter">{streakStatus.streak}<span className="text-xs text-slate-500 ml-1">/ 500 DAYS</span></p>
                                      </div>
-                                     <div className="h-4 w-full bg-white/10 rounded-full overflow-hidden p-1 border border-white/5">
+                                     <div className="h-4 w-full bg-card/10 rounded-full overflow-hidden p-1 border border-white/5">
                                         <motion.div 
                                           initial={{ width: 0 }} 
                                           animate={{ width: `${Math.min(100, (streakStatus.streak / 500) * 100)}%` }} 
@@ -809,7 +908,7 @@ const SettingsPage = () => {
                                        key={i} 
                                        className={`group p-8 rounded-[2.5rem] border transition-all relative overflow-hidden flex flex-col justify-between min-h-[220px] ${
                                          isAchieved 
-                                           ? "bg-white border-indigo-100 shadow-xl hover:shadow-2xl hover:-translate-y-1" 
+                                           ? "bg-card border-indigo-100 shadow-xl hover:shadow-2xl hover:-translate-y-1" 
                                            : "bg-slate-50/50 border-slate-100 opacity-60"
                                        }`}
                                      >

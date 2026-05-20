@@ -67,7 +67,7 @@ export const AuthorAvatar = ({
       className={`flex items-center gap-2 ${username ? "cursor-pointer group/avatar" : ""}`}
       onClick={handleClick}
     >
-      <div className={`relative ${className} rounded-full border border-slate-200/50 bg-white transition-all z-10 ${username ? "group-hover/avatar:border-indigo-600" : ""} ${showGlow ? "ring-4 ring-indigo-600/40 premium-glow-indigo" : ""}`}>
+      <div className={`relative ${className} rounded-full border border-slate-200/50 bg-card transition-all z-10 ${username ? "group-hover/avatar:border-indigo-600" : ""} ${showGlow ? "ring-4 ring-indigo-600/40 premium-glow-indigo" : ""}`}>
         <div className="w-full h-full rounded-full overflow-hidden">
           {hasAvatar ? (
             <img 
@@ -85,14 +85,14 @@ export const AuthorAvatar = ({
         </div>
         {/* Identity Badge Overlays */}
         {showVerified && (
-          <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm z-20">
+          <div className="absolute -bottom-1 -right-1 bg-card rounded-full p-0.5 shadow-sm z-20">
             <div className="bg-indigo-600 rounded-full p-0.5">
               <ShieldCheck className="w-2.5 h-2.5 text-white" />
             </div>
           </div>
         )}
         {!showVerified && (isAdmin || streak >= 7) && (
-          <div className="absolute -bottom-1 -right-1 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm z-20 text-[10px]">
+          <div className="absolute -bottom-1 -right-1 bg-card rounded-full w-5 h-5 flex items-center justify-center shadow-sm z-20 text-[10px]">
             {getRankBadge(streak, isAdmin, customBadge)}
           </div>
         )}

@@ -392,7 +392,7 @@ const BlogPostPage = () => {
             
             <div className="absolute bottom-12 left-12 right-12 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
               <div className="space-y-4 max-w-2xl">
-                <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md border border-white/10 ${categoryColors[post.category] || "bg-white/20 text-white"}`}>
+                <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl backdrop-blur-md border border-white/10 ${categoryColors[post.category] || "bg-card/20 text-white"}`}>
                   {post.category}
                 </span>
                 <h1 className="text-4xl md:text-6xl font-[1000] text-white tracking-[-0.04em] leading-[0.9] drop-shadow-2xl">
@@ -445,17 +445,17 @@ const BlogPostPage = () => {
 
           {/* Reactions */}
           <div className="flex items-center gap-4 mt-8 p-5 bg-slate-50 rounded-2xl border border-slate-100">
-            <button onClick={handleLike} disabled={liking} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all ${liked ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-white text-slate-500 border border-slate-200 hover:border-rose-100 hover:text-rose-500"} ${liking ? "opacity-50 cursor-not-allowed" : ""}`}>
+            <button onClick={handleLike} disabled={liking} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all ${liked ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-card text-slate-500 border border-slate-200 hover:border-rose-100 hover:text-rose-500"} ${liking ? "opacity-50 cursor-not-allowed" : ""}`}>
               <Heart className={`w-4 h-4 ${liked ? "fill-rose-500" : ""}`} /> {likeCount}
             </button>
-            <button onClick={handleSave} disabled={saving} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all ${saved ? "bg-indigo-50 text-indigo-600 border border-indigo-100" : "bg-white text-slate-500 border border-slate-200 hover:border-indigo-100 hover:text-indigo-600"} ${saving ? "opacity-50 cursor-not-allowed" : ""}`}>
+            <button onClick={handleSave} disabled={saving} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-sm transition-all ${saved ? "bg-indigo-50 text-indigo-600 border border-indigo-100" : "bg-card text-slate-500 border border-slate-200 hover:border-indigo-100 hover:text-indigo-600"} ${saving ? "opacity-50 cursor-not-allowed" : ""}`}>
               <Bookmark className={`w-4 h-4 ${saved ? "fill-indigo-600" : ""}`} /> {saved ? "Saved" : "Save"}
             </button>
             <div className="ml-auto flex items-center gap-2">
-              <button onClick={() => handleShare("twitter")} className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-sky-500 hover:border-sky-100 transition-all">
+              <button onClick={() => handleShare("twitter")} className="w-9 h-9 rounded-xl bg-card border border-slate-200 flex items-center justify-center text-slate-400 hover:text-sky-500 hover:border-sky-100 transition-all">
                 <span className="font-black text-sm">𝕏</span>
               </button>
-              <button onClick={() => handleShare()} className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all">
+              <button onClick={() => handleShare()} className="w-9 h-9 rounded-xl bg-card border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all">
                 <Link2 className="w-4 h-4" />
               </button>
             </div>
@@ -470,7 +470,7 @@ const BlogPostPage = () => {
 
             {/* Post Comment */}
             {user ? (
-              <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="bg-card border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
                  <div className="flex items-center gap-3">
                     <AuthorAvatar 
                       name={userData?.name || user.displayName || "User"}
@@ -499,7 +499,7 @@ const BlogPostPage = () => {
             ) : (
               <div className="bg-slate-50 border border-dashed border-slate-200 rounded-3xl p-8 text-center">
                  <p className="text-sm font-bold text-slate-500 mb-4">Sign in to join the conversation</p>
-                 <button onClick={() => router.push("/login")} className="px-6 py-2.5 bg-white border border-slate-200 text-slate-900 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-colors">Sign In</button>
+                 <button onClick={() => router.push("/login")} className="px-6 py-2.5 bg-card border border-slate-200 text-slate-900 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-colors">Sign In</button>
               </div>
             )}
 
@@ -543,7 +543,7 @@ const BlogPostPage = () => {
         {/* Sidebar */}
         <aside className="space-y-6">
           {related.length > 0 && (
-            <div className="bg-white border border-slate-100 rounded-2xl p-5">
+            <div className="bg-card border border-slate-100 rounded-2xl p-5">
               <h3 className="font-black text-sm text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Related
               </h3>
@@ -565,7 +565,7 @@ const BlogPostPage = () => {
             <Sparkles className="w-8 h-8 mx-auto opacity-80" />
             <p className="font-black text-sm">Try these prompts now</p>
             <p className="text-xs text-white/70">Browse our community library of AI prompts.</p>
-            <Link href="/prompts" className="block mt-2 bg-white text-indigo-600 text-xs font-black uppercase tracking-widest px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
+            <Link href="/prompts" className="block mt-2 bg-card text-indigo-600 text-xs font-black uppercase tracking-widest px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-colors">
               Browse Prompts
             </Link>
           </div>

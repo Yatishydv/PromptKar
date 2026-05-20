@@ -166,7 +166,7 @@ const FAQPage = () => {
             placeholder="Search questions..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-200 transition-all text-sm font-medium shadow-sm"
+            className="w-full bg-card border border-slate-200 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-50 focus:border-indigo-200 transition-all text-sm font-medium shadow-sm"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 text-xs font-black">✕</button>
@@ -179,7 +179,7 @@ const FAQPage = () => {
         <button
           onClick={() => setActiveCategory("All")}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border transition-all ${
-            activeCategory === "All" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
+            activeCategory === "All" ? "bg-indigo-600 text-white border-indigo-600" : "bg-card text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
           }`}
         >
           All ({ALL_QUESTIONS.length})
@@ -189,7 +189,7 @@ const FAQPage = () => {
             key={cat.category}
             onClick={() => setActiveCategory(cat.category)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border transition-all ${
-              activeCategory === cat.category ? `${cat.bg} ${cat.color} border-current` : "bg-white text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
+              activeCategory === cat.category ? `${cat.bg} ${cat.color} border-current` : "bg-card text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
             }`}
           >
             <cat.icon className="w-3 h-3" />
@@ -245,7 +245,7 @@ const FAQPage = () => {
                   return (
                     <div
                       key={key}
-                      className={`bg-white border rounded-2xl overflow-hidden transition-all ${isOpen ? "border-indigo-200 shadow-md shadow-indigo-50" : "border-slate-100 hover:border-slate-200"}`}
+                      className={`bg-card border rounded-2xl overflow-hidden transition-all ${isOpen ? "border-indigo-200 shadow-md shadow-indigo-50" : "border-slate-100 hover:border-slate-200"}`}
                     >
                       <button
                         onClick={() => setOpenKey(isOpen ? null : key)}
@@ -274,7 +274,7 @@ const FAQPage = () => {
 
       {/* Still need help */}
       <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border border-indigo-100 rounded-3xl p-10 text-center space-y-5">
-        <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-card shadow-md flex items-center justify-center mx-auto">
           <MessageCircle className="w-7 h-7 text-indigo-600" />
         </div>
         <div className="space-y-2">
@@ -282,7 +282,7 @@ const FAQPage = () => {
           <p className="text-slate-500 text-sm max-w-sm mx-auto">Can't find what you're looking for? Browse our blog for guides or explore the prompts yourself.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/blog" className="flex items-center gap-2 justify-center bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-xl text-sm font-black hover:border-indigo-200 hover:text-indigo-600 transition-all">
+          <Link href="/blog" className="flex items-center gap-2 justify-center bg-card border border-slate-200 text-slate-700 px-6 py-3 rounded-xl text-sm font-black hover:border-indigo-200 hover:text-indigo-600 transition-all">
             <BookOpen className="w-4 h-4" /> Browse Blog
           </Link>
           <Link href="/prompts" className="flex items-center gap-2 justify-center bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-black hover:bg-indigo-700 transition-colors">

@@ -18,14 +18,14 @@ import { fetcher } from "@/lib/api-client";
 import { IPrompt, IBlog } from "@/types";
 
 const CATEGORY_METADATA: Record<string, any> = {
-  "Blog Writing": { icon: Layout, color: "bg-[#F0FDF4] text-emerald-600" },
-  "Social Media": { icon: MessageSquare, color: "bg-[#FDF2F8] text-pink-600" },
-  "Copywriting": { icon: LayoutGrid, color: "bg-[#FFF7ED] text-orange-600" },
-  "Marketing": { icon: Zap, color: "bg-[#F5F3FF] text-indigo-600" },
-  "Midjourney": { icon: Box, color: "bg-[#EFF6FF] text-blue-600" },
-  "Design": { icon: Palette, color: "bg-[#F5F3FF] text-purple-600" },
+  "Blog Writing": { icon: Layout, color: "bg-emerald-50 text-emerald-600" },
+  "Social Media": { icon: MessageSquare, color: "bg-rose-50 text-pink-600" },
+  "Copywriting": { icon: LayoutGrid, color: "bg-orange-50 text-orange-600" },
+  "Marketing": { icon: Zap, color: "bg-indigo-50 text-indigo-600" },
+  "Midjourney": { icon: Box, color: "bg-indigo-50 text-blue-600" },
+  "Design": { icon: Palette, color: "bg-indigo-50 text-purple-600" },
   "Development": { icon: Code, color: "bg-slate-50 text-slate-600" },
-  "Photography": { icon: Camera, color: "bg-red-50 text-red-600" },
+  "Photography": { icon: Camera, color: "bg-rose-50 text-red-600" },
 };
 
 const DEFAULT_META = { icon: Sparkles, color: "bg-slate-50 text-slate-400" };
@@ -161,7 +161,7 @@ export default function Home() {
       <div className="flex-1 space-y-10">
 
         {/* Hero */}
-        <section className="relative overflow-hidden rounded-[2rem] bg-[#EEF2FF] px-8 py-10 md:px-12 md:py-16 border border-white shadow-sm">
+        <section className="relative overflow-hidden rounded-[2rem] bg-indigo-50 px-8 py-10 md:px-12 md:py-16 border border-slate-100 shadow-sm">
           <div className="relative z-10 max-w-md space-y-6">
             <div className="space-y-2">
               <h4 className="text-[15px] font-extrabold text-slate-800 tracking-tight">Find. Share. Improve.</h4>
@@ -180,7 +180,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/enhance">
-                <Button className="h-10.5 px-6 rounded-xl text-[12.5px] font-black bg-white text-slate-900 border border-slate-100 hover:bg-slate-50 shadow-sm">
+                <Button className="h-10.5 px-6 rounded-xl text-[12.5px] font-black bg-card text-slate-900 border border-slate-100 hover:bg-slate-50 shadow-sm">
                   Improve with AI <Sparkles className="ml-2 w-3.5 h-3.5 text-indigo-600" />
                 </Button>
               </Link>
@@ -194,7 +194,7 @@ export default function Home() {
                     userId={`hero-user-${i}`}
                     name={`User ${i}`}
                     avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=hero${i}&backgroundColor=b6e3f4,c0aede,d1d4f9`}
-                    className="w-8 h-8 border-[2.5px] border-white"
+                    className="w-8 h-8 border-[2.5px] border-slate-50"
                   />
                 ))}
               </div>
@@ -234,7 +234,7 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                 {trendingPrompts.map((p) => (
                   <Link key={p._id || p.slug} href={`/prompt/${p.slug}`}>
-                    <div className="bg-white border border-slate-100 p-5 rounded-[1.5rem] shadow-soft hover:shadow-premium transition-all duration-300 group h-full flex flex-col relative">
+                    <div className="bg-card border border-slate-100 p-5 rounded-[1.5rem] shadow-soft hover:shadow-premium transition-all duration-300 group h-full flex flex-col relative">
                       <div className="absolute top-4 right-4 z-10">
                         <button
                           onClick={(e) => handleSave(e, p.slug, p.savedBy?.includes(user?.uid || ""))}
@@ -298,7 +298,7 @@ export default function Home() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
                 {categories.map((c) => (
                   <Link key={c.name} href={`/categories/${c.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                    <div className="bg-white border border-slate-100 p-6 rounded-[1.5rem] flex flex-col items-center text-center shadow-soft hover:bg-indigo-50/20 cursor-pointer group transition-all duration-300 h-full">
+                    <div className="bg-card border border-slate-100 p-6 rounded-[1.5rem] flex flex-col items-center text-center shadow-soft hover:bg-indigo-50/20 cursor-pointer group transition-all duration-300 h-full">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 shadow-sm ${c.color}`}>
                         <c.icon className="w-6 h-6" />
                       </div>
@@ -327,14 +327,14 @@ export default function Home() {
             ) : Array.isArray(liveBlogs) && liveBlogs.length > 0 ? (
                liveBlogs.map((b: IBlog) => (
                  <Link key={b.slug} href={`/blog/${b.slug}`}>
-                   <div className="bg-white border border-slate-100 rounded-[1.5rem] overflow-hidden shadow-soft group hover:shadow-premium transition-all duration-300 h-full flex flex-col cursor-pointer">
+                   <div className="bg-card border border-slate-100 rounded-[1.5rem] overflow-hidden shadow-soft group hover:shadow-premium transition-all duration-300 h-full flex flex-col cursor-pointer">
                      <div
                        className="overflow-hidden relative bg-slate-100 transition-all duration-500"
                        style={{ height: b.coverHeight ? `${Math.min(Math.max(b.coverHeight * 0.45, 140), 250)}px` : '176px' }}
                      >
                        <img src={b.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={b.title} />
                        <div className="absolute top-4 left-4">
-                         <span className="bg-white/90 backdrop-blur-sm text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest text-indigo-600 shadow-sm">
+                         <span className="bg-card/90 backdrop-blur-sm text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest text-indigo-600 shadow-sm">
                            {b.category}
                          </span>
                        </div>

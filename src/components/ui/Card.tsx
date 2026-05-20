@@ -10,9 +10,9 @@ export const Card = ({ className, hoverable = true, glass = false, children, ...
   return (
     <div
       className={cn(
-        "bg-white border border-slate-100 rounded-[2rem] shadow-soft transition-all duration-300",
+        "bg-card border border-slate-100 rounded-[2rem] shadow-soft transition-all duration-300",
         hoverable && "hover:shadow-premium hover:border-slate-200",
-        glass && "bg-white/10 backdrop-blur-md border-white/20",
+        glass && "bg-card/10 backdrop-blur-md border-white/20",
         className
       )}
       {...props}

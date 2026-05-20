@@ -124,7 +124,7 @@ const BlogSettingsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Main Metadata */}
         <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
+          <section className="bg-card border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
             <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs flex items-center gap-2">
               <Globe className="w-4 h-4 text-indigo-600" /> Platform Visibility
             </h3>
@@ -184,7 +184,7 @@ const BlogSettingsPage = () => {
             </div>
           </section>
 
-          <section className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
+          <section className="bg-card border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
             <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-indigo-600" /> Media Assets
             </h3>
@@ -210,7 +210,7 @@ const BlogSettingsPage = () => {
 
         {/* Right Column: Controls & Blogger Link */}
         <div className="space-y-6">
-          <section className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
+          <section className="bg-card border border-slate-100 rounded-3xl p-8 shadow-sm space-y-6">
             <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Status</h3>
             <div className="space-y-4">
                <button 
@@ -222,7 +222,7 @@ const BlogSettingsPage = () => {
                     <p className="text-[9px] text-slate-400 font-bold uppercase">Show in top carousel</p>
                   </div>
                   <div className={`w-10 h-5 rounded-full relative ${formData.featured ? "bg-indigo-600" : "bg-slate-300"}`}>
-                    <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${formData.featured ? "right-1" : "left-1"}`} />
+                    <div className={`absolute top-1 w-3 h-3 bg-card rounded-full transition-all ${formData.featured ? "right-1" : "left-1"}`} />
                   </div>
                </button>
 
@@ -235,7 +235,7 @@ const BlogSettingsPage = () => {
                     <p className="text-[9px] text-slate-400 font-bold uppercase">Live on website</p>
                   </div>
                   <div className={`w-10 h-5 rounded-full relative ${formData.published ? "bg-emerald-500" : "bg-red-500"}`}>
-                    <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${formData.published ? "right-1" : "left-1"}`} />
+                    <div className={`absolute top-1 w-3 h-3 bg-card rounded-full transition-all ${formData.published ? "right-1" : "left-1"}`} />
                   </div>
                </button>
             </div>
@@ -255,7 +255,7 @@ const BlogSettingsPage = () => {
                   type="text"
                   value={formData.bloggerId}
                   onChange={(e) => setFormData({...formData, bloggerId: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl py-3 px-4 text-sm font-bold text-white focus:ring-2 focus:ring-white/20 outline-none transition-all"
+                  className="w-full bg-card/10 border border-white/20 rounded-xl py-3 px-4 text-sm font-bold text-white focus:ring-2 focus:ring-white/20 outline-none transition-all"
                   placeholder="Paste ID from Blogger URL"
                 />
               </label>
@@ -263,7 +263,7 @@ const BlogSettingsPage = () => {
                 <a 
                   href={`https://www.blogger.com/blog/post/edit/6418707625664438874/${formData.bloggerId}`}
                   target="_blank"
-                  className="flex items-center justify-center gap-2 text-[10px] font-black uppercase bg-white text-indigo-900 py-3 rounded-xl hover:bg-indigo-50 transition-all"
+                  className="flex items-center justify-center gap-2 text-[10px] font-black uppercase bg-card text-indigo-900 py-3 rounded-xl hover:bg-indigo-50 transition-all"
                 >
                   <ExternalLink className="w-3 h-3" /> Test Blogger Link
                 </a>

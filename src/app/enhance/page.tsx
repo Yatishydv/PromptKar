@@ -418,7 +418,7 @@ const AIEnhancerContent = () => {
   return (
     <div className="flex flex-col gap-6">
       {/* Header section to match website UI */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             AI Prompt <span className="text-indigo-600">Enhancer</span>
@@ -444,7 +444,7 @@ const AIEnhancerContent = () => {
       </div>
 
       {/* Intelligence Control Panel */}
-      <div className="bg-white border border-slate-100 rounded-[1.5rem] p-4 flex items-center justify-between shadow-sm shadow-slate-100/50">
+      <div className="bg-card border border-slate-100 rounded-[1.5rem] p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm shadow-slate-100/50">
         <div className="flex items-center gap-4">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${chatMode ? "bg-orange-50 text-orange-600" : "bg-indigo-50 text-indigo-600"}`}>
             {chatMode ? <MessageSquare className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
@@ -465,13 +465,13 @@ const AIEnhancerContent = () => {
         <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
           <button
             onClick={() => setChatMode(false)}
-            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!chatMode ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!chatMode ? "bg-card text-indigo-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
           >
             Professional
           </button>
           <button
             onClick={() => setChatMode(true)}
-            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${chatMode ? "bg-white text-orange-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${chatMode ? "bg-card text-orange-600 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
           >
             Chat
           </button>
@@ -479,9 +479,9 @@ const AIEnhancerContent = () => {
       </div>
 
       {/* Main Container - Card Style to match website UI */}
-      <div className="grid grid-cols-12 gap-6 h-[calc(100vh-240px)] min-h-[650px] relative">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-[calc(100vh-240px)] lg:min-h-[650px] relative">
         {/* Internal Sidebar */}
-        <div className="col-span-3 bg-white border border-slate-100 rounded-[2rem] flex flex-col overflow-hidden shadow-sm shadow-slate-100/50">
+        <div className="hidden lg:flex lg:col-span-3 bg-card border border-slate-100 rounded-[2rem] flex-col overflow-hidden shadow-sm shadow-slate-100/50">
           <div className="p-5 border-b border-slate-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-slate-400" />
@@ -507,7 +507,7 @@ const AIEnhancerContent = () => {
                     onClick={() => loadChatFromHistory(session)}
                     className={`w-full p-3.5 rounded-2xl border transition-all text-left relative overflow-hidden ${activeChatId === session.id
                         ? "bg-indigo-50/50 border-indigo-100 text-indigo-600"
-                        : "bg-white border-transparent hover:bg-slate-50 text-slate-500"
+                        : "bg-card border-transparent hover:bg-slate-50 text-slate-500"
                       }`}
                   >
                     <p className="text-[12.5px] font-bold line-clamp-1 pr-6">{session.title}</p>
@@ -528,7 +528,7 @@ const AIEnhancerContent = () => {
         </div>
 
         {/* Chat Area */}
-        <div className="col-span-9 flex flex-col bg-white border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm shadow-slate-100/50 relative">
+        <div className="col-span-12 lg:col-span-9 flex flex-col bg-card border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm shadow-slate-100/50 relative h-[600px] lg:h-full">
           {/* Scroll Area */}
           <div
             ref={scrollRef}
@@ -586,12 +586,12 @@ const AIEnhancerContent = () => {
                             autoFocus
                             value={editInput}
                             onChange={(e) => setEditInput(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none min-h-[120px] shadow-inner"
+                            className="w-full bg-card/5 border border-white/10 rounded-2xl p-5 text-white text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none min-h-[120px] shadow-inner"
                           />
                           <div className="flex justify-end gap-2 pt-1">
                             <button
                               onClick={() => setEditIndex(null)}
-                              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/5 transition-all"
+                              className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-card/5 transition-all"
                             >
                               Cancel
                             </button>
@@ -638,7 +638,7 @@ const AIEnhancerContent = () => {
                           setEditIndex(idx);
                           setEditInput(msg.parts[0].text);
                         }}
-                        className="absolute -left-12 top-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/20 hover:text-indigo-400 hover:bg-white/10 opacity-0 group-hover/msg:opacity-100 transition-all border border-white/5"
+                        className="absolute -left-12 top-2 w-8 h-8 flex items-center justify-center rounded-full bg-card/5 text-white/20 hover:text-indigo-400 hover:bg-card/10 opacity-0 group-hover/msg:opacity-100 transition-all border border-white/5"
                         title="Edit prompt"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -655,7 +655,7 @@ const AIEnhancerContent = () => {
                         </button>
                         <button
                           onClick={() => copyToClipboard(msg.parts[0].text)}
-                          className="h-8 px-4 rounded-xl bg-white border border-slate-100 text-[10px] font-black text-slate-400 flex items-center gap-2 hover:border-slate-200 hover:text-slate-600 transition-all shadow-sm"
+                          className="h-8 px-4 rounded-xl bg-card border border-slate-100 text-[10px] font-black text-slate-400 flex items-center gap-2 hover:border-slate-200 hover:text-slate-600 transition-all shadow-sm"
                         >
                           <Copy className="w-3.5 h-3.5" /> Analysis
                         </button>
@@ -701,7 +701,7 @@ const AIEnhancerContent = () => {
           </div>
 
           {/* Sleek Pill-Style Input - ChatGPT/Gemini Aesthetic */}
-          <div className="p-6 bg-white relative z-10 space-y-4">
+          <div className="p-6 bg-card relative z-10 space-y-4">
             {/* Style Selector */}
             <div className="max-w-4xl mx-auto flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">
               <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-2">Mode:</span>
@@ -721,7 +721,7 @@ const AIEnhancerContent = () => {
 
             <div className="max-w-4xl mx-auto relative group">
               <div className="absolute inset-0 bg-indigo-600/5 rounded-[2.5rem] blur-2xl opacity-0 group-focus-within:opacity-100 transition-all duration-700" />
-              <div className="relative bg-white border border-slate-100 rounded-[2.5rem] p-1.5 flex items-center gap-3 shadow-xl shadow-slate-200/40 focus-within:border-indigo-600/20 transition-all duration-300">
+              <div className="relative bg-card border border-slate-100 rounded-[2.5rem] p-1.5 flex items-center gap-3 shadow-xl shadow-slate-200/40 focus-within:border-indigo-600/20 transition-all duration-300">
                 <div className="flex-1 min-h-[40px] max-h-[200px] overflow-y-auto no-scrollbar py-2 px-5">
                   <textarea
                     rows={1}
@@ -758,13 +758,13 @@ const AIEnhancerContent = () => {
       </div>
 
       {/* Footer info to match website aesthetic */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { icon: Zap, label: "Neural Precision", desc: "Advanced logic mapping for every prompt" },
           { icon: Target, label: "Context Aware", desc: "Maintains intent across complex instructions" },
           { icon: Palette, label: "Style Control", desc: "Professional tone and structure enforcement" }
         ].map((feat, i) => (
-          <div key={i} className="bg-white border border-slate-100 rounded-2xl p-5 flex items-center gap-4 shadow-sm shadow-slate-100/50">
+          <div key={i} className="bg-card border border-slate-100 rounded-2xl p-5 flex items-center gap-4 shadow-sm shadow-slate-100/50">
             <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-indigo-600">
               <feat.icon className="w-5 h-5" />
             </div>
@@ -791,7 +791,7 @@ const AIEnhancerContent = () => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-2xl bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100"
+              className="relative w-full max-w-2xl bg-card rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100"
             >
               <div className="absolute top-6 right-6 z-10">
                 <button
@@ -807,7 +807,7 @@ const AIEnhancerContent = () => {
                 <div className="md:w-5/12 bg-indigo-600 p-10 flex flex-col justify-between relative overflow-hidden">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent)]" />
                   <div className="relative z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white mb-6">
+                    <div className="w-16 h-16 rounded-2xl bg-card/20 backdrop-blur-md flex items-center justify-center text-white mb-6">
                       <Zap className="w-8 h-8 fill-current" />
                     </div>
                     <h2 className="text-3xl font-black text-white leading-tight">Unlock Neural Power</h2>

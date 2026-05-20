@@ -114,14 +114,14 @@ export const NotificationDropdown = () => {
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 border-2 border-white rounded-full flex items-center justify-center text-[8px] font-black text-white leading-none">
+          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-rose-500 border-2 border-card rounded-full flex items-center justify-center text-[8px] font-black text-white leading-none">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 top-full mt-2 w-[340px] bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full mt-2 w-[340px] bg-card border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-50">
             <div className="flex items-center gap-2">
               <h3 className="font-black text-sm text-slate-900">Notifications</h3>
@@ -170,7 +170,7 @@ export const NotificationDropdown = () => {
                       avatar={n.senderAvatar}
                       className="w-10 h-10"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full border border-slate-100 flex items-center justify-center shadow-sm">
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-card rounded-full border border-slate-100 flex items-center justify-center shadow-sm">
                       <NotifIcon type={n.type} />
                     </div>
                   </div>

@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
                   <p className="text-4xl font-black text-indigo-400 group-hover:scale-110 transition-transform">#{stats.globalRank}</p>
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1">Global Rank</p>
                </div>
-               <div className="w-px h-12 bg-white/10" />
+               <div className="w-px h-12 bg-card/10" />
                <div className="text-center">
                   <p className="text-4xl font-black text-white">{stats.percentile}%</p>
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1">Top Tier</p>
@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-soft group hover:border-indigo-600 transition-all"
+            className="bg-card border border-slate-100 rounded-[2.5rem] p-8 shadow-soft group hover:border-indigo-600 transition-all"
           >
             <div className="space-y-4">
                <div className={`w-12 h-12 ${stat.bg} rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110`}>
@@ -164,7 +164,7 @@ export default function AnalyticsPage() {
                ))}
             </div>
 
-            <div className="bg-white border border-slate-100 rounded-[3rem] p-8 md:p-10 shadow-soft h-[500px] relative overflow-hidden">
+            <div className="bg-card border border-slate-100 rounded-[3rem] p-8 md:p-10 shadow-soft h-[500px] relative overflow-hidden">
                <AnimatePresence mode="wait">
                   {activeTab === "performance" && (
                     <motion.div key="v" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="h-full flex flex-col">
@@ -203,7 +203,7 @@ export default function AnalyticsPage() {
                           {stats.topCategories.length > 0 ? stats.topCategories.map((cat, i: number) => (
                             <div key={cat.name} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between group">
                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-xs font-black shadow-sm group-hover:scale-110 transition-transform">
+                                  <div className="w-10 h-10 bg-card rounded-xl flex items-center justify-center text-xs font-black shadow-sm group-hover:scale-110 transition-transform">
                                      {i+1}
                                   </div>
                                   <div>
@@ -230,7 +230,7 @@ export default function AnalyticsPage() {
                        </div>
                        <div className="overflow-y-auto max-h-[350px] custom-scrollbar pr-2">
                           <table className="w-full text-left">
-                             <thead className="sticky top-0 bg-white z-10">
+                             <thead className="sticky top-0 bg-card z-10">
                                 <tr className="border-b border-slate-50">
                                    <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Prompt Name</th>
                                    <th className="py-4 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">Views</th>
@@ -284,7 +284,7 @@ export default function AnalyticsPage() {
                            <span>Milestone: {stats.nextM} Days</span>
                            <span>{stats.nextM - (userData?.currentStreak || 0)} Days Left</span>
                         </div>
-                        <div className="h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div className="h-3 bg-card/5 rounded-full overflow-hidden border border-white/5">
                            <motion.div initial={{ width: 0 }} animate={{ width: `${stats.progress}%` }} className="h-full bg-indigo-600 shadow-indigo" />
                         </div>
                      </div>
@@ -304,7 +304,7 @@ export default function AnalyticsPage() {
 
       {/* CALL TO ACTION */}
       <div className="bg-slate-50 border border-slate-100 rounded-[3rem] p-12 text-center space-y-6">
-         <div className="w-16 h-16 bg-white border border-slate-100 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+         <div className="w-16 h-16 bg-card border border-slate-100 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
             <Globe className="w-8 h-8 text-indigo-600" />
          </div>
          <div className="space-y-2">

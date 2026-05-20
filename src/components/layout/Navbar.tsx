@@ -48,7 +48,7 @@ const DropdownMenu = ({
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1 w-52 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 py-2 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute top-full left-0 mt-1 w-52 bg-card border border-slate-100 rounded-2xl shadow-xl z-50 py-2 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           {items.map(item => (
             <Link
               key={item.href}
@@ -165,7 +165,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`relative z-50 transition-all duration-300 w-full`}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 w-full bg-card`}>
       {/* Multi-Announcement Carousel */}
       {settings.announcementsEnabled && activeAnnouncements.length > 0 && showAnnouncement && (
         <div className="bg-indigo-600 text-white px-4 py-2.5 text-center relative overflow-hidden group h-[42px] flex items-center justify-center">
@@ -192,7 +192,7 @@ const Navbar = () => {
             {settings.announcementCloseable && (
               <button
                 onClick={() => setShowAnnouncement(false)}
-                className="absolute right-4 p-1 hover:bg-white/10 rounded-full transition-colors z-10"
+                className="absolute right-4 p-1 hover:bg-card/10 rounded-full transition-colors z-10"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -201,7 +201,7 @@ const Navbar = () => {
         </div>
       )}
 
-      <header className={`h-[64px] w-full bg-white border-b border-slate-100 px-4 md:px-8 flex items-center shrink-0 z-50`}>
+      <header className={`h-[64px] w-full bg-card border-b border-slate-100 px-4 md:px-8 flex items-center shrink-0 z-50`}>
         <button
           onClick={() => setShowMobileMenu(true)}
           className="lg:hidden p-2 -ml-2 mr-2 text-slate-400 hover:text-indigo-600 transition-colors"
@@ -232,9 +232,9 @@ const Navbar = () => {
               onChange={e => setSearchVal(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search prompts..."
-              className="w-full bg-slate-50 border border-slate-100 rounded-xl py-1.5 pl-9 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-[11px] font-medium"
+              className="w-full bg-slate-50 border border-slate-100 rounded-xl py-1.5 pl-9 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-[11px] font-medium"
             />
-            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 bg-white border border-slate-100 px-1 py-0.5 rounded text-[8px] font-bold text-slate-300">
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 bg-card border border-slate-100 px-1 py-0.5 rounded text-[8px] font-bold text-slate-300">
               <span>{isMac ? '⌘' : 'Ctrl'}</span><span>K</span>
             </div>
           </div>
@@ -293,10 +293,10 @@ const Navbar = () => {
                       {(userData?.name || userData?.username || user.displayName || "U")[0]}
                     </div>
                   )}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-card rounded-full" />
                 </div>
                 <div className="hidden sm:flex items-center gap-1">
-                  <span className="text-[12.5px] font-black text-[#0F172A] flex items-center gap-1">
+                  <span className="text-[12.5px] font-black text-slate-900 flex items-center gap-1">
                     @{userData?.username || "user"}
                     <span className="ml-0.5 text-[10px]">{getRankBadge(userData?.currentStreak || 0, isAdmin, userData?.customBadge)}</span>
                     {isAdmin && (
@@ -312,7 +312,7 @@ const Navbar = () => {
               {showProfileMenu && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowProfileMenu(false)} />
-                  <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 py-2 overflow-hidden animate-in fade-in zoom-in duration-200">
+                  <div className="absolute right-0 mt-2 w-52 bg-card border border-slate-100 rounded-2xl shadow-xl z-50 py-2 overflow-hidden animate-in fade-in zoom-in duration-200">
                     <div className="px-4 py-2 border-b border-slate-50 mb-1">
                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Your Rank</p>
                       <p className="text-[11px] font-black text-indigo-600 mt-1">{getRankTitle(userData?.currentStreak || 0, isAdmin, userData?.customTitle)}</p>
@@ -375,7 +375,7 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-[280px] bg-white z-[101] lg:hidden shadow-2xl flex flex-col"
+              className="fixed inset-y-0 left-0 w-[280px] bg-card z-[101] lg:hidden shadow-2xl flex flex-col"
             >
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                 <Link href="/" onClick={() => setShowMobileMenu(false)} className="flex items-center">
@@ -456,7 +456,7 @@ const Navbar = () => {
                     <Link
                       href={`/profile/${userData?.username || user.uid}`}
                       onClick={() => setShowMobileMenu(false)}
-                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-white transition-all border border-transparent hover:border-slate-100"
+                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-card transition-all border border-transparent hover:border-slate-100"
                     >
                       <AuthorAvatar userId={user.uid} name={userData?.name || userData?.username} avatar={userData?.avatar} className="w-10 h-10" />
                       <div className="flex-1 min-w-0">

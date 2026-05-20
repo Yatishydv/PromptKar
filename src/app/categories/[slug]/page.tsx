@@ -171,10 +171,10 @@ const CategoryDetailPage = () => {
                   placeholder={`Search ${categoryName} prompts...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white border border-slate-100 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all text-[13px] font-medium shadow-sm"
+                  className="w-full bg-card border border-slate-100 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all text-[13px] font-medium shadow-sm"
                 />
              </div>
-             <button className="h-12 px-5 flex items-center gap-2.5 bg-white border border-slate-100 rounded-2xl text-slate-900 font-bold text-[13px] hover:bg-slate-50 transition-all shadow-sm">
+             <button className="h-12 px-5 flex items-center gap-2.5 bg-card border border-slate-100 rounded-2xl text-slate-900 font-bold text-[13px] hover:bg-slate-50 transition-all shadow-sm">
                 <Filter className="w-4 h-4 text-slate-400" /> Filter
              </button>
           </div>
@@ -191,7 +191,7 @@ const CategoryDetailPage = () => {
           {filteredPrompts.length > 0 ? filteredPrompts.map((p, idx) => (
             <div
               key={p.id} 
-              className="group relative bg-white border border-slate-100/80 p-8 rounded-[2.5rem] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 flex flex-col h-full"
+              className="group relative bg-card border border-slate-100/80 p-8 rounded-[2.5rem] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 flex flex-col h-full"
             >
               {/* Top Row: User & Difficulty */}
               <div className="flex items-center justify-between mb-8">

@@ -1,16 +1,35 @@
 import { GoogleGenAI } from "@google/genai";
+import fs from "fs";
+import path from "path";
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
 // We ensure it is set in process.env for the server-side calls.
-const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-if (apiKey) process.env.GEMINI_API_KEY = apiKey; 
+let apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-export const ai = new GoogleGenAI({});
+// Manual fallback for dev environment to load keys without server restarts
+if (!apiKey && process.env.NODE_ENV !== "production") {
+  try {
+    const envPath = path.join(process.cwd(), ".env.local");
+    if (fs.existsSync(envPath)) {
+      const envContent = fs.readFileSync(envPath, "utf8");
+      const match = envContent.match(/NEXT_PUBLIC_GEMINI_API_KEY\s*=\s*(.*)/);
+      if (match && match[1]) {
+        apiKey = match[1].trim().replace(/['"]/g, "");
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load .env.local key manually:", err);
+  }
+}
+
+if (apiKey) process.env.GEMINI_API_KEY = apiKey;
+
+export const ai = new GoogleGenAI(apiKey ? { apiKey } : {});
 
 // Helper for sleep/delay
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const getGeminiModel = () => "gemini-1.5-flash"; // Fallback stable model for single-call routes
+export const getGeminiModel = () => "gemini-2.5-flash"; // Stable model for single-call routes
 
 export const enhancePromptWithHistory = async (prompt: string, history: any[], style: string = "Standard", isChatMode: boolean = false) => {
   const styleInstructions: Record<string, string> = {
@@ -65,12 +84,9 @@ export const enhancePromptWithHistory = async (prompt: string, history: any[], s
 
   const systemInstruction = isChatMode ? chatInstruction : engineeringInstruction;
 
-  // As requested: prioritizing gemini-3-flash-preview
   const modelsToTry = [
-    "gemini-3-flash-preview",
+    "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro",
   ];
 
   let lastError: any = null;
@@ -94,7 +110,7 @@ export const enhancePromptWithHistory = async (prompt: string, history: any[], s
         model: modelName,
         contents: contents,
         config: {
-          maxOutputTokens: 2048,
+          maxOutputTokens: 8192,
           temperature: 0.7,
         }
       });
@@ -108,8 +124,18 @@ export const enhancePromptWithHistory = async (prompt: string, history: any[], s
       const status = error.message || "";
       console.warn(`⚠️ Node ${modelName} failed:`, status);
 
-      // If it's a 429 or 503, hop to next model
-      if (status.includes("429") || status.includes("503") || status.includes("404") || status.includes("500") || status.includes("not found")) {
+      // If it's a transient, model-specific, or config error, try the next model
+      const lowerStatus = status.toLowerCase();
+      if (
+        lowerStatus.includes("429") ||
+        lowerStatus.includes("503") ||
+        lowerStatus.includes("404") ||
+        lowerStatus.includes("500") ||
+        lowerStatus.includes("not found") ||
+        lowerStatus.includes("not supported") ||
+        lowerStatus.includes("credentials") ||
+        lowerStatus.includes("api key")
+      ) {
           await sleep(300); 
           continue;
       }

@@ -115,7 +115,7 @@ const EditPromptPage = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
-        <div className="max-w-md w-full bg-white rounded-[2.5rem] p-12 text-center shadow-2xl border border-slate-100">
+        <div className="max-w-md w-full bg-card rounded-[2.5rem] p-12 text-center shadow-2xl border border-slate-100">
           <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
              <Plus className="w-8 h-8" />
           </div>
@@ -184,7 +184,7 @@ const EditPromptPage = () => {
         {/* Form Column */}
         <div className="col-span-12 lg:col-span-7">
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm space-y-10">
+            <div className="bg-card border border-slate-100 rounded-[2.5rem] p-10 shadow-sm space-y-10">
               {/* Basics Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
@@ -199,7 +199,7 @@ const EditPromptPage = () => {
                       placeholder="e.g., Professional Blog Writer"
                       value={formData.title}
                       onChange={e => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[15px] font-bold text-slate-900 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[15px] font-bold text-slate-900 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                     />
                   </div>
                   <div className="space-y-2">
@@ -209,7 +209,7 @@ const EditPromptPage = () => {
                       rows={2}
                       value={formData.description}
                       onChange={e => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300 resize-none"
+                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300 resize-none"
                     />
                   </div>
                 </div>
@@ -260,7 +260,7 @@ const EditPromptPage = () => {
                     placeholder="e.g., seo, marketing, writing"
                     value={formData.tags}
                     onChange={e => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                   />
                 </div>
               </div>
@@ -277,7 +277,7 @@ const EditPromptPage = () => {
                     rows={10}
                     value={formData.content}
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] py-6 px-6 text-[14px] font-mono leading-relaxed text-slate-700 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] py-6 px-6 text-[14px] font-mono leading-relaxed text-slate-700 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                   />
                 </div>
               </div>
@@ -309,7 +309,7 @@ const EditPromptPage = () => {
                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Live Preview</span>
             </div>
 
-            <Card className="relative border border-slate-100 bg-white overflow-hidden rounded-[2.5rem] shadow-premium group">
+            <Card className="relative border border-slate-100 bg-card overflow-hidden rounded-[2.5rem] shadow-premium group">
                <div className="p-8 md:p-10 space-y-8">
                   {/* Preview Header */}
                   <div className="space-y-4">
@@ -352,7 +352,7 @@ const EditPromptPage = () => {
                </div>
             </Card>
 
-            <div className="bg-[#FFFDF2] rounded-[2.5rem] p-8 border border-[#FEF3C7]/50 space-y-4">
+            <div className="bg-indigo-50 rounded-[2.5rem] p-8 border border-slate-200/50 space-y-4">
                <h4 className="text-[14px] font-black text-slate-900 flex items-center gap-2">
                  <History className="w-4 h-4 text-yellow-600" />
                  Editing Mode

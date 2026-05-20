@@ -39,7 +39,7 @@ export const StreakAnimation: React.FC<StreakAnimationProps> = ({ show, streak, 
         >
           <div className="relative">
             {/* The Glass Card */}
-            <div className="bg-white/80 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-6 shadow-[0_30px_100px_rgba(234,88,12,0.15)] overflow-hidden">
+            <div className="bg-card/80 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-6 shadow-[0_30px_100px_rgba(234,88,12,0.15)] overflow-hidden">
               
               {/* Background Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-orange-500/20 rounded-full blur-[40px] pointer-events-none" />

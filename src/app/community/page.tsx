@@ -46,9 +46,9 @@ export default function CommunityPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       {/* Light Pro Hero Header */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-[#F1F5FF] border border-white p-10 md:p-16 text-center space-y-6 shadow-sm">
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-indigo-50 border border-card p-10 md:p-16 text-center space-y-6 shadow-sm">
          <div className="relative z-10 space-y-4 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 border border-indigo-100 rounded-full text-indigo-600 text-[10px] font-black uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-card/80 border border-indigo-100 rounded-full text-indigo-600 text-[10px] font-black uppercase tracking-widest">
                <Users className="w-3 h-3" /> Community Hub
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
@@ -68,10 +68,10 @@ export default function CommunityPage() {
                  placeholder="Search creators..."
                  value={searchTerm}
                  onChange={(e) => setSearchTerm(e.target.value)}
-                 className="w-full bg-white border border-slate-100 rounded-xl py-3 pl-11 pr-4 text-sm font-bold placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm"
+                 className="w-full bg-card border border-slate-100 rounded-xl py-3 pl-11 pr-4 text-sm font-bold placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm"
                />
             </div>
-            <div className="flex items-center gap-2 bg-white border border-slate-100 rounded-xl px-4 py-2 shadow-sm">
+            <div className="flex items-center gap-2 bg-card border border-slate-100 rounded-xl px-4 py-2 shadow-sm">
                <TrendingUp className="w-4 h-4 text-indigo-600" />
                <span className="text-slate-900 text-sm font-black">{users.length}</span>
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Creators</span>
@@ -96,7 +96,7 @@ export default function CommunityPage() {
                 onClick={() => setSortBy(option.id as any)}
                 className={`px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
                   sortBy === option.id 
-                    ? "bg-white text-indigo-600 shadow-sm border border-slate-100" 
+                    ? "bg-card text-indigo-600 shadow-sm border border-slate-100" 
                     : "text-slate-400 hover:text-slate-600"
                 }`}
               >
@@ -124,13 +124,13 @@ export default function CommunityPage() {
                 transition={{ duration: 0.2, delay: index * 0.02 }}
               >
                 <Link href={`/profile/${u.username}`} className="group block h-full">
-                  <div className="bg-white border border-slate-100 rounded-3xl p-6 hover:border-indigo-600 hover:shadow-soft transition-all h-full flex flex-col items-center text-center space-y-4">
+                  <div className="bg-card border border-slate-100 rounded-3xl p-6 hover:border-indigo-600 hover:shadow-soft transition-all h-full flex flex-col items-center text-center space-y-4">
                     <div className="relative">
                        <div className="w-20 h-20 rounded-full border-2 border-slate-50 shadow-sm overflow-hidden group-hover:scale-105 transition-transform">
                           <AuthorAvatar avatar={u.avatar} name={u.name} className="w-full h-full object-cover" />
                        </div>
                        {u.currentStreak > 0 && (
-                         <div className="absolute -top-1 -right-1 bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white shadow-sm">
+                         <div className="absolute -top-1 -right-1 bg-orange-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-card shadow-sm">
                             🔥
                          </div>
                        )}
@@ -175,7 +175,7 @@ export default function CommunityPage() {
       </div>
 
       {/* CTA Footer */}
-      <div className="bg-[#F1F5FF] rounded-[2.5rem] p-10 md:p-16 text-center space-y-6 mt-12">
+      <div className="bg-indigo-50 rounded-[2.5rem] p-10 md:p-16 text-center space-y-6 mt-12">
          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Establish your identity</h2>
          <p className="text-slate-500 font-bold max-w-lg mx-auto text-sm">Join the global network of prompt engineers and start your streak today.</p>
          <div className="flex items-center justify-center gap-4">

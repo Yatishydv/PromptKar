@@ -50,7 +50,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex w-[220px] bg-white border-r border-slate-100 flex-col h-full overflow-y-auto no-scrollbar py-6 px-4 shrink-0">
+    <aside className="hidden lg:flex w-[220px] bg-card border-r border-slate-100 flex-col h-full overflow-y-auto no-scrollbar py-6 px-4 shrink-0">
       {/* Navigation */}
       <nav className="space-y-0.5 mb-8">
         {menuItems.map((item) => {
@@ -74,8 +74,8 @@ const Sidebar = () => {
       <div className="space-y-6 mt-auto">
         {/* Create Card */}
         <Link href="/create" className="block group/create">
-          <div className="bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-[1.5rem] p-5 relative overflow-hidden shadow-indigo hover:shadow-premium transition-all duration-300 cursor-pointer active:scale-[0.98]">
-            <div className="absolute top-3.5 right-3.5 bg-white/20 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10 group-hover/create:rotate-90 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-[1.5rem] p-5 relative overflow-hidden shadow-indigo hover:shadow-premium transition-all duration-300 cursor-pointer active:scale-[0.98]">
+            <div className="absolute top-3.5 right-3.5 bg-card/20 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10 group-hover/create:rotate-90 transition-transform duration-300">
                <Plus className="text-white w-4 h-4" />
             </div>
             <div className="relative z-10 space-y-3.5">
@@ -83,7 +83,7 @@ const Sidebar = () => {
                   <h4 className="font-extrabold text-white text-[15px]">Create Prompt</h4>
                   <p className="text-[11px] text-indigo-50/80 leading-relaxed font-bold">Share your ideas with the community and get likes.</p>
                </div>
-               <Button className="w-full bg-white text-[#4F46E5] hover:bg-white text-[12.5px] font-black h-9.5 rounded-xl shadow-lg border-none flex items-center justify-center gap-1.5">
+               <Button className="w-full bg-card text-primary hover:bg-card text-[12.5px] font-black h-9.5 rounded-xl shadow-lg border-none flex items-center justify-center gap-1.5">
                   Create Now <ChevronRight className="w-3.5 h-3.5" />
                </Button>
             </div>
@@ -92,7 +92,7 @@ const Sidebar = () => {
 
         {/* Streak Widget */}
         <Link href="/streak" className="block group/streak">
-          <div className="bg-white border border-slate-50 rounded-[1.5rem] p-5 shadow-sm shadow-slate-100/50 space-y-4 hover:border-indigo-100 hover:shadow-md hover:shadow-indigo-50 transition-all cursor-pointer">
+          <div className="bg-card border border-slate-50 rounded-[1.5rem] p-5 shadow-sm shadow-slate-100/50 space-y-4 hover:border-indigo-100 hover:shadow-md hover:shadow-indigo-50 transition-all cursor-pointer">
              <div className="space-y-1">
                 <span className="text-[14px] font-black text-slate-900 flex items-center gap-1.5 group-hover/streak:text-indigo-600 transition-colors">
                   Your Streak <span className="text-orange-500 text-base">🔥</span>
@@ -107,7 +107,7 @@ const Sidebar = () => {
                 <div className="flex justify-between items-center px-0.5 gap-1">
                    {weeklyActivity.map((day, i) => (
                       <div key={i} className={`w-4.5 h-4.5 rounded-full flex items-center justify-center shrink-0 ${day.active ? "bg-indigo-600 shadow-sm" : "border-2 border-slate-100"}`}>
-                         {day.active && <div className="w-1.5 h-1.5 bg-white rounded-full opacity-80" />}
+                         {day.active && <div className="w-1.5 h-1.5 bg-card rounded-full opacity-80" />}
                       </div>
                    ))}
                 </div>
@@ -121,7 +121,7 @@ const Sidebar = () => {
         </Link>
 
         {/* Upgrade Card */}
-        <div className="bg-[#FFFDF2] rounded-[1.5rem] p-5 border border-[#FEF3C7]/50 space-y-5">
+        <div className="bg-indigo-50 rounded-[1.5rem] p-5 border border-slate-100 space-y-5">
            <div className="flex items-center gap-1.5">
               <span className="text-[15px] font-black text-slate-900">Upgrade to Pro</span>
               <span className="text-yellow-500 text-base">⭐</span>
@@ -139,7 +139,7 @@ const Sidebar = () => {
                 </li>
               ))}
            </ul>
-           <Button className="w-full bg-[#6366F1] text-white hover:bg-[#4F46E5] text-[12.5px] font-black h-10.5 rounded-xl shadow-lg shadow-indigo-100 border-none">
+           <Button className="w-full bg-indigo-600 text-white hover:bg-indigo-600/90 text-[12.5px] font-black h-10.5 rounded-xl shadow-lg shadow-indigo-100 border-none">
              Upgrade Now
            </Button>
         </div>

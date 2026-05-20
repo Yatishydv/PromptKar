@@ -68,13 +68,13 @@ const PromptsContent = () => {
         <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
           <button 
             onClick={() => setViewMode("grid")}
-            className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}
+            className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-card text-indigo-600 shadow-sm" : "text-slate-500"}`}
           >
             <Grid className="w-4 h-4" />
           </button>
           <button 
             onClick={() => setViewMode("list")}
-            className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500"}`}
+            className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-card text-indigo-600 shadow-sm" : "text-slate-500"}`}
           >
             <ListIcon className="w-4 h-4" />
           </button>
@@ -90,7 +90,7 @@ const PromptsContent = () => {
             placeholder="Search prompts..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-indigo-600 transition-all text-sm"
+            className="w-full bg-card border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-indigo-600 transition-all text-sm"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -101,7 +101,7 @@ const PromptsContent = () => {
               className={`px-4 py-1.5 rounded-lg border text-xs font-bold transition-all ${
                 activeCategory === cat 
                   ? "bg-indigo-600 border-indigo-600 text-white shadow-sm" 
-                  : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                  : "bg-card border-slate-200 text-slate-500 hover:border-slate-300"
               }`}
             >
               {cat}

@@ -70,14 +70,14 @@ const StreakPage = () => {
       {/* Top Header Bento Section */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Main Streak Card */}
-        <div className="md:col-span-2 bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+        <div className="md:col-span-2 bg-card border border-slate-100 rounded-[2.5rem] p-10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-50 rounded-full blur-3xl -mr-24 -mt-24 opacity-60 group-hover:bg-indigo-100 transition-colors" />
           <div className="relative z-10 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between">
               <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100"><Flame className="w-8 h-8" /></div>
               <button 
                 onClick={handleShare}
-                className="px-4 py-2 bg-white border border-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2"
+                className="px-4 py-2 bg-card border border-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2"
               >
                 <Share2 className="w-3 h-3" /> Share Journey
               </button>
@@ -99,7 +99,7 @@ const StreakPage = () => {
               <Zap className="w-8 h-8 text-indigo-400 mb-1" />
             </div>
           </div>
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow group">
+          <div className="bg-card border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow group">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Personal Best</p>
             <div className="flex items-end justify-between">
               <h2 className="text-4xl font-black text-slate-900">{userData?.bestStreak || streak}</h2>
@@ -111,7 +111,7 @@ const StreakPage = () => {
         {/* Rank Bento */}
         <div className="bg-indigo-50 border border-indigo-100 rounded-[2.5rem] p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow group">
            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm"><Star className="w-6 h-6" /></div>
+              <div className="w-12 h-12 bg-card rounded-xl flex items-center justify-center text-indigo-600 shadow-sm"><Star className="w-6 h-6" /></div>
               <ArrowUpRight className="w-6 h-6 text-indigo-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
            </div>
            <div>
@@ -127,7 +127,7 @@ const StreakPage = () => {
       {/* Main History & Roadmap Bento Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar Bento */}
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-[3rem] p-10 shadow-sm space-y-10">
+        <div className="lg:col-span-2 bg-card border border-slate-100 rounded-[3rem] p-10 shadow-sm space-y-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-900"><Calendar className="w-5 h-5" /></div>
@@ -165,8 +165,8 @@ const StreakPage = () => {
                   <div key={day.dateStr} className="group relative">
                     <div className={`aspect-square rounded-2xl border flex flex-col items-center justify-center transition-all duration-300 ${
                       day.active 
-                        ? "bg-white border-slate-200 shadow-sm" 
-                        : "bg-white border-slate-100 hover:border-slate-200"
+                        ? "bg-card border-slate-200 shadow-sm" 
+                        : "bg-card border-slate-100 hover:border-slate-200"
                     } ${isToday ? "scale-110 z-10 border-indigo-600 shadow-lg shadow-indigo-100 ring-2 ring-indigo-600/20" : ""}`}>
                       {day.active && <Flame className="w-4 h-4 md:w-6 md:h-6 text-yellow-500 animate-pulse-slow fill-yellow-500/20" />}
                       <span className={`text-[10px] md:text-xs font-black mt-1 ${
@@ -187,7 +187,7 @@ const StreakPage = () => {
         </div>
 
         {/* Roadmap Rewards Bento */}
-        <div className="bg-white border border-slate-100 rounded-[3rem] p-10 shadow-sm space-y-8 flex flex-col h-full">
+        <div className="bg-card border border-slate-100 rounded-[3rem] p-10 shadow-sm space-y-8 flex flex-col h-full">
            <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600"><Trophy className="w-5 h-5" /></div>
               <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Roadmap Journey</h2>
@@ -200,7 +200,7 @@ const StreakPage = () => {
                 { days: 60, label: "Identity Glow", icon: Sparkles, bg: "bg-indigo-50 text-indigo-500" },
                 { days: 90, label: "Featured Prompt", icon: Star, bg: "bg-amber-50 text-amber-500" },
               ].map((item) => (
-                <div key={item.days} className={`p-5 rounded-3xl border transition-all ${streak >= item.days ? "bg-white border-slate-100 shadow-sm" : "bg-slate-50/50 border-slate-100 opacity-60"}`}>
+                <div key={item.days} className={`p-5 rounded-3xl border transition-all ${streak >= item.days ? "bg-card border-slate-100 shadow-sm" : "bg-slate-50/50 border-slate-100 opacity-60"}`}>
                    <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 ${item.bg} rounded-xl flex items-center justify-center`}><item.icon className="w-5 h-5" /></div>
                       <div className="flex-1">

@@ -13,7 +13,7 @@ export const AIWidget = () => {
   const [text, setText] = useState("");
 
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-xl">
+    <div className="bg-card border border-slate-200 p-6 rounded-xl">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="w-4 h-4 text-indigo-600" />
         <h3 className="font-bold text-sm text-slate-900">Prompt Enhancer</h3>
@@ -38,7 +38,7 @@ export const CreatorsWidget = () => {
     i === 0 ? "text-yellow-500" : i === 1 ? "text-slate-400" : i === 2 ? "text-orange-500" : "text-slate-300";
 
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+    <div className="bg-card border border-slate-200 p-6 rounded-xl shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-yellow-500" />
@@ -99,7 +99,7 @@ export const CommunityWidget = () => (
       Share prompts, climb the leaderboard, and learn from 25K+ members.
     </p>
     <Link href="/community">
-      <Button className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-none font-bold">
+      <Button className="w-full bg-card text-indigo-600 hover:bg-indigo-50 border-none font-bold">
         Explore Community
       </Button>
     </Link>

@@ -96,7 +96,7 @@ const BlogPage = () => {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 80% 20%, white 0%, transparent 60%)" }} />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 rounded-full text-[10px] font-black uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-card/10 border border-white/20 rounded-full text-[10px] font-black uppercase tracking-widest">
               <BookOpen className="w-3 h-3" /> PromptKar Journal
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight">The Art of<br />Prompting</h1>
@@ -108,7 +108,7 @@ const BlogPage = () => {
                 href="https://www.blogger.com/u/1/blog/posts/6418707625664438874"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white text-indigo-600 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-50 transition-colors no-underline"
+                className="inline-flex items-center gap-2 bg-card text-indigo-600 px-5 py-2.5 rounded-xl text-sm font-black hover:bg-indigo-50 transition-colors no-underline"
               >
                 ✏️ Write New Article
               </a>
@@ -121,7 +121,7 @@ const BlogPage = () => {
               placeholder="Search articles..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-white/10 border border-white/20 text-white placeholder-white/40 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:bg-white/20 transition-all text-sm font-medium"
+              className="w-full bg-card/10 border border-white/20 text-white placeholder-white/40 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:bg-card/20 transition-all text-sm font-medium"
             />
           </div>
         </div>
@@ -136,7 +136,7 @@ const BlogPage = () => {
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${
               activeCategory === cat
                 ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                : "bg-white text-slate-500 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
+                : "bg-card text-slate-500 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
             }`}
           >
             {cat}
@@ -206,7 +206,7 @@ const BlogPage = () => {
         <h2 className="text-2xl font-black text-slate-900">Weekly Prompt Insights</h2>
         <p className="text-slate-500 text-sm max-w-md mx-auto">Join 12,000+ subscribers. Get the best prompt engineering tips every Tuesday.</p>
         <div className="flex gap-3 max-w-md mx-auto">
-          <input type="email" placeholder="you@example.com" className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-300 transition-all" />
+          <input type="email" placeholder="you@example.com" className="flex-1 bg-card border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-300 transition-all" />
           <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-black hover:bg-indigo-700 transition-colors whitespace-nowrap">Subscribe</button>
         </div>
       </div>
@@ -243,7 +243,7 @@ function PostCard({ post, isAdmin, deleting, onDelete, large }: {
   const cardHeight = post.coverHeight ? `${Math.min(Math.max(post.coverHeight * 0.55, 160), 350)}px` : (large ? "220px" : "180px");
 
   return (
-    <div className="group bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-indigo-100 transition-all duration-300 flex flex-col h-full relative">
+    <div className="group bg-card border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-indigo-100 transition-all duration-300 flex flex-col h-full relative">
       {/* Admin delete button */}
       {isAdmin && (
         <button

@@ -404,7 +404,7 @@ const AdminPanel = () => {
                                 userId={p.authorId}
                                 name={p.authorName}
                                 avatar={p.authorAvatar}
-                                className="w-10 h-10 relative border-2 border-white shadow-sm"
+                                className="w-10 h-10 relative border-2 border-card shadow-sm"
                                 isAdmin={true}
                                 isGlowActive={true}
                               />
@@ -415,7 +415,7 @@ const AdminPanel = () => {
                             </div>
                           </div>
                           <Link href={`/prompt/${p.slug}`} target="_blank">
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg border-slate-100 hover:border-indigo-100 hover:bg-white text-slate-400 hover:text-indigo-600">
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg border-slate-100 hover:border-indigo-100 hover:bg-card text-slate-400 hover:text-indigo-600">
                               <ExternalLink className="w-3.5 h-3.5" />
                             </Button>
                           </Link>
@@ -442,7 +442,7 @@ const AdminPanel = () => {
                               <AuthorAvatar 
                                 name={u.name || u.username} 
                                 avatar={u.avatar} 
-                                className="w-10 h-10 relative border-2 border-white shadow-sm" 
+                                className="w-10 h-10 relative border-2 border-card shadow-sm" 
                                 isAdmin={u.isAdmin}
                                 isGlowActive={u.isGlowActive}
                                 isVerifiedActive={u.isVerifiedActive}
@@ -469,7 +469,7 @@ const AdminPanel = () => {
           {/* PROMPTS TAB */}
           {activeTab === "prompts" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center justify-between bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
+              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search prompts to manage..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
@@ -520,7 +520,7 @@ const AdminPanel = () => {
           {/* BLOGS TAB */}
           {activeTab === "blogs" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center justify-between bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
+              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search articles..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
@@ -584,7 +584,7 @@ const AdminPanel = () => {
                             href="https://www.blogger.com/u/1/blog/posts/6418707625664438874"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-400 hover:border-indigo-100 hover:text-indigo-600 transition-all"
+                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-slate-100 bg-card text-slate-400 hover:border-indigo-100 hover:text-indigo-600 transition-all"
                             title="Edit Content on Blogger"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -618,7 +618,7 @@ const AdminPanel = () => {
                             <Loader2 className="w-4 h-4 text-indigo-600 animate-spin mx-auto my-2" />
                           ) : likers.length > 0 ? (
                             likers.map((u: any) => (
-                              <div key={u.userId} className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-indigo-100 shadow-sm">
+                              <div key={u.userId} className="flex items-center gap-2 bg-card px-2.5 py-1.5 rounded-xl border border-indigo-100 shadow-sm">
                                 <AuthorAvatar 
                                   name={u.name} 
                                   avatar={u.avatar} 
@@ -645,7 +645,7 @@ const AdminPanel = () => {
           {/* USERS TAB */}
           {activeTab === "users" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center justify-between bg-white border border-slate-100 p-4 rounded-2xl shadow-sm">
+              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search community members..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
@@ -653,7 +653,7 @@ const AdminPanel = () => {
                 <div className="text-xs font-black text-slate-400 uppercase tracking-widest px-4">{recentUsers.length} MEMBERS</div>
               </div>
 
-              <div className="bg-white border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm">
+              <div className="bg-card border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm">
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-slate-50/50">
                     <tr>
@@ -742,7 +742,7 @@ const AdminPanel = () => {
                         onClick={() => setSystemSettings((prev: any) => ({ ...prev, maintenanceMode: !prev.maintenanceMode }))}
                         className={`w-14 h-7 rounded-full relative transition-all ${systemSettings.maintenanceMode ? "bg-red-500 shadow-lg shadow-red-100" : "bg-slate-300"}`}
                       >
-                        <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all ${systemSettings.maintenanceMode ? "right-1" : "left-1"}`} />
+                        <div className={`absolute top-1 w-5 h-5 bg-card rounded-full shadow-md transition-all ${systemSettings.maintenanceMode ? "right-1" : "left-1"}`} />
                       </button>
                     </div>
 
@@ -755,7 +755,7 @@ const AdminPanel = () => {
                         onClick={() => setSystemSettings((prev: any) => ({ ...prev, announcementsEnabled: !prev.announcementsEnabled }))}
                         className={`w-14 h-7 rounded-full relative transition-all ${systemSettings.announcementsEnabled ? "bg-indigo-600 shadow-lg shadow-indigo-100" : "bg-slate-300"}`}
                       >
-                        <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all ${systemSettings.announcementsEnabled ? "right-1" : "left-1"}`} />
+                        <div className={`absolute top-1 w-5 h-5 bg-card rounded-full shadow-md transition-all ${systemSettings.announcementsEnabled ? "right-1" : "left-1"}`} />
                       </button>
                     </div>
                   </div>
@@ -766,12 +766,12 @@ const AdminPanel = () => {
                       <div className="flex items-center justify-between border-b border-slate-200/50 pb-6">
                         <div className="flex items-center gap-4">
                           <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Live Broadcasts</h3>
-                          <div className="flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-100 text-indigo-600 rounded-full text-[10px] font-black uppercase shadow-sm">
+                          <div className="flex items-center gap-2 px-4 py-1.5 bg-card border border-slate-100 text-indigo-600 rounded-full text-[10px] font-black uppercase shadow-sm">
                             <button
                               onClick={() => setSystemSettings((prev: any) => ({ ...prev, announcementCloseable: !prev.announcementCloseable }))}
                               className={`w-8 h-4 rounded-full relative transition-all ${systemSettings.announcementCloseable ? "bg-indigo-600" : "bg-slate-300"}`}
                             >
-                              <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${systemSettings.announcementCloseable ? "right-0.5" : "left-0.5"}`} />
+                              <div className={`absolute top-0.5 w-3 h-3 bg-card rounded-full transition-all ${systemSettings.announcementCloseable ? "right-0.5" : "left-0.5"}`} />
                             </button>
                             Dismissible
                           </div>
@@ -792,7 +792,7 @@ const AdminPanel = () => {
                       <div className="space-y-4">
                         {(systemSettings.announcements || []).map((ann: any, idx: number) => (
                           <div key={idx} className="flex gap-4 items-center animate-in fade-in slide-in-from-top-4 duration-300">
-                            <div className="w-12 h-12 rounded-2xl bg-white border border-slate-100 text-slate-900 shadow-sm flex items-center justify-center font-black text-sm shrink-0">{idx + 1}</div>
+                            <div className="w-12 h-12 rounded-2xl bg-card border border-slate-100 text-slate-900 shadow-sm flex items-center justify-center font-black text-sm shrink-0">{idx + 1}</div>
                             <input
                               type="text"
                               value={ann.text}
@@ -803,7 +803,7 @@ const AdminPanel = () => {
                                   return { ...prev, announcements: arr };
                                 });
                               }}
-                              className="flex-1 bg-white border border-slate-200 rounded-[20px] px-6 py-4 text-sm font-bold text-slate-700 focus:ring-8 focus:ring-indigo-50 focus:border-indigo-200 transition-all outline-none shadow-sm"
+                              className="flex-1 bg-card border border-slate-200 rounded-[20px] px-6 py-4 text-sm font-bold text-slate-700 focus:ring-8 focus:ring-indigo-50 focus:border-indigo-200 transition-all outline-none shadow-sm"
                               placeholder="Message text with [link text](url)..."
                             />
                             <Button
@@ -920,7 +920,7 @@ const AdminPanel = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl z-[201] overflow-hidden border border-slate-100"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl bg-card rounded-[2.5rem] shadow-2xl z-[201] overflow-hidden border border-slate-100"
             >
               <div className="bg-slate-900 p-8 text-white">
                 <div className="flex items-center justify-between">
@@ -981,7 +981,7 @@ const AdminPanel = () => {
                       onClick={() => setEditingUser({ ...editingUser, isAdmin: !editingUser.isAdmin })}
                       className={`w-12 h-6 rounded-full relative transition-all ${editingUser.isAdmin ? "bg-red-500" : "bg-slate-300"}`}
                     >
-                      <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${editingUser.isAdmin ? "right-1" : "left-1"}`} />
+                      <div className={`absolute top-1 w-4 h-4 bg-card rounded-full transition-all ${editingUser.isAdmin ? "right-1" : "left-1"}`} />
                     </button>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
@@ -990,7 +990,7 @@ const AdminPanel = () => {
                       onClick={() => setEditingUser({ ...editingUser, isPro: !editingUser.isPro })}
                       className={`w-12 h-6 rounded-full relative transition-all ${editingUser.isPro ? "bg-indigo-600" : "bg-slate-300"}`}
                     >
-                      <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${editingUser.isPro ? "right-1" : "left-1"}`} />
+                      <div className={`absolute top-1 w-4 h-4 bg-card rounded-full transition-all ${editingUser.isPro ? "right-1" : "left-1"}`} />
                     </button>
                   </div>
                 </div>

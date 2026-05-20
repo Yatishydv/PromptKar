@@ -33,7 +33,7 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({ streak, isOpen, 
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-lg bg-white rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden"
+            className="relative w-full max-w-lg bg-card rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden"
           >
             {/* Top Glow */}
             <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-indigo-500/10 to-transparent" />
@@ -77,7 +77,7 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({ streak, isOpen, 
                         <p className="text-xl font-black text-slate-900">{rank}</p>
                      </div>
                   </div>
-                  <div className="flex items-center justify-center gap-2 bg-white/80 py-2 px-4 rounded-full border border-slate-100">
+                  <div className="flex items-center justify-center gap-2 bg-card/80 py-2 px-4 rounded-full border border-slate-100">
                      <Flame className="w-4 h-4 text-orange-500 fill-orange-500" />
                      <span className="text-sm font-black text-slate-900">{streak} Day Streak Unlocked</span>
                   </div>

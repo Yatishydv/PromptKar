@@ -43,9 +43,9 @@ const LeaderboardPage = () => {
     i === 0 ? "text-yellow-500" : i === 1 ? "text-slate-400" : i === 2 ? "text-orange-500" : "text-slate-300";
 
   const rankBg = (i: number) =>
-    i === 0 ? "bg-yellow-50 border-yellow-100" :
-    i === 1 ? "bg-slate-50 border-slate-100" :
-    i === 2 ? "bg-orange-50 border-orange-100" : "bg-white border-slate-100";
+    i === 0 ? "bg-card border-yellow-400/30" :
+    i === 1 ? "bg-card border-slate-300/30" :
+    i === 2 ? "bg-card border-orange-400/30" : "bg-card border-slate-100";
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
@@ -66,7 +66,7 @@ const LeaderboardPage = () => {
           <button
             onClick={() => setActiveType("users")}
             className={`px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 ${
-              activeType === "users" ? "bg-white text-indigo-600 shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"
+              activeType === "users" ? "bg-card text-indigo-600 shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"
             }`}
           >
             <Trophy className="w-3.5 h-3.5" /> Top Creators
@@ -74,7 +74,7 @@ const LeaderboardPage = () => {
           <button
             onClick={() => setActiveType("prompts")}
             className={`px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 ${
-              activeType === "prompts" ? "bg-white text-indigo-600 shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"
+              activeType === "prompts" ? "bg-card text-indigo-600 shadow-sm border border-slate-100" : "text-slate-400 hover:text-slate-600"
             }`}
           >
             <Star className="w-3.5 h-3.5" /> Top Prompts
@@ -91,7 +91,7 @@ const LeaderboardPage = () => {
       ) : activeType === "users" ? (
         <div className="space-y-3">
           {topUsers.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
+            <div className="text-center py-20 bg-card rounded-3xl border border-slate-100">
               <Sparkles className="w-10 h-10 text-slate-200 mx-auto mb-3" />
               <p className="font-black text-slate-900">No creators yet</p>
               <p className="text-slate-400 text-sm mt-1">Be the first to share prompts and earn likes!</p>
@@ -142,7 +142,7 @@ const LeaderboardPage = () => {
       ) : (
         <div className="space-y-3">
           {topPrompts.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
+            <div className="text-center py-20 bg-card rounded-3xl border border-slate-100">
               <Sparkles className="w-10 h-10 text-slate-200 mx-auto mb-3" />
               <p className="font-black text-slate-900">No prompts yet</p>
               <p className="text-slate-400 text-sm mt-1">Create prompts and earn likes to appear here!</p>
@@ -199,7 +199,7 @@ const LeaderboardPage = () => {
           { icon: "🔥", title: "Featured Spotlight", desc: "Your best prompts pinned to the trending section for all visitors." },
           { icon: "⚡", title: "Premium Tools", desc: "Unlock advanced analytics and bulk enhancement tools for free." },
         ].map(item => (
-          <div key={item.title} className="bg-white border border-slate-100 rounded-2xl p-5 text-center hover:shadow-md transition-all">
+          <div key={item.title} className="bg-card border border-slate-100 rounded-2xl p-5 text-center hover:shadow-md transition-all">
             <div className="text-3xl mb-3">{item.icon}</div>
             <h4 className="font-black text-slate-900 text-sm mb-1">{item.title}</h4>
             <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>

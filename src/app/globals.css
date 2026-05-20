@@ -10,11 +10,21 @@
   --color-border: var(--border-app);
   --color-card: var(--card-app);
   
+  --color-white: var(--white-app);
   --color-slate-50: var(--slate-50-app);
   --color-slate-100: var(--slate-100-app);
+  --color-slate-200: var(--slate-200-app);
+  --color-slate-300: var(--slate-300-app);
+  --color-slate-400: var(--slate-400-app);
+  --color-slate-500: var(--slate-500-app);
+  --color-slate-600: var(--slate-600-app);
+  --color-slate-700: var(--slate-700-app);
+  --color-slate-800: var(--slate-800-app);
   --color-slate-900: var(--slate-900-app);
 
   --color-indigo-50: var(--indigo-50-app);
+  --color-indigo-100: var(--indigo-100-app);
+  --color-indigo-400: var(--indigo-400-app);
   --color-indigo-600: var(--primary-app);
 
   --color-emerald-50: #ECFDF5;
@@ -46,46 +56,86 @@
     --fg-app: #0F172A;
     --card-app: #FFFFFF;
     --border-app: #F1F5F9;
+    --white-app: #FFFFFF;
     --slate-50-app: #F8FAFC;
     --slate-100-app: #F1F5F9;
+    --slate-200-app: #E2E8F0;
+    --slate-300-app: #CBD5E1;
+    --slate-400-app: #94A3B8;
+    --slate-500-app: #64748B;
+    --slate-600-app: #475569;
+    --slate-700-app: #334155;
+    --slate-800-app: #1E293B;
     --slate-900-app: #0F172A;
     --indigo-50-app: #EEF2FF;
-  }
-
-  [data-app-theme="Midnight"] {
-    --primary-app: #8B5CF6;
-    --bg-app: #030712;
-    --fg-app: #F9FAFB;
-    --card-app: #111827;
-    --border-app: #1F2937;
-    --slate-50-app: #111827;
-    --slate-100-app: #1F2937;
-    --slate-900-app: #F9FAFB;
-    --indigo-50-app: #1E1B4B;
+    --indigo-100-app: #E0E7FF;
+    --indigo-400-app: #818CF8;
   }
 
   [data-app-theme="Cyber"] {
     --primary-app: #6366F1;
-    --bg-app: #F8FAFC;
-    --fg-app: #0F172A;
+    --bg-app: #eef2ff;
+    --fg-app: #1e1b4b;
     --card-app: #FFFFFF;
-    --border-app: #F1F5F9;
-    --slate-50-app: #F8FAFC;
-    --slate-100-app: #F1F5F9;
-    --slate-900-app: #0F172A;
-    --indigo-50-app: #EEF2FF;
+    --border-app: #c7d2fe;
+    --white-app: #FFFFFF;
+    --slate-50-app: #eef2ff;
+    --slate-100-app: #e0e7ff;
+    --slate-200-app: #c7d2fe;
+    --slate-300-app: #a5b4fc;
+    --slate-400-app: #6366f1;
+    --slate-500-app: #4f46e5;
+    --slate-600-app: #4338ca;
+    --slate-700-app: #3730a3;
+    --slate-800-app: #312e81;
+    --slate-900-app: #1e1b4b;
+    --indigo-50-app: #e0e7ff;
+    --indigo-100-app: #c7d2fe;
+    --indigo-400-app: #818CF8;
+  }
+
+  [data-app-theme="Midnight"] {
+    --primary-app: #8B5CF6;
+    --bg-app: #0f172a;
+    --fg-app: #F1F5F9;
+    --card-app: #1e293b;
+    --border-app: #334155;
+    --white-app: #1e293b;
+    --slate-50-app: #1e293b;
+    --slate-100-app: #334155;
+    --slate-200-app: #475569;
+    --slate-300-app: #475569;
+    --slate-400-app: #64748b;
+    --slate-500-app: #94a3b8;
+    --slate-600-app: #cbd5e1;
+    --slate-700-app: #e2e8f0;
+    --slate-800-app: #e2e8f0;
+    --slate-900-app: #F1F5F9;
+    --indigo-50-app: rgba(139, 92, 246, 0.12);
+    --indigo-100-app: rgba(139, 92, 246, 0.2);
+    --indigo-400-app: #c4b5fd;
   }
 
   [data-app-theme="Matrix"] {
     --primary-app: #10B981;
-    --bg-app: #020617;
-    --fg-app: #ECFDF5;
-    --card-app: #064E3B20;
-    --border-app: #065F4640;
-    --slate-50-app: #062C25;
-    --slate-100-app: #064E3B;
-    --slate-900-app: #D1FAE5;
-    --indigo-50-app: #064E3B;
+    --bg-app: #022c22;
+    --fg-app: #ecfdf5;
+    --card-app: #064e3b;
+    --border-app: #065f46;
+    --white-app: #064e3b;
+    --slate-50-app: #064e3b;
+    --slate-100-app: #065f46;
+    --slate-200-app: #047857;
+    --slate-300-app: #059669;
+    --slate-400-app: #34d399;
+    --slate-500-app: #6ee7b7;
+    --slate-600-app: #a7f3d0;
+    --slate-700-app: #d1fae5;
+    --slate-800-app: #d1fae5;
+    --slate-900-app: #ecfdf5;
+    --indigo-50-app: rgba(52, 211, 153, 0.1);
+    --indigo-100-app: rgba(52, 211, 153, 0.15);
+    --indigo-400-app: #6ee7b7;
   }
 
   body {
@@ -184,3 +234,62 @@
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(0.9); }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   THEME OVERRIDES — Only for non-token elements (nav, inputs, shadows)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Midnight — nav glass + inputs + shadows */
+[data-app-theme="Midnight"] nav { 
+  background-color: rgba(15, 23, 42, 0.92) !important; 
+  backdrop-filter: blur(20px) saturate(180%); 
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15) !important; 
+}
+[data-app-theme="Midnight"] input,
+[data-app-theme="Midnight"] textarea,
+[data-app-theme="Midnight"] select { 
+  background-color: #0f172a !important; 
+  border-color: #334155 !important; 
+  color: #e2e8f0 !important; 
+}
+[data-app-theme="Midnight"] input::placeholder,
+[data-app-theme="Midnight"] textarea::placeholder { color: #475569 !important; }
+[data-app-theme="Midnight"] .shadow-soft,
+[data-app-theme="Midnight"] .shadow-sm { box-shadow: 0 2px 15px rgba(0,0,0,0.35) !important; }
+[data-app-theme="Midnight"] .shadow-xl,
+[data-app-theme="Midnight"] .shadow-2xl { box-shadow: 0 8px 30px rgba(0,0,0,0.45) !important; }
+[data-app-theme="Midnight"] .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+[data-app-theme="Midnight"] ::selection { background: rgba(139, 92, 246, 0.3); color: #f1f5f9; }
+[data-app-theme="Midnight"] .text-white { color: #ffffff !important; }
+
+/* Matrix — nav glass + inputs + shadows */
+[data-app-theme="Matrix"] nav { 
+  background-color: rgba(2, 44, 34, 0.92) !important; 
+  backdrop-filter: blur(20px) saturate(180%); 
+  border-bottom: 1px solid rgba(52, 211, 153, 0.15) !important; 
+}
+[data-app-theme="Matrix"] input,
+[data-app-theme="Matrix"] textarea,
+[data-app-theme="Matrix"] select { 
+  background-color: #022c22 !important; 
+  border-color: #065f46 !important; 
+  color: #d1fae5 !important; 
+}
+[data-app-theme="Matrix"] input::placeholder,
+[data-app-theme="Matrix"] textarea::placeholder { color: #34d399 !important; }
+[data-app-theme="Matrix"] .shadow-soft,
+[data-app-theme="Matrix"] .shadow-sm { box-shadow: 0 2px 15px rgba(0,0,0,0.4) !important; }
+[data-app-theme="Matrix"] .shadow-xl,
+[data-app-theme="Matrix"] .shadow-2xl { box-shadow: 0 8px 30px rgba(0,0,0,0.5) !important; }
+[data-app-theme="Matrix"] .custom-scrollbar::-webkit-scrollbar-thumb { background: #065f46; }
+[data-app-theme="Matrix"] ::selection { background: rgba(52, 211, 153, 0.3); color: #ecfdf5; }
+[data-app-theme="Matrix"] .text-white { color: #ffffff !important; }
+
+/* Cyber — nav glass */
+[data-app-theme="Cyber"] nav { 
+  background-color: rgba(238, 242, 255, 0.88) !important; 
+  backdrop-filter: blur(20px) saturate(180%); 
+  border-bottom: 1px solid rgba(99, 102, 241, 0.12) !important; 
+}
+[data-app-theme="Cyber"] ::selection { background: rgba(99, 102, 241, 0.2); color: #1e1b4b; }

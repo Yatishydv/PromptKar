@@ -15,7 +15,7 @@ export const Skeleton = ({ className = "" }: SkeletonProps) => {
 };
 
 export const CardSkeleton = () => (
-  <div className="bg-white border border-slate-200 p-6 rounded-2xl space-y-4">
+  <div className="bg-card border border-slate-200 p-6 rounded-2xl space-y-4">
     <div className="flex items-center justify-between">
       <Skeleton className="w-20 h-4" />
       <Skeleton className="w-8 h-8 rounded-lg" />

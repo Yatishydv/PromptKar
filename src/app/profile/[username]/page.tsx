@@ -37,7 +37,7 @@ const SuggestedCreators = ({ currentUserId, followingIds }: { currentUserId: str
   if (isLoading || suggestions.length === 0) return null;
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-soft space-y-6">
+    <div className="bg-card border border-slate-100 rounded-[2.5rem] p-8 shadow-soft space-y-6">
        <div className="flex items-center justify-between px-1">
           <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Suggested for you</h3>
           <Link href="/community" className="text-[9px] font-black text-indigo-600 uppercase tracking-widest hover:underline">See All</Link>
@@ -109,7 +109,7 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+        className="relative w-full max-w-lg bg-card rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
       >
         <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
            <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3">
@@ -120,7 +120,7 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
            </button>
         </div>
 
-        <div className="p-4 bg-white border-b border-slate-50">
+        <div className="p-4 bg-card border-b border-slate-50">
            <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
@@ -194,6 +194,29 @@ export default function ProfilePage() {
   const isOwnProfile = currentUser?.uid === profileData?.firebaseUid;
   const isAdmin = profileData?.isAdmin || profileData?.username?.toLowerCase() === "yatishydv";
 
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `@${profileData?.username}'s Profile on PromptKar`,
+          text: profileData?.bio || `Check out @${profileData?.username}'s profile on PromptKar!`,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Link copied to clipboard!");
+      } catch (err) {
+        toast.error("Failed to copy link");
+      }
+    }
+  };
+
   const handleFollow = async () => {
     if (!currentUser) return toast.error("Sign in to follow creators");
     setFollowLoading(true);
@@ -242,7 +265,7 @@ export default function ProfilePage() {
 
   if (error || !profileData) {
     return (
-      <div className="max-w-4xl mx-auto py-24 text-center space-y-6 bg-white border border-slate-100 rounded-[3rem] shadow-soft mt-12">
+      <div className="max-w-4xl mx-auto py-24 text-center space-y-6 bg-card border border-slate-100 rounded-[3rem] shadow-soft mt-12">
         <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-300">
            <Layers className="w-10 h-10" />
         </div>
@@ -283,7 +306,7 @@ export default function ProfilePage() {
               {(profileData.isGlowActive || (isAdmin && profileData.isGlowActive === undefined)) && (
                 <div className="absolute inset-0 bg-indigo-600 rounded-full blur-3xl opacity-50 premium-glow-indigo" />
               )}
-              <div className={`w-32 h-32 sm:w-44 md:w-52 md:h-52 rounded-full border-2 ${profileData.isGlowActive || (isAdmin && profileData.isGlowActive === undefined) ? "border-indigo-600 premium-glow-indigo shadow-2xl" : "border-white/40 shadow-xl backdrop-blur-sm"} bg-white overflow-hidden relative z-10 transition-all duration-700 hover:rotate-1`}>
+              <div className={`w-32 h-32 sm:w-44 md:w-52 md:h-52 rounded-full border-2 ${profileData.isGlowActive || (isAdmin && profileData.isGlowActive === undefined) ? "border-indigo-600 premium-glow-indigo shadow-2xl" : "border-white/40 shadow-xl backdrop-blur-sm"} bg-card overflow-hidden relative z-10 transition-all duration-700 hover:rotate-1`}>
                 <AuthorAvatar 
                   avatar={profileData.avatar} 
                   name={profileData.name} 
@@ -296,7 +319,7 @@ export default function ProfilePage() {
                 />
               </div>
               {(profileData.isVerifiedActive || (isAdmin && profileData.isVerifiedActive === undefined)) && (
-                 <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-indigo-600 text-white p-1.5 sm:p-2.5 rounded-xl md:rounded-2xl shadow-xl border-[3px] md:border-4 border-white z-20">
+                 <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-indigo-600 text-white p-1.5 sm:p-2.5 rounded-xl md:rounded-2xl shadow-xl border-[3px] md:border-4 border-card z-20">
                     <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
                  </div>
               )}
@@ -348,9 +371,9 @@ export default function ProfilePage() {
                  {isFollowing ? "Following" : "Follow Creator"}
                </Button>
              )}
-             <button className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all shrink-0">
-                <Share2 className="w-4 h-4 md:w-5 md:h-5" />
-             </button>
+              <button onClick={handleShare} className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-card border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all shrink-0">
+                 <Share2 className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
           </div>
         </div>
       </div>
@@ -360,7 +383,7 @@ export default function ProfilePage() {
         {/* Sidebar Info */}
         <div className="lg:col-span-4 space-y-8">
            {/* Bio & Stats */}
-           <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-soft space-y-8">
+           <div className="bg-card border border-slate-100 rounded-[2.5rem] p-8 shadow-soft space-y-8">
               <div className="space-y-4">
                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Mission Statement</h3>
                  <p className="text-[14px] font-bold text-slate-600 leading-relaxed italic">
@@ -369,15 +392,15 @@ export default function ProfilePage() {
               </div>
 
                <div className="flex items-center gap-2 md:gap-3 pt-4">
-                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Followers", userIds: profileData.followers || [] })}>
+                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-card hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Followers", userIds: profileData.followers || [] })}>
                      <p className="text-base md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.followers?.length || 0}</p>
                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Followers</p>
                   </div>
-                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-white hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Following", userIds: profileData.following || [] })}>
+                  <div className="flex-1 text-center p-3 md:p-4 bg-slate-50 rounded-2xl border border-slate-100 transition-all hover:bg-card hover:shadow-sm group cursor-pointer" onClick={() => setModalState({ open: true, title: "Following", userIds: profileData.following || [] })}>
                      <p className="text-base md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.following?.length || 0}</p>
                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Following</p>
                   </div>
-                  <div className="flex-1 text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-white hover:shadow-sm group">
+                  <div className="flex-1 text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-card hover:shadow-sm group">
                      <div className="flex flex-col items-center justify-center">
                         <div className="flex items-center gap-1">
                            <Flame className="w-3.5 h-3.5 text-indigo-600" />
@@ -426,7 +449,7 @@ export default function ProfilePage() {
 
            {/* Creator Impact Card - Dynamic Metrics */}
            <div className={`rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl ${isAdmin ? "bg-indigo-600 text-white" : "bg-slate-900 text-white"}`}>
-              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -mr-10 -mt-10 ${isAdmin ? "bg-white/20" : "bg-indigo-600/20"}`} />
+              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -mr-10 -mt-10 ${isAdmin ? "bg-card/20" : "bg-indigo-600/20"}`} />
               <div className="relative z-10 space-y-6">
                  <div className="flex items-center justify-between">
                     <h3 className={`text-[11px] font-black uppercase tracking-widest ${isAdmin ? "text-indigo-100" : "text-indigo-400"}`}>Creator Impact</h3>
@@ -503,7 +526,7 @@ export default function ProfilePage() {
                     ) : promptsData?.length > 0 ? (
                       promptsData.map((p: any) => (
                         <Link key={p.slug} href={`/prompt/${p.slug}`} className="group">
-                          <div className="bg-white border border-slate-100 p-8 rounded-[2.5rem] hover:border-indigo-600 hover:shadow-premium transition-all duration-500 h-full flex flex-col space-y-6 relative overflow-hidden">
+                          <div className="bg-card border border-slate-100 p-8 rounded-[2.5rem] hover:border-indigo-600 hover:shadow-premium transition-all duration-500 h-full flex flex-col space-y-6 relative overflow-hidden">
                              <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50/30 rounded-full blur-2xl -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
                              <div className="flex items-center justify-between relative z-10">
                                 <span className="text-[9px] font-black uppercase tracking-[0.15em] text-indigo-600 bg-indigo-50 px-3 py-1 rounded-xl">
@@ -526,7 +549,7 @@ export default function ProfilePage() {
                         </Link>
                       ))
                     ) : (
-                      <div className="col-span-full py-24 text-center bg-white border border-slate-100 rounded-[3rem] shadow-soft">
+                      <div className="col-span-full py-24 text-center bg-card border border-slate-100 rounded-[3rem] shadow-soft">
                          <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
                             <Sparkles className="w-10 h-10" />
                          </div>
@@ -550,7 +573,7 @@ export default function ProfilePage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="col-span-full py-24 text-center bg-white border border-slate-100 rounded-[3rem] shadow-soft"
+                    className="col-span-full py-24 text-center bg-card border border-slate-100 rounded-[3rem] shadow-soft"
                   >
                     <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
                        <Bookmark className="w-10 h-10" />
@@ -568,7 +591,7 @@ export default function ProfilePage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="col-span-full py-24 text-center bg-white border border-slate-100 rounded-[3rem] shadow-soft"
+                    className="col-span-full py-24 text-center bg-card border border-slate-100 rounded-[3rem] shadow-soft"
                   >
                     <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
                        <Trophy className="w-10 h-10" />

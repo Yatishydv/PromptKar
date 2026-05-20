@@ -80,7 +80,7 @@ export const Dialog: React.FC<DialogProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto border border-slate-100"
+              className="bg-card w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto border border-slate-100"
             >
               {/* Header Icon Section */}
               <div className={`h-32 ${style.bg} flex items-center justify-center relative overflow-hidden`}>
@@ -91,13 +91,13 @@ export const Dialog: React.FC<DialogProps> = ({
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.1, type: "spring" }}
-                  className="w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center z-10"
+                  className="w-16 h-16 bg-card rounded-2xl shadow-xl flex items-center justify-center z-10"
                 >
                   {style.icon}
                 </motion.div>
                 <button 
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 transition-colors bg-white/50 backdrop-blur-sm rounded-full"
+                  className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 transition-colors bg-card/50 backdrop-blur-sm rounded-full"
                 >
                   <X className="w-4 h-4" />
                 </button>

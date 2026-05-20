@@ -62,7 +62,7 @@ export const SystemProvider = ({ children }: { children: React.ReactNode }) => {
   // Maintenance Mode Overlay
   if (!loading && settings.maintenanceMode && !isAdmin) {
     return (
-      <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center p-8 text-center">
+      <div className="fixed inset-0 z-[9999] bg-card flex flex-col items-center justify-center p-8 text-center">
         <div className="w-24 h-24 bg-indigo-50 rounded-3xl flex items-center justify-center mb-6 animate-pulse">
           <span className="text-4xl">🛠️</span>
         </div>

@@ -77,7 +77,7 @@ const CreatePromptPage = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
-        <div className="max-w-md w-full bg-white rounded-[2.5rem] p-12 text-center shadow-2xl border border-slate-100">
+        <div className="max-w-md w-full bg-card rounded-[2.5rem] p-12 text-center shadow-2xl border border-slate-100">
           <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
              <Plus className="w-8 h-8" />
           </div>
@@ -158,7 +158,7 @@ const CreatePromptPage = () => {
         {/* Form Column */}
         <div className="col-span-12 lg:col-span-7">
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm space-y-10">
+            <div className="bg-card border border-slate-100 rounded-[2.5rem] p-10 shadow-sm space-y-10">
               {/* Basics Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ const CreatePromptPage = () => {
                       placeholder="e.g., Professional Blog Writer"
                       value={formData.title}
                       onChange={e => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[15px] font-bold text-slate-900 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[15px] font-bold text-slate-900 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                     />
                   </div>
                   <div className="space-y-2">
@@ -183,7 +183,7 @@ const CreatePromptPage = () => {
                       rows={2}
                       value={formData.description}
                       onChange={e => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300 resize-none"
+                      className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300 resize-none"
                     />
                   </div>
                 </div>
@@ -234,7 +234,7 @@ const CreatePromptPage = () => {
                     placeholder="e.g., seo, marketing, writing"
                     value={formData.tags}
                     onChange={e => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-4 px-6 text-[14px] font-medium text-slate-600 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                   />
                 </div>
               </div>
@@ -251,7 +251,7 @@ const CreatePromptPage = () => {
                     rows={10}
                     value={formData.content}
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] py-6 px-6 text-[14px] font-mono leading-relaxed text-slate-700 focus:border-indigo-600/10 focus:bg-white focus:ring-0 transition-all placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-[1.5rem] py-6 px-6 text-[14px] font-mono leading-relaxed text-slate-700 focus:border-indigo-600/10 focus:bg-card focus:ring-0 transition-all placeholder:text-slate-300"
                   />
                 </div>
               </div>
@@ -283,7 +283,7 @@ const CreatePromptPage = () => {
                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Live Preview</span>
             </div>
 
-            <Card className="relative border border-slate-100 bg-white overflow-hidden rounded-[2.5rem] shadow-premium group">
+            <Card className="relative border border-slate-100 bg-card overflow-hidden rounded-[2.5rem] shadow-premium group">
                <div className="p-8 md:p-10 space-y-8">
                   {/* Preview Header */}
                   <div className="space-y-4">
@@ -330,9 +330,9 @@ const CreatePromptPage = () => {
             </Card>
 
             <div className="bg-indigo-600 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-premium group">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700" />
+               <div className="absolute top-0 right-0 w-32 h-32 bg-card/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700" />
                <div className="relative z-10 space-y-4">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-xl">
+                  <div className="w-12 h-12 bg-card/20 rounded-2xl flex items-center justify-center backdrop-blur-xl">
                      <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
@@ -341,7 +341,7 @@ const CreatePromptPage = () => {
                   </div>
                   <Button 
                     onClick={() => router.push("/enhance")}
-                    className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-none rounded-xl h-11 font-black text-xs uppercase tracking-widest transition-all"
+                    className="w-full bg-card text-indigo-600 hover:bg-indigo-50 border-none rounded-xl h-11 font-black text-xs uppercase tracking-widest transition-all"
                   >
                     Open AI Lab
                   </Button>

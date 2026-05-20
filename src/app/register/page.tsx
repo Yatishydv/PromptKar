@@ -55,7 +55,7 @@ const RegisterPage = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl shadow-xl shadow-indigo-100 mb-6">
             <Sparkles className="text-white w-8 h-8" />
           </div>
-          <h2 className="text-3xl font-black text-[#0F172A] tracking-tight">Create Account</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Create Account</h2>
           <p className="mt-2 text-sm text-slate-500 font-medium">
             Join PromptKar and start sharing your brilliance
           </p>
@@ -67,13 +67,13 @@ const RegisterPage = () => {
               {/* Avatar Selection */}
               <div className="flex flex-col items-center gap-4 pb-4">
                 <div className="relative group">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-xl bg-slate-50">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-card shadow-xl bg-slate-50">
                     <img src={selectedAvatar} className="w-full h-full object-cover" alt="Avatar" />
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                    className="absolute -bottom-2 -right-2 w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white cursor-pointer shadow-lg hover:scale-110 transition-all border-4 border-white"
+                    className="absolute -bottom-2 -right-2 w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white cursor-pointer shadow-lg hover:scale-110 transition-all border-4 border-card"
                   >
                     <User className="w-4 h-4" />
                   </button>
@@ -89,7 +89,7 @@ const RegisterPage = () => {
                         key={cat}
                         type="button"
                         onClick={() => setActiveAvatarTab(cat as any)}
-                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeAvatarTab === cat ? "bg-indigo-600 text-white" : "bg-white text-slate-400 border border-slate-100"
+                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeAvatarTab === cat ? "bg-indigo-600 text-white" : "bg-card text-slate-400 border border-slate-100"
                           }`}
                       >
                         {cat}
@@ -105,7 +105,7 @@ const RegisterPage = () => {
                           setSelectedAvatar(url);
                           setShowAvatarPicker(false);
                         }}
-                        className={`aspect-square rounded-full overflow-hidden border-2 transition-all ${selectedAvatar === url ? "border-indigo-600 ring-2 ring-indigo-50" : "border-transparent bg-white hover:border-slate-200"
+                        className={`aspect-square rounded-full overflow-hidden border-2 transition-all ${selectedAvatar === url ? "border-indigo-600 ring-2 ring-indigo-50" : "border-transparent bg-card hover:border-slate-200"
                           }`}
                       >
                         <img src={url} className="w-full h-full object-cover" alt="Identity" />
@@ -125,7 +125,7 @@ const RegisterPage = () => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="Full Name"
                   />
                 </div>
@@ -139,7 +139,7 @@ const RegisterPage = () => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="username"
                   />
                 </div>
@@ -152,7 +152,7 @@ const RegisterPage = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="Email address"
                   />
                 </div>
@@ -165,7 +165,7 @@ const RegisterPage = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-white focus:border-indigo-600/20 transition-all text-sm font-medium"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-100 rounded-xl bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:bg-card focus:border-indigo-600/20 transition-all text-sm font-medium"
                     placeholder="Create Password"
                   />
                 </div>
@@ -199,7 +199,7 @@ const RegisterPage = () => {
                 <div className="w-full border-t border-slate-100"></div>
               </div>
               <div className="relative flex justify-center text-[11px] uppercase tracking-wider font-bold">
-                <span className="px-3 bg-white text-slate-400">Or sign up with</span>
+                <span className="px-3 bg-card text-slate-400">Or sign up with</span>
               </div>
             </div>
 

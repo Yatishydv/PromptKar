@@ -93,11 +93,11 @@ const CategoriesPage = () => {
     <div className="space-y-8 pb-24">
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-[#EEF2FF] px-10 py-12 border border-white shadow-sm">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full -mr-20 -mt-20 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-indigo-50 px-10 py-12 border border-card shadow-sm">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-card/20 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-3">
-            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full w-fit shadow-sm">
+            <div className="flex items-center gap-2 px-3 py-1 bg-card rounded-full w-fit shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-800">Prompt Directory</span>
             </div>
@@ -115,7 +115,7 @@ const CategoriesPage = () => {
                 placeholder="Search categories..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-slate-100 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all text-[13px] font-medium shadow-sm"
+                className="w-full bg-card border border-slate-100 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all text-[13px] font-medium shadow-sm"
               />
             </div>
           </div>
@@ -129,7 +129,7 @@ const CategoriesPage = () => {
           { label: "Total Prompts",    value: categories.reduce((a,c) => a + c.count, 0), icon: Sparkles, color: "text-rose-600 bg-rose-50" },
           { label: "Total Likes",      value: categories.reduce((a,c) => a + (c.totalLikes||0), 0), icon: Heart, color: "text-pink-600 bg-pink-50" },
         ].map(stat => (
-          <div key={stat.label} className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4">
+          <div key={stat.label} className="bg-card rounded-2xl border border-slate-100 p-5 flex items-center gap-4">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.color}`}>
               <stat.icon className="w-5 h-5" />
             </div>
@@ -159,7 +159,7 @@ const CategoriesPage = () => {
             <Link
               key={c.name}
               href={`/categories/${categorySlug(c.name)}`}
-              className="group flex flex-col h-full bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-lg hover:border-indigo-100 transition-all duration-300"
+              className="group flex flex-col h-full bg-card border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-lg hover:border-indigo-100 transition-all duration-300"
             >
               {/* Icon row */}
               <div className="flex items-center justify-between mb-8">
@@ -204,7 +204,7 @@ const CategoriesPage = () => {
       {/* Empty state CTA */}
       {!loading && categories.every(c => c.count === 0) && (
         <div className="text-center py-8">
-          <div className="inline-flex flex-col items-center gap-3 bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
+          <div className="inline-flex flex-col items-center gap-3 bg-card border border-slate-100 rounded-3xl p-8 shadow-sm">
             <Sparkles className="w-8 h-8 text-indigo-600" />
             <p className="font-black text-slate-900">No prompts yet — be the first!</p>
             <p className="text-sm text-slate-400">Create your first prompt and it will appear in its category.</p>

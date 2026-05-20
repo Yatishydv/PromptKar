@@ -147,6 +147,29 @@ const PromptDetailPage = () => {
     }
   };
 
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: promptData?.title || "Check out this AI Prompt",
+          text: promptData?.description || "Check out this prompt on PromptKar!",
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Link copied to clipboard!");
+      } catch (err) {
+        toast.error("Failed to copy link");
+      }
+    }
+  };
+
   const handleReaction = async (reaction: string) => {
     if (!user) return toast.error("Please sign in to react");
     try {
@@ -269,7 +292,7 @@ const PromptDetailPage = () => {
           {activeTab === "content" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="relative group">
-                <Card className="relative border border-slate-100 bg-white overflow-hidden rounded-[2rem] shadow-soft">
+                <Card className="relative border border-slate-100 bg-card overflow-hidden rounded-[2rem] shadow-soft">
                   <CardContent className="p-8 md:p-10">
                     <div className="relative">
                       <div className="bg-slate-900 rounded-[1.5rem] border border-slate-800 shadow-2xl relative group/prompt overflow-hidden">
@@ -322,19 +345,19 @@ const PromptDetailPage = () => {
                   <div className="flex bg-slate-50 border border-slate-100 rounded-full px-2 py-1 gap-1">
                     <button
                       onClick={() => handleReaction("thumbsup")}
-                      className="p-1.5 hover:bg-white rounded-full transition-all hover:scale-110 active:scale-95"
+                      className="p-1.5 hover:bg-card rounded-full transition-all hover:scale-110 active:scale-95"
                     >
                       <ThumbsUp className="w-4.5 h-4.5 text-blue-500" />
                     </button>
                     <button
                       onClick={() => handleReaction("fire")}
-                      className="p-1.5 hover:bg-white rounded-full transition-all hover:scale-110 active:scale-95"
+                      className="p-1.5 hover:bg-card rounded-full transition-all hover:scale-110 active:scale-95"
                     >
                       <Flame className="w-4.5 h-4.5 text-orange-500" />
                     </button>
                     <button
                       onClick={() => handleReaction("lightbulb")}
-                      className="p-1.5 hover:bg-white rounded-full transition-all hover:scale-110 active:scale-95"
+                      className="p-1.5 hover:bg-card rounded-full transition-all hover:scale-110 active:scale-95"
                     >
                       <Lightbulb className="w-4.5 h-4.5 text-yellow-500" />
                     </button>
@@ -346,7 +369,7 @@ const PromptDetailPage = () => {
                       <Sparkles className="w-4 h-4" /> Improve with AI
                     </Button>
                   </Link>
-                  <Button variant="outline" className="p-2 w-11 h-11 rounded-xl">
+                  <Button variant="outline" className="p-2 w-11 h-11 rounded-xl" onClick={handleShare}>
                     <Share2 className="w-4 h-4 text-slate-400" />
                   </Button>
                 </div>
@@ -365,7 +388,7 @@ const PromptDetailPage = () => {
                     {promptData.history?.slice().reverse().map((ver: any, i: number) => (
                       <div key={i} className="relative pl-14">
                         {/* Dot */}
-                        <div className="absolute left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-slate-200 border-2 border-white shadow-sm" />
+                        <div className="absolute left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-slate-200 border-2 border-card shadow-sm" />
 
                         <div className="space-y-3">
                           <div className="flex items-center gap-3">
@@ -386,7 +409,7 @@ const PromptDetailPage = () => {
                                 navigator.clipboard.writeText(ver.content);
                                 toast.success("Old version copied!");
                               }}
-                              className="absolute top-4 right-4 p-2 bg-white rounded-xl border border-slate-100 text-slate-400 hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                              className="absolute top-4 right-4 p-2 bg-card rounded-xl border border-slate-100 text-slate-400 hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
                             >
                               <Copy className="w-3.5 h-3.5" />
                             </button>
@@ -397,7 +420,7 @@ const PromptDetailPage = () => {
 
                     {/* Original Version */}
                     <div className="relative pl-14">
-                      <div className="absolute left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-indigo-600 border-2 border-white shadow-sm shadow-indigo-100" />
+                      <div className="absolute left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-indigo-600 border-2 border-card shadow-sm shadow-indigo-100" />
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
                           <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2 py-1 rounded-lg">
@@ -412,7 +435,7 @@ const PromptDetailPage = () => {
                   </div>
                 </div>
               ) : (
-                <div className="p-12 text-center bg-white/5 rounded-3xl border border-white/5">
+                <div className="p-12 text-center bg-card/5 rounded-3xl border border-white/5">
                   <History className="w-12 h-12 text-foreground/10 mx-auto mb-4" />
                   <h4 className="font-bold mb-2">No version history yet</h4>
                   <p className="text-xs text-foreground/40">This prompt is in its original masterpiece state.</p>
@@ -480,7 +503,7 @@ const PromptDetailPage = () => {
                 />
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-lg text-[#0F172A] cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => router.push(`/profile/${promptData.authorUsername}`)}>
+                    <h4 className="font-bold text-lg text-slate-900 cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => router.push(`/profile/${promptData.authorUsername}`)}>
                       @{promptData.authorUsername || "anonymous"}
                     </h4>
                     <span className="text-lg" title={getRankTitle(promptData.authorStreak || 0, promptData.authorIsAdmin, promptData.authorCustomTitle)}>
@@ -518,7 +541,7 @@ const PromptDetailPage = () => {
                 <div className="text-xs font-bold text-foreground/40 uppercase tracking-wider">Tags</div>
                 <div className="flex flex-wrap gap-2">
                   {promptData.tags?.map((tag: string) => (
-                    <span key={tag} className="text-[10px] px-2 py-1 rounded-md bg-white/5 border border-white/10 text-foreground/60">
+                    <span key={tag} className="text-[10px] px-2 py-1 rounded-md bg-card/5 border border-white/10 text-foreground/60">
                       #{tag}
                     </span>
                   ))}
@@ -565,7 +588,7 @@ const LikersList = ({ slug }: { slug: string }) => {
     <div className="flex flex-wrap gap-4">
       {users.map((u: any) => (
         <Link key={u.firebaseUid} href={`/profile/${u.username}`}>
-          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/50 transition-all group">
+          <div className="flex items-center gap-3 bg-card px-4 py-2 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:shadow-lg hover:shadow-indigo-50/50 transition-all group">
             <AuthorAvatar 
               name={u.name} 
               avatar={u.avatar} 

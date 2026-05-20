@@ -89,6 +89,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* SEO Hidden Keywords for Class Assignment */}
+        <div style={{ display: "none" }} aria-hidden="true">
+          <h1>Best AI Prompts</h1>
+          <h2>Best AI Prompts Marketplace</h2>
+          <p>Best AI Prompts, Best AI Prompts, Best AI Prompts, Best AI Prompts, Best AI Prompts.</p>
+          <p>If you are looking for the best AI prompts, you have found the ultimate library of best AI prompts. We offer the best AI prompts for all your needs. Download the best AI prompts today.</p>
+        </div>
         <AuthProvider>
           <SystemProvider>
             <ThemePreviewProvider>

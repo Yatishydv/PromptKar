@@ -3,10 +3,11 @@ import PromptClient from './PromptClient';
 import connectDB from '@/lib/mongodb';
 import Prompt from '@/models/Prompt';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   try {
+    const { slug } = await params;
     await connectDB();
-    const prompt = await Prompt.findOne({ slug: params.slug }).lean();
+    const prompt = await Prompt.findOne({ slug }).lean();
     if (!prompt) return { title: 'Not Found' };
     
     return {
@@ -22,10 +23,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   try {
+    const { slug } = await params;
     await connectDB();
-    const prompt = await Prompt.findOne({ slug: params.slug }).lean();
+    const prompt = await Prompt.findOne({ slug }).lean();
     
     let initialData = null;
     if (prompt) {

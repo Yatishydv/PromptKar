@@ -83,7 +83,7 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
   const [post, setPost] = useState<any>(initialData);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(!initialData);
-  const [notFound, setNotFound] = useState(!initialData && true);
+  const [notFound, setNotFound] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [saved, setSaved] = useState(false);

@@ -3,10 +3,11 @@ import BlogClient from './BlogClient';
 import connectDB from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   try {
+    const { slug } = await params;
     await connectDB();
-    const blog = await Blog.findOne({ slug: params.slug }).lean();
+    const blog = await Blog.findOne({ slug }).lean();
     if (!blog) return { title: 'Not Found' };
     
     return {
@@ -23,10 +24,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   try {
+    const { slug } = await params;
     await connectDB();
-    const blog = await Blog.findOne({ slug: params.slug }).lean();
+    const blog = await Blog.findOne({ slug }).lean();
     
     let initialData = null;
     if (blog) {

@@ -24,55 +24,8 @@ const categoryColors: Record<string, string> = {
   Development: "bg-cyan-50 text-cyan-700",
 };
 
-// Render markdown-ish content: headings, code blocks, paragraphs
-// Render native HTML content with professional typography
-// Isolated renderer for Blogger content using Shadow DOM or Iframe to prevent CSS leakage
-const BloggerRenderer = ({ content }: { content: string }) => {
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
-
-  // Auto-resize iframe to content height
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-
-    const handleResize = () => {
-      if (iframe.contentWindow?.document.body) {
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-      }
-    };
-
-    iframe.onload = () => {
-      // Inject some base styles to ensure links open in top window
-      const doc = iframe.contentWindow?.document;
-      if (doc) {
-        const base = doc.createElement('base');
-        base.target = '_top';
-        doc.head.appendChild(base);
-        
-        // Hide scrollbars in the iframe
-        doc.body.style.overflow = 'hidden';
-        doc.body.style.margin = '0';
-        doc.body.style.padding = '0';
-        
-        handleResize();
-      }
-    };
-
-    // Poll for height changes (images loading etc)
-    const interval = setInterval(handleResize, 1000);
-    return () => clearInterval(interval);
-  }, [content]);
-
-  return (
-    <iframe
-      ref={iframeRef}
-      srcDoc={content}
-      className="w-full border-none transition-all duration-500"
-      title="Blog Content"
-      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-    />
-  );
-};
+// Removed BloggerRenderer iframe to fix SEO Soft 404 issues. 
+// Content is now rendered directly into the DOM using dangerouslySetInnerHTML.
 
 const BlogClient = ({ initialData }: { initialData: any }) => {
   const { slug } = useParams();
@@ -429,9 +382,10 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
           </div>
 
           {/* Content */}
-          <div className="min-h-[200px]">
-             <BloggerRenderer content={post.content} />
-          </div>
+             <div 
+               className="blog-content text-slate-700 text-[15px]" 
+               dangerouslySetInnerHTML={{ __html: post.content }} 
+             />
 
           {/* Tags */}
           {post.tags?.length > 0 && (

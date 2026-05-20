@@ -68,7 +68,7 @@ const ROADMAP_MILESTONES = [
 
 const SettingsPage = () => {
   const router = useRouter();
-  const { user, userData, isAdmin, refreshUserData, loading: authLoading } = useAuth();
+  const { user, userData, isAdmin, refreshUserData, setPasswordForGoogleUser, resetPassword, loading: authLoading } = useAuth();
   const { setPreviewTheme } = useThemePreview();
 
   // Clear preview theme when leaving settings page
@@ -89,6 +89,9 @@ const SettingsPage = () => {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [settingPassword, setSettingPassword] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -553,10 +556,97 @@ const SettingsPage = () => {
                         </div>
                      </Card>
                    )}
-                </motion.div>
-             )}
 
-             {/* 2. Appearance */}
+                   {/* Password & Security */}
+                   <Card className="border-slate-100 shadow-soft overflow-hidden">
+                     <CardContent className="p-8 space-y-6">
+                       <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                           <Lock className="w-5 h-5 text-indigo-600" />
+                         </div>
+                         <div>
+                           <h3 className="text-[15px] font-black text-slate-900">Password & Security</h3>
+                           <p className="text-[11px] font-bold text-slate-400">
+                             {user?.providerData?.some(p => p.providerId === 'password') 
+                               ? "You can log in with email + password. Reset it below if needed."
+                               : "You signed in with Google. Set a password to also log in with email + password."
+                             }
+                           </p>
+                         </div>
+                       </div>
+
+                       {user?.providerData?.some(p => p.providerId === 'password') ? (
+                         <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                           <div>
+                             <p className="text-[13px] font-black text-slate-900">Reset Your Password</p>
+                             <p className="text-[11px] text-slate-400 font-medium">We&apos;ll send a reset link to {user?.email}</p>
+                           </div>
+                           <Button
+                             onClick={async () => {
+                               if (user?.email) {
+                                 try { await resetPassword(user.email); } catch {}
+                               }
+                             }}
+                             className="bg-slate-900 text-white rounded-xl h-10 px-5 text-[11px] font-black border-none hover:bg-indigo-600 transition-colors"
+                           >
+                             Send Reset Email
+                           </Button>
+                         </div>
+                       ) : (
+                         <div className="space-y-4">
+                           <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                             <p className="text-[11px] font-bold text-indigo-600">
+                               💡 Setting a password lets you log in with {user?.email} + password, in addition to Google Sign-In.
+                             </p>
+                           </div>
+                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                             <div>
+                               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">New Password</label>
+                               <input
+                                 type="password"
+                                 value={newPassword}
+                                 onChange={(e) => setNewPassword(e.target.value)}
+                                 placeholder="Min 6 characters"
+                                 className="w-full h-12 px-4 bg-card border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600/10 focus:border-indigo-600/30 transition-all"
+                               />
+                             </div>
+                             <div>
+                               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Confirm Password</label>
+                               <input
+                                 type="password"
+                                 value={confirmPassword}
+                                 onChange={(e) => setConfirmPassword(e.target.value)}
+                                 placeholder="Re-enter password"
+                                 className="w-full h-12 px-4 bg-card border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600/10 focus:border-indigo-600/30 transition-all"
+                               />
+                             </div>
+                           </div>
+                           <Button
+                             disabled={settingPassword || !newPassword || newPassword.length < 6 || newPassword !== confirmPassword}
+                             onClick={async () => {
+                               if (newPassword !== confirmPassword) { toast.error("Passwords don't match!"); return; }
+                               if (newPassword.length < 6) { toast.error("Password must be at least 6 characters."); return; }
+                               setSettingPassword(true);
+                               try {
+                                 await setPasswordForGoogleUser(newPassword);
+                                 setNewPassword("");
+                                 setConfirmPassword("");
+                               } catch {} finally {
+                                 setSettingPassword(false);
+                               }
+                             }}
+                             className="bg-indigo-600 text-white rounded-xl h-11 px-8 text-[11px] font-black border-none disabled:opacity-50 disabled:cursor-not-allowed"
+                           >
+                             {settingPassword ? "Setting Password..." : "Set Password"}
+                           </Button>
+                         </div>
+                       )}
+                     </CardContent>
+                   </Card>
+                </motion.div>
+              )}
+
+              {/* 2. Appearance */}
              {activeTab === "appearance" && (
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-12">
                    {/* Aura Toggle */}

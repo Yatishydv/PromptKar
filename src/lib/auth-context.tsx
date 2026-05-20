@@ -6,9 +6,12 @@ import {
   User, 
   signInWithPopup, 
   GoogleAuthProvider, 
+  EmailAuthProvider,
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  linkWithCredential,
   updateProfile
 } from "firebase/auth";
 import { auth } from "./firebase";
@@ -24,6 +27,8 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   registerWithEmail: (email: string, pass: string, name: string, username: string, avatar: string) => Promise<void>;
   loginWithEmail: (email: string, pass: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  setPasswordForGoogleUser: (newPassword: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUserData: () => Promise<void>;
 }
@@ -36,6 +41,8 @@ const AuthContext = createContext<AuthContextType>({
   signInWithGoogle: async () => {},
   registerWithEmail: async () => {},
   loginWithEmail: async () => {},
+  resetPassword: async () => {},
+  setPasswordForGoogleUser: async () => {},
   logout: async () => {},
   refreshUserData: async () => {},
 });
@@ -155,7 +162,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await signInWithEmailAndPassword(auth, email, pass);
       toast.success("Signed in successfully!");
     } catch (error: any) {
-      toast.error(error.message || "Invalid email or password.");
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        toast.error("Wrong password. If you signed up with Google, use Google Sign-In or reset your password.");
+      } else if (error.code === 'auth/user-not-found') {
+        toast.error("No account found with this email. Please register first.");
+      } else if (error.code === 'auth/too-many-requests') {
+        toast.error("Too many attempts. Please try again later or reset your password.");
+      } else {
+        toast.error(error.message || "Invalid email or password.");
+      }
+      throw error;
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://promptkar.site';
+      await sendPasswordResetEmail(auth, email, {
+        url: `${baseUrl}/login`,
+        handleCodeInApp: false,
+      });
+      toast.success("Password reset email sent! Check your inbox (and spam folder).");
+    } catch (error: any) {
+      console.error("Password Reset Error:", error);
+      toast.error(error.message || "Failed to send reset email.");
+      throw error;
+    }
+  };
+
+  const setPasswordForGoogleUser = async (newPassword: string) => {
+    if (!user || !user.email) {
+      toast.error("You must be logged in to set a password.");
+      return;
+    }
+    try {
+      const credential = EmailAuthProvider.credential(user.email, newPassword);
+      await linkWithCredential(user, credential);
+      toast.success("Password set! You can now log in with email + password too.");
+    } catch (error: any) {
+      if (error.code === 'auth/provider-already-linked') {
+        toast.error("Email/password login is already enabled. Use 'Forgot Password' on the login page to reset it.");
+      } else if (error.code === 'auth/requires-recent-login') {
+        toast.error("For security, please sign out and sign back in with Google first, then try again.");
+      } else {
+        toast.error(error.message || "Failed to set password.");
+      }
       throw error;
     }
   };
@@ -180,6 +231,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signInWithGoogle, 
       registerWithEmail, 
       loginWithEmail, 
+      resetPassword,
+      setPasswordForGoogleUser,
       logout,
       refreshUserData
     }}>

@@ -94,9 +94,9 @@ const LoginPage = () => {
                 </div>
 
                 <div className="text-[13px]">
-                  <a href="#" className="font-bold text-indigo-600 hover:text-indigo-500">
+                  <Link href="/reset-password" className="font-bold text-indigo-600 hover:text-indigo-500">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 

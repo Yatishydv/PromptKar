@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import BlogClient from './BlogClient';
-import { connectDB } from '@/lib/mongodb';
-import { Blog } from '@/models/Blog';
+import connectDB from '@/lib/mongodb';
+import Blog from '@/models/Blog';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   try {

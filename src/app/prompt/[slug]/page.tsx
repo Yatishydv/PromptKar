@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import PromptClient from './PromptClient';
-import { connectDB } from '@/lib/mongodb';
-import { Prompt } from '@/models/Prompt';
+import connectDB from '@/lib/mongodb';
+import Prompt from '@/models/Prompt';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   try {

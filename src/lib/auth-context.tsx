@@ -12,7 +12,8 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   linkWithCredential,
-  updateProfile
+  updateProfile,
+  getAdditionalUserInfo
 } from "firebase/auth";
 import { auth } from "./firebase";
 import { toast } from "react-hot-toast";
@@ -135,8 +136,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
       toast.success("Signed in successfully!");
+      
+      const additionalInfo = getAdditionalUserInfo(result);
+      if (additionalInfo?.isNewUser && result.user.email) {
+        try {
+          const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://promptkar.site';
+          await sendPasswordResetEmail(auth, result.user.email, {
+            url: `${baseUrl}/login`,
+            handleCodeInApp: false,
+          });
+          toast.success("Welcome! We've sent a password setup email to your inbox so you can also log in with email/password.");
+        } catch (emailErr) {
+          console.error("Failed to send welcome password setup email:", emailErr);
+        }
+      }
     } catch (error: any) {
       console.error("Google Sign-in Error:", error);
       toast.error(error.message || "Failed to sign in. Check if pop-ups are blocked.");

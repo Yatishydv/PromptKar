@@ -23,18 +23,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s | PromptKar",
-    default: "PromptKar | Premium AI Prompt Marketplace",
+    default: "PromptKar | Best ChatGPT Prompts & AI Templates",
   },
-  description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
+  description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
   keywords: [
-    "AI Prompt Marketplace",
-    "Prompt Marketplace",
-    "buy ai prompts",
-    "prompt engineering",
-    "ai prompts",
-    "prompt generator",
-    "best ai prompts",
-    "ai image generator prompts"
+    "best ChatGPT prompts",
+    "ChatGPT prompts",
+    "Midjourney prompts",
+    "buy AI prompts",
+    "AI prompt generator"
   ],
   authors: [{ name: "PromptKar Team" }],
   creator: "PromptKar",
@@ -44,8 +41,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "PromptKar | Premium AI Prompt Marketplace",
-    description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
+    title: "PromptKar | Best ChatGPT Prompts",
+    description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
     url: "https://www.promptkar.site",
     siteName: "PromptKar",
     images: [
@@ -53,7 +50,7 @@ export const metadata: Metadata = {
         url: "/og-image.png", // Recommended: Create this image in public/
         width: 1200,
         height: 630,
-        alt: "PromptKar - AI Prompt Marketplace",
+        alt: "PromptKar - Best ChatGPT Prompts",
       },
     ],
     locale: "en_US",
@@ -61,8 +58,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PromptKar | Premium AI Prompt Marketplace",
-    description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
+    title: "PromptKar | Best ChatGPT Prompts",
+    description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
     images: ["/og-image.png"],
     creator: "@promptkar",
   },

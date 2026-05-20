@@ -298,30 +298,68 @@ const SettingsPage = () => {
     if (!confirmSecond) return;
 
     setDeletingAccount(true);
+    const uid = user.uid;
+
     try {
-      const res = await fetch(`/api/users/${user.uid}`, {
+      const { deleteUser } = await import("firebase/auth");
+      
+      // Step 1: Attempt Firebase Auth deletion first (requires fresh login)
+      try {
+        await deleteUser(user);
+      } catch (err: any) {
+        if (err.code === "auth/requires-recent-login") {
+          // Identify provider and trigger inline reauthentication
+          const providerId = user.providerData[0]?.providerId;
+          
+          if (providerId === "google.com") {
+            const confirmReauth = window.confirm(
+              "For security, we need to verify your Google identity before deleting. Click OK to sign in with Google again."
+            );
+            if (!confirmReauth) {
+              setDeletingAccount(false);
+              return;
+            }
+            const { GoogleAuthProvider, reauthenticateWithPopup } = await import("firebase/auth");
+            const provider = new GoogleAuthProvider();
+            await reauthenticateWithPopup(user, provider);
+            // Retry delete after successful reauth
+            await deleteUser(user);
+          } else if (providerId === "password") {
+            const password = window.prompt(
+              "For security, please enter your current password to confirm account deletion:"
+            );
+            if (!password) {
+              setDeletingAccount(false);
+              return;
+            }
+            const { EmailAuthProvider, reauthenticateWithCredential } = await import("firebase/auth");
+            const credential = EmailAuthProvider.credential(user.email!, password);
+            await reauthenticateWithCredential(user, credential);
+            // Retry delete after successful reauth
+            await deleteUser(user);
+          } else {
+            throw err; // Let it fall back to manual instructions
+          }
+        } else {
+          throw err;
+        }
+      }
+
+      // Step 2: Delete MongoDB records only after Firebase deletion successfully completes
+      const res = await fetch(`/api/users/${uid}`, {
         method: "DELETE",
       });
 
       if (!res.ok) {
         const errData = await res.json();
-        throw new Error(errData.error || "Failed to delete database records.");
+        console.error("Firebase deleted but MongoDB failed:", errData);
       }
-
-      const { deleteUser } = await import("firebase/auth");
-      await deleteUser(user);
 
       toast.success("Your profile and all data have been completely deleted.");
       router.push("/");
     } catch (err: any) {
       console.error("Account Deletion Error:", err);
-      if (err.code === "auth/requires-recent-login") {
-        toast.error(
-          "For security reasons, please log out, log back in, and try again to verify your identity before deleting your account."
-        );
-      } else {
-        toast.error(err.message || "An error occurred during account deletion.");
-      }
+      toast.error(err.message || "An error occurred during account deletion.");
     } finally {
       setDeletingAccount(false);
     }

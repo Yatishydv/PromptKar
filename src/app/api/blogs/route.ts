@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import slugify from "slugify";
+import { notifyGoogleIndexingAPI } from "@/lib/indexing";
 
 export async function GET(request: Request) {
   try {
@@ -68,6 +69,13 @@ export async function POST(request: Request) {
     body.readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
 
     const post = await Blog.create(body);
+
+    // Notify Google Indexing API asynchronously
+    if (post.slug && post.published !== false) {
+      const url = `https://www.promptkar.site/blog/${post.slug}`;
+      notifyGoogleIndexingAPI(url, 'URL_UPDATED').catch(console.error);
+    }
+
     return NextResponse.json(post, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

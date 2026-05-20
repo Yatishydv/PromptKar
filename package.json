@@ -22,6 +22,8 @@
     "firebase": "^12.12.1",
     "firebase-admin": "^13.8.0",
     "framer-motion": "^12.38.0",
+    "google-auth-library": "^10.6.2",
+    "googleapis": "^172.0.0",
     "lucide-react": "^1.14.0",
     "mongodb": "^7.2.0",
     "mongoose": "^9.6.1",

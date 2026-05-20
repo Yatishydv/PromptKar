@@ -2,6 +2,7 @@ import { successResponse, handleApiError } from "@/lib/api-utils";
 import dbConnect from "@/lib/mongodb";
 import Prompt from "@/models/Prompt";
 import User from "@/models/User";
+import { notifyGoogleIndexingAPI } from "@/lib/indexing";
 
 export async function GET(request: Request) {
   try {
@@ -94,6 +95,12 @@ export async function POST(request: Request) {
           };
         }
       }
+    }
+
+    // Notify Google Indexing API asynchronously (do not block response)
+    if (prompt.slug) {
+      const url = `https://www.promptkar.site/prompt/${prompt.slug}`;
+      notifyGoogleIndexingAPI(url, 'URL_UPDATED').catch(console.error);
     }
 
     return successResponse({ prompt, streakData }, 201);

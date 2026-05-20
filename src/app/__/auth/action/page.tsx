@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 /**
@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from "next/navigation";
  * Firebase sends users to /__/auth/action?mode=resetPassword&oobCode=xxx
  * This page redirects them to our branded /reset-password page
  */
-export default function AuthActionPage() {
+function AuthActionContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -35,5 +35,22 @@ export default function AuthActionPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function AuthActionPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-black text-slate-400 uppercase tracking-widest animate-pulse">
+            Loading...
+          </p>
+        </div>
+      </div>
+    }>
+      <AuthActionContent />
+    </Suspense>
   );
 }

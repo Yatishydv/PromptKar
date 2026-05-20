@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Mail, Lock, ArrowRight, CheckCircle2, AlertCircle, Sparkles, ArrowLeft, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-const ResetPasswordPage = () => {
+const ResetPasswordContent = () => {
   const { resetPassword } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -395,6 +395,21 @@ const ResetPasswordPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const ResetPasswordPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-black text-slate-400 uppercase tracking-widest animate-pulse">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ResetPasswordContent />
+    </Suspense>
   );
 };
 

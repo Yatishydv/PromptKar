@@ -106,13 +106,16 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
       try {
         const url = user ? `/api/blogs/${slug}?userId=${user.uid}` : `/api/blogs/${slug}`;
         const res = await fetch(url, { cache: 'no-store' });
-        if (!res.ok) { setNotFound(true); return; }
+        if (!res.ok) { 
+          if (!initialData) setNotFound(true); 
+          return; 
+        }
         const data = await res.json();
         if (data.success && data.data) {
           setPost(data.data);
           setLikeCount(data.data.likes || 0);
         } else {
-          setNotFound(true);
+          if (!initialData) setNotFound(true);
           return;
         }
 
@@ -137,7 +140,9 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
             setRelated(relData.data.filter((p: any) => p.slug !== slug).slice(0, 3));
           }
         }
-      } catch { setNotFound(true); }
+      } catch { 
+        if (!initialData) setNotFound(true); 
+      }
       finally { setLoading(false); }
     })();
   }, [slug, user]);

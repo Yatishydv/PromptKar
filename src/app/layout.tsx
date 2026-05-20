@@ -23,14 +23,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s | PromptKar",
-    default: "PromptKar | Best ChatGPT Prompts & AI Templates",
+    default: "PromptKar | Best AI Prompts & Templates",
   },
-  description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
+  description: "Discover the best AI prompts and templates. PromptKar is the top destination to find, copy, and share high-quality artificial intelligence prompts.",
   keywords: [
-    "best ChatGPT prompts",
-    "ChatGPT prompts",
-    "Midjourney prompts",
+    "best AI prompts",
+    "AI prompts",
     "buy AI prompts",
+    "AI prompt templates",
     "AI prompt generator"
   ],
   authors: [{ name: "PromptKar Team" }],
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "PromptKar | Best ChatGPT Prompts",
-    description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
+    title: "PromptKar | Best AI Prompts",
+    description: "Discover the best AI prompts and templates. PromptKar is the top destination to find, copy, and share high-quality artificial intelligence prompts.",
     url: "https://www.promptkar.site",
     siteName: "PromptKar",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
         url: "/og-image.png", // Recommended: Create this image in public/
         width: 1200,
         height: 630,
-        alt: "PromptKar - Best ChatGPT Prompts",
+        alt: "PromptKar - Best AI Prompts",
       },
     ],
     locale: "en_US",
@@ -58,8 +58,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PromptKar | Best ChatGPT Prompts",
-    description: "Discover the best ChatGPT prompts and Midjourney templates. PromptKar is the top destination to find, copy, and share high-quality AI prompts.",
+    title: "PromptKar | Best AI Prompts",
+    description: "Discover the best AI prompts and templates. PromptKar is the top destination to find, copy, and share high-quality artificial intelligence prompts.",
     images: ["/og-image.png"],
     creator: "@promptkar",
   },

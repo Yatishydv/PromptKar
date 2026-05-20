@@ -125,7 +125,28 @@ export async function DELETE(
     const Prompt = (await import("@/models/Prompt")).default;
     await Prompt.deleteMany({ authorId: id });
 
-    // 2. Delete user
+    // 2. Delete user's comments
+    const Comment = (await import("@/models/Comment")).default;
+    await Comment.deleteMany({ userId: id });
+
+    // 3. Delete user's interactions (likes/saves)
+    const Interaction = (await import("@/models/Interaction")).default;
+    await Interaction.deleteMany({ userId: id });
+
+    // 4. Delete user's notifications (sent or received)
+    const Notification = (await import("@/models/Notification")).default;
+    await Notification.deleteMany({
+      $or: [
+        { recipientId: id },
+        { senderId: id }
+      ]
+    });
+
+    // 5. Delete user's usage logs
+    const Usage = (await import("@/models/Usage")).default;
+    await Usage.deleteMany({ identifier: id });
+
+    // 6. Delete user profile
     const user = await User.findOneAndDelete({ firebaseUid: id });
 
     if (!user) {

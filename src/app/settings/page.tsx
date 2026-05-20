@@ -12,7 +12,7 @@ import {
   User as UserIcon, Zap, Smile, Bug, Coffee, 
   ArrowRight, Flag, Trophy, Target, Star, Award,
   Milestone, Zap as ZapIcon, BadgeCheck, Palette as PaletteIcon,
-  Crown, Verified, Flame, Share2
+  Crown, Verified, Flame, Share2, Trash2
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
@@ -92,6 +92,7 @@ const SettingsPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [settingPassword, setSettingPassword] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -283,6 +284,49 @@ const SettingsPage = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    
+    const confirmFirst = window.confirm(
+      "Are you absolutely sure you want to permanently delete your account? This will erase ALL your prompts, comments, stats, and profile from the system. This action CANNOT be undone."
+    );
+    if (!confirmFirst) return;
+
+    const confirmSecond = window.confirm(
+      "FINAL CONFIRMATION: Click OK to confirm account deletion."
+    );
+    if (!confirmSecond) return;
+
+    setDeletingAccount(true);
+    try {
+      const res = await fetch(`/api/users/${user.uid}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to delete database records.");
+      }
+
+      const { deleteUser } = await import("firebase/auth");
+      await deleteUser(user);
+
+      toast.success("Your profile and all data have been completely deleted.");
+      router.push("/");
+    } catch (err: any) {
+      console.error("Account Deletion Error:", err);
+      if (err.code === "auth/requires-recent-login") {
+        toast.error(
+          "For security reasons, please log out, log back in, and try again to verify your identity before deleting your account."
+        );
+      } else {
+        toast.error(err.message || "An error occurred during account deletion.");
+      }
+    } finally {
+      setDeletingAccount(false);
+    }
+  };
+
   const getStreakStatus = () => {
     const effectiveIsAdmin = isAdmin && !simRegularUser;
     const effectiveStreak = simStreak !== null ? simStreak : (userData?.currentStreak || 0);
@@ -307,6 +351,7 @@ const SettingsPage = () => {
     { id: "appearance", label: "Look & Feel", icon: PaletteIcon },
     { id: "roadmap", label: "Roadmap", icon: Target },
     { id: "links", label: "Social Links", icon: Globe },
+    { id: "danger", label: "Danger Zone", icon: Trash2 },
   ];
 
   if (!mounted || authLoading) return <div className="p-20 text-center font-black text-slate-400 animate-pulse">ESTABLISHING CONNECTION...</div>;
@@ -1067,6 +1112,54 @@ const SettingsPage = () => {
                              </div>
                            </div>
                          ))}
+                      </div>
+                   </Card>
+                </motion.div>
+             )}
+
+             {/* 5. Danger Zone */}
+             {activeTab === "danger" && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8">
+                   <Card className="border-red-100 bg-red-50/10 shadow-soft rounded-[3rem] p-10 border-dashed">
+                      <div className="space-y-6">
+                         <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+                               <Trash2 className="w-5 h-5" />
+                            </div>
+                            <div>
+                               <h3 className="text-lg font-black text-slate-900">Danger Zone</h3>
+                               <p className="text-[11px] font-bold text-slate-400">Irreversible account actions. Please proceed with extreme caution.</p>
+                            </div>
+                         </div>
+                         
+                         <hr className="border-red-100/50" />
+                         
+                         <div className="space-y-4">
+                            <p className="text-[13px] text-slate-600 font-medium leading-relaxed">
+                               Deleting your profile will permanently remove:
+                            </p>
+                            <ul className="list-disc pl-6 text-[12px] text-slate-500 font-bold space-y-1">
+                               <li>Your personal creator profile information</li>
+                               <li>All of your published and draft prompts</li>
+                               <li>All of your comments, likes, saves, and interactions</li>
+                               <li>All notification history and activity stats</li>
+                               <li>Your engineering streak progress and achievements</li>
+                            </ul>
+                            <p className="text-[12px] font-bold text-red-600">
+                               ⚠️ This action is final. Your data cannot be restored under any circumstances.
+                            </p>
+                         </div>
+                         
+                         <div className="flex flex-col sm:flex-row gap-4 items-center">
+                            <Button
+                               onClick={handleDeleteAccount}
+                               disabled={deletingAccount}
+                               className="bg-red-600 text-white rounded-2xl h-14 px-8 text-xs font-black uppercase tracking-widest border-none hover:bg-red-700 transition-colors shadow-lg shadow-red-200 flex items-center gap-2"
+                            >
+                               {deletingAccount ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                               {deletingAccount ? "Deleting Account..." : "Permanently Delete Account"}
+                            </Button>
+                         </div>
                       </div>
                    </Card>
                 </motion.div>

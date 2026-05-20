@@ -23,37 +23,37 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s | PromptKar",
-    default: "PromptKar | Discover, Share & Improve AI Prompts",
+    default: "PromptKar | Premium AI Prompt Marketplace",
   },
-  description: "The ultimate social platform for AI prompt engineering. Discover, share, and improve your best prompts for ChatGPT, Midjourney, Claude, and more.",
+  description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
   keywords: [
+    "AI Prompt Marketplace",
+    "Prompt Marketplace",
+    "buy ai prompts",
     "prompt engineering",
-    "ai prompt engineering",
     "ai prompts",
     "prompt generator",
     "best ai prompts",
-    "prompt engineering course",
-    "ai image generator prompts",
-    "ai writing prompts"
+    "ai image generator prompts"
   ],
   authors: [{ name: "PromptKar Team" }],
   creator: "PromptKar",
   publisher: "PromptKar",
-  metadataBase: new URL("https://promptkar.site"),
+  metadataBase: new URL("https://www.promptkar.site"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "PromptKar | Discover, Share & Improve AI Prompts",
-    description: "Join the ultimate community for AI prompt engineering. Share and discover the best prompts for AI models.",
-    url: "https://promptkar.site",
+    title: "PromptKar | Premium AI Prompt Marketplace",
+    description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
+    url: "https://www.promptkar.site",
     siteName: "PromptKar",
     images: [
       {
         url: "/og-image.png", // Recommended: Create this image in public/
         width: 1200,
         height: 630,
-        alt: "PromptKar - AI Prompt Engineering Community",
+        alt: "PromptKar - AI Prompt Marketplace",
       },
     ],
     locale: "en_US",
@@ -61,8 +61,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PromptKar | Discover, Share & Improve AI Prompts",
-    description: "Join the ultimate community for AI prompt engineering. Share and discover the best prompts for AI models.",
+    title: "PromptKar | Premium AI Prompt Marketplace",
+    description: "Discover, copy, and share high-quality templates at PromptKar - the ultimate AI prompt marketplace for Midjourney, ChatGPT, DALL-E, and Stable Diffusion.",
     images: ["/og-image.png"],
     creator: "@promptkar",
   },

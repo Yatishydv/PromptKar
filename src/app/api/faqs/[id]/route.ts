@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Faq from "@/models/Faq";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
     
@@ -17,8 +17,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const resolvedParams = await params;
+
     const updatedFaq = await Faq.findByIdAndUpdate(
-      params.id,
+      resolvedParams.id,
       { question, answer, category, iconName },
       { new: true }
     );
@@ -33,7 +35,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
       await dbConnect();
       
@@ -42,7 +44,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         return NextResponse.json({ error: "Only Head Admin can delete FAQs." }, { status: 403 });
       }
   
-      const deletedFaq = await Faq.findByIdAndDelete(params.id);
+      const resolvedParams = await params;
+
+      const deletedFaq = await Faq.findByIdAndDelete(resolvedParams.id);
       
       if (!deletedFaq) {
           return NextResponse.json({ error: "FAQ not found" }, { status: 404 });

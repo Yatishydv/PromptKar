@@ -322,7 +322,10 @@ const AdminPanel = () => {
           username: '',
           message: '',
           linkType: 'none',
-          linkTarget: ''
+          linkTarget: '',
+          modalTitle: '',
+          modalIcon: 'zap',
+          modalBody: ''
         });
       } else {
         throw new Error(data.error);

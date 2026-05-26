@@ -199,7 +199,7 @@ const FAQPage = () => {
         </p>
 
         {isHeadAdmin && (
-          <div className="absolute right-0 top-0 mt-8">
+          <div className="mt-6 flex justify-center sm:absolute sm:right-0 sm:top-0 sm:mt-8">
             <button 
               onClick={() => {
                 setEditingId(null);

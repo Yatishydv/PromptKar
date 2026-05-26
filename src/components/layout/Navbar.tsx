@@ -480,7 +480,7 @@ const Navbar = () => {
                       onClick={() => setShowMobileMenu(false)}
                       className="flex items-center gap-3 p-2 rounded-xl hover:bg-card transition-all border border-transparent hover:border-slate-100"
                     >
-                      <AuthorAvatar userId={user.uid} name={userData?.name || userData?.username} avatar={userData?.avatar} className="w-10 h-10" />
+                      <AuthorAvatar userId={user.uid} name={userData?.name || userData?.username} avatar={userData?.avatar} className="w-10 h-10 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-black text-slate-900 truncate">@{userData?.username || "user"}</p>
                         <p className="text-[10px] font-bold text-slate-400">View Profile</p>

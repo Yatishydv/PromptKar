@@ -142,7 +142,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const additionalInfo = getAdditionalUserInfo(result);
       if (additionalInfo?.isNewUser && result.user.email) {
         try {
-          const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://promptkar.site';
+          const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.promptkar.site';
           await sendPasswordResetEmail(auth, result.user.email, {
             url: `${baseUrl}/login`,
             handleCodeInApp: false,
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resetPassword = async (email: string) => {
     try {
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://promptkar.site';
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.promptkar.site';
       await sendPasswordResetEmail(auth, email, {
         url: `${baseUrl}/login`,
         handleCodeInApp: false,

@@ -34,7 +34,7 @@ export async function generateMetadata(
       openGraph: {
         title,
         description,
-        url: `https://promptkar.site/blog/${slug}`,
+        url: `https://www.promptkar.site/blog/${slug}`,
         type: 'article',
         publishedTime: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
         authors: post.author ? [post.author] : ['PromptKar Community'],
@@ -47,7 +47,7 @@ export async function generateMetadata(
         images: ogImage ? [ogImage] : [],
       },
       alternates: {
-        canonical: `https://promptkar.site/blog/${slug}`,
+        canonical: `https://www.promptkar.site/blog/${slug}`,
       }
     };
   } catch (error) {

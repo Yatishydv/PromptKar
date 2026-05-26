@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/api', '/settings'],
     },
-    sitemap: 'https://promptkar.site/sitemap.xml',
+    sitemap: 'https://www.promptkar.site/sitemap.xml',
   };
 }

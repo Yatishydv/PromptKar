@@ -37,9 +37,6 @@ export const metadata: Metadata = {
   creator: "PromptKar",
   publisher: "PromptKar",
   metadataBase: new URL("https://www.promptkar.site"),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: "PromptKar | Best AI Prompts",
     description: "Discover the best AI prompts and templates. PromptKar is the top destination to find, copy, and share high-quality artificial intelligence prompts.",

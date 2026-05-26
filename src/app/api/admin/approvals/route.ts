@@ -32,9 +32,8 @@ export async function POST(request: Request) {
     }
 
     if (decision === 'REJECTED') {
-      action.status = 'REJECTED';
-      await action.save();
-      return NextResponse.json({ message: "Action rejected." });
+      await PendingAction.findByIdAndDelete(actionId);
+      return NextResponse.json({ message: "Action rejected and removed from database." });
     }
 
     if (decision === 'APPROVED') {
@@ -72,9 +71,8 @@ export async function POST(request: Request) {
         // Other cases can be handled here...
       }
 
-      action.status = 'APPROVED';
-      await action.save();
-      return NextResponse.json({ message: "Action approved and executed." });
+      await PendingAction.findByIdAndDelete(actionId);
+      return NextResponse.json({ message: "Action approved and executed (record removed)." });
     }
 
     return NextResponse.json({ error: "Invalid decision" }, { status: 400 });

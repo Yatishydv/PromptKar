@@ -16,6 +16,7 @@ import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
 import { Dialog } from "@/components/ui/Dialog";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const ADMIN_EMAIL = "yatishydv@gmail.com";
 
@@ -291,9 +292,30 @@ const AdminPanel = () => {
 
   if (authLoading || (loading && isAdmin)) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
-        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Loading secure dashboard...</p>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-10 pb-20 pt-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-100 pb-8">
+          <div className="flex items-center gap-5">
+            <Skeleton className="w-16 h-16 rounded-2xl" />
+            <div className="space-y-2">
+              <Skeleton className="w-48 h-8" />
+              <Skeleton className="w-32 h-3" />
+            </div>
+          </div>
+          <Skeleton className="w-32 h-11 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+          <div className="lg:col-span-1 space-y-2">
+            {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="w-full h-11 rounded-2xl" />)}
+          </div>
+          <div className="lg:col-span-4 space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map(i => <Skeleton key={i} className="w-full h-32 rounded-xl" />)}
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              {[1, 2].map(i => <Skeleton key={i} className="w-full h-64 rounded-xl" />)}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -615,7 +637,11 @@ const AdminPanel = () => {
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {likersLoading ? (
-                            <Loader2 className="w-4 h-4 text-indigo-600 animate-spin mx-auto my-2" />
+                            <div className="flex flex-wrap gap-2 py-2">
+                              {[1, 2, 3].map(i => (
+                                <Skeleton key={i} className="w-24 h-8 rounded-xl" />
+                              ))}
+                            </div>
                           ) : likers.length > 0 ? (
                             likers.map((u: any) => (
                               <div key={u.userId} className="flex items-center gap-2 bg-card px-2.5 py-1.5 rounded-xl border border-indigo-100 shadow-sm">

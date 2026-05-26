@@ -9,15 +9,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     await connectDB();
     const blog = await Blog.findOne({ slug }).lean();
     if (!blog) return { title: 'Not Found' };
-    
+
+    // Strip HTML tags from content for a clean text excerpt
+    const cleanExcerpt = blog.excerpt
+      || blog.content?.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
+      || 'Discover powerful AI prompts and insights on PromptKar.';
+
+    const title = `${blog.title} | PromptKar`;
+    const images = blog.coverImage ? [{ url: blog.coverImage, width: 1200, height: 630, alt: blog.title }] : [];
+
     return {
-      title: `${blog.title} | PromptKar Blog`,
-      description: blog.excerpt || blog.content?.substring(0, 150) || "Read this amazing post on PromptKar.",
+      title,
+      description: cleanExcerpt,
       openGraph: {
-        title: `${blog.title} | PromptKar Blog`,
-        description: blog.excerpt || blog.content?.substring(0, 150) || "Read this amazing post on PromptKar.",
-        images: blog.coverImage ? [blog.coverImage] : [],
-      }
+        title,
+        description: cleanExcerpt,
+        type: 'article',
+        siteName: 'PromptKar',
+        url: `https://promptkar.site/blog/${slug}`,
+        images,
+        ...(blog.createdAt && { publishedTime: new Date(blog.createdAt).toISOString() }),
+        ...(blog.author && { authors: [blog.author] }),
+      },
+      twitter: {
+        card: blog.coverImage ? 'summary_large_image' : 'summary',
+        title: blog.title,
+        description: cleanExcerpt,
+        ...(blog.coverImage && { images: [blog.coverImage] }),
+      },
     };
   } catch (e) {
     return { title: 'PromptKar Blog' };

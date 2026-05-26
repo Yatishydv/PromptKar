@@ -1,17 +1,92 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Calendar, Clock, ArrowLeft, Bookmark,
   Tag, Heart, Link2, ChevronRight, Sparkles,
-  Loader2, Eye, Share2, Trash2, Edit2, MessageSquare
+  Eye, Share2, Trash2, Edit2, MessageSquare
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
 import { Dialog } from "@/components/ui/Dialog";
+import { Skeleton } from "@/components/ui/Skeleton";
+
+/**
+ * Sanitize raw Blogger HTML to prevent it from breaking the site layout.
+ * - Strips <style> and <script> tags entirely
+ * - Removes dangerous inline style properties (position:fixed/absolute/sticky,
+ *   z-index, width/height using vw/vh/%, top/left/right/bottom, overflow:visible)
+ * - Removes class attributes that could clash with Tailwind
+ * - Constrains images and iframes
+ */
+function sanitizeBlogHtml(rawHtml: string): string {
+  if (!rawHtml) return "";
+
+  let html = rawHtml;
+
+  // 1. Strip <style>...</style> blocks (case-insensitive, dotall)
+  html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+
+  // 2. Strip <script>...</script> blocks
+  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+
+  // 3. Remove onclick, onload, onerror, etc. event handlers from tags
+  html = html.replace(/\s+on\w+\s*=\s*(["'])[\s\S]*?\1/gi, "");
+
+  // 4. Clean up dangerous inline style properties while keeping safe ones.
+  //    We process each style="..." attribute individually.
+  html = html.replace(/style\s*=\s*"([^"]*)"/gi, (match, styleValue: string) => {
+    // Parse out individual declarations
+    const declarations = styleValue.split(";").map((d: string) => d.trim()).filter(Boolean);
+    const safe = declarations.filter((decl: string) => {
+      const prop = decl.split(":")[0]?.trim().toLowerCase() || "";
+      const val = decl.split(":").slice(1).join(":").trim().toLowerCase() || "";
+
+      // Block position:fixed/absolute/sticky (they escape the container)
+      if (prop === "position" && /fixed|absolute|sticky/i.test(val)) return false;
+      // Block z-index (can overlay navbar)
+      if (prop === "z-index") return false;
+      // Block viewport-relative widths/heights
+      if ((prop === "width" || prop === "min-width" || prop === "max-width") && /\d+\s*vw/i.test(val)) return false;
+      if ((prop === "height" || prop === "min-height" || prop === "max-height") && /\d+\s*vh/i.test(val)) return false;
+      // Block top/left/right/bottom (used with absolute/fixed)
+      if (["top", "left", "right", "bottom"].includes(prop)) return false;
+      // Block negative margins that pull content outside container
+      if (/margin/i.test(prop) && /-\d/i.test(val)) return false;
+      // Block overflow: visible (can bleed out of container)
+      if (prop === "overflow" && val === "visible") return false;
+
+      return true;
+    });
+
+    if (safe.length === 0) return "";
+    return `style="${safe.join("; ")}"`;
+  });
+
+  // Also handle style='...' (single quotes)
+  html = html.replace(/style\s*=\s*'([^']*)'/gi, (match, styleValue: string) => {
+    const declarations = styleValue.split(";").map((d: string) => d.trim()).filter(Boolean);
+    const safe = declarations.filter((decl: string) => {
+      const prop = decl.split(":")[0]?.trim().toLowerCase() || "";
+      const val = decl.split(":").slice(1).join(":").trim().toLowerCase() || "";
+      if (prop === "position" && /fixed|absolute|sticky/i.test(val)) return false;
+      if (prop === "z-index") return false;
+      if ((prop === "width" || prop === "min-width" || prop === "max-width") && /\d+\s*vw/i.test(val)) return false;
+      if ((prop === "height" || prop === "min-height" || prop === "max-height") && /\d+\s*vh/i.test(val)) return false;
+      if (["top", "left", "right", "bottom"].includes(prop)) return false;
+      if (/margin/i.test(prop) && /-\d/i.test(val)) return false;
+      if (prop === "overflow" && val === "visible") return false;
+      return true;
+    });
+    if (safe.length === 0) return "";
+    return `style="${safe.join("; ")}"`;
+  });
+
+  return html;
+}
 
 const ADMIN_EMAIL = "yatishydv@gmail.com";
 
@@ -34,6 +109,11 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
   const isAdmin = user?.email === ADMIN_EMAIL;
 
   const [post, setPost] = useState<any>(initialData);
+
+  // Memoize sanitized content so it only recalculates when post changes
+  const sanitizedContent = useMemo(() => {
+    return post?.content ? sanitizeBlogHtml(post.content) : "";
+  }, [post?.content]);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(!initialData);
   const [notFound, setNotFound] = useState(false);
@@ -259,11 +339,21 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
     }
   };
 
-  const handleShare = (platform?: string) => {
+  const handleShare = async (platform?: string) => {
     const url = window.location.href;
+    const shareTitle = post?.title || "Check this out";
+    const shareText = `🚀 ${shareTitle}\n\nRead on PromptKar 👇`;
+
     if (platform === "twitter") {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(post?.title || "")}&url=${encodeURIComponent(url)}`);
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`🚀 ${shareTitle}`)}&url=${encodeURIComponent(url)}&via=promptkar`);
     } else {
+      // Try native Web Share API first (great on mobile)
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareTitle, text: shareText, url });
+          return;
+        } catch { /* User cancelled — fall through to clipboard */ }
+      }
       navigator.clipboard.writeText(url);
       toast.success("Link copied!");
     }
@@ -288,9 +378,31 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
   };
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center py-32 gap-3">
-      <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-      <p className="text-slate-400 font-bold text-xs uppercase tracking-widest animate-pulse">Loading article...</p>
+    <div className="max-w-4xl mx-auto pb-24 space-y-8 pt-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="w-32 h-8 rounded-full" />
+        <Skeleton className="w-20 h-8 rounded-xl" />
+      </div>
+      <Skeleton className="w-full h-[400px] rounded-[3.5rem]" />
+      <div className="space-y-4 pt-4">
+        <div className="flex gap-4">
+          <Skeleton className="w-24 h-4" />
+          <Skeleton className="w-20 h-4" />
+          <Skeleton className="w-16 h-4" />
+        </div>
+        <Skeleton className="w-3/4 h-10" />
+        <div className="flex items-center gap-4 p-4 rounded-2xl">
+          <Skeleton className="w-12 h-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="w-28 h-4" />
+            <Skeleton className="w-48 h-3" />
+          </div>
+        </div>
+        <div className="space-y-3 pt-4">
+          {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="w-full h-4" />)}
+          <Skeleton className="w-2/3 h-4" />
+        </div>
+      </div>
     </div>
   );
 
@@ -386,10 +498,10 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
             </div>
           </div>
 
-          {/* Content */}
+          {/* Content — rendered inside an isolated container to prevent Blogger HTML from breaking site layout */}
              <div 
                className="blog-content text-slate-700 text-[15px]" 
-               dangerouslySetInnerHTML={{ __html: post.content }} 
+               dangerouslySetInnerHTML={{ __html: sanitizedContent }} 
              />
 
           {/* Tags */}

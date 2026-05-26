@@ -294,16 +294,108 @@
 }
 [data-app-theme="Cyber"] ::selection { background: rgba(99, 102, 241, 0.2); color: #1e1b4b; }
 
-/* Blog Content Default Styles (Reverting Tailwind Preflight for Rich Text) */
+/* ═══════════════════════════════════════════════════════════════════
+   Blog Content — Bulletproof Containment for Raw Blogger HTML
+   Prevents injected HTML from escaping the article area or breaking
+   the navbar, sidebar, or any other part of the site layout.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Container-level isolation */
+.blog-content {
+  isolation: isolate;          /* Creates a new stacking context */
+  contain: layout style;       /* CSS containment — blocks layout/style leaks */
+  position: relative;
+  z-index: 0;                  /* Keeps everything below the navbar */
+  overflow: hidden;            /* Nothing escapes the box */
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  line-height: 1.8;
+}
+
+/* Force ALL children to stay contained */
+.blog-content * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Headings */
 .blog-content h1 { @apply text-3xl font-black mt-8 mb-4 text-foreground; }
 .blog-content h2 { @apply text-2xl font-black mt-8 mb-4 text-foreground; }
 .blog-content h3 { @apply text-xl font-black mt-6 mb-3 text-foreground; }
+.blog-content h4 { @apply text-lg font-bold mt-5 mb-2 text-foreground; }
+.blog-content h5 { @apply text-base font-bold mt-4 mb-2 text-foreground; }
+.blog-content h6 { @apply text-sm font-bold mt-4 mb-2 text-foreground; }
+
+/* Text */
 .blog-content p { @apply mb-4 leading-relaxed; }
 .blog-content a { @apply text-primary hover:underline; }
+.blog-content strong, .blog-content b { @apply font-bold; }
+.blog-content em, .blog-content i { @apply italic; }
+
+/* Lists */
 .blog-content ul { @apply list-disc pl-5 mb-4; }
 .blog-content ol { @apply list-decimal pl-5 mb-4; }
+.blog-content li { @apply mb-1; }
+
+/* Quotes */
 .blog-content blockquote { @apply border-l-4 border-primary pl-4 italic my-4 text-slate-500; }
-.blog-content img { @apply rounded-2xl my-6 max-w-full; }
+
+/* Images — constrained to container */
+.blog-content img {
+  @apply rounded-2xl my-6;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  display: block;
+}
+
+/* Code blocks */
 .blog-content pre { @apply bg-slate-900 text-slate-50 p-4 rounded-xl overflow-x-auto my-4 text-sm; }
 .blog-content code { @apply bg-slate-100 text-rose-500 px-1.5 py-0.5 rounded-md text-sm font-mono; }
 .blog-content pre code { @apply bg-transparent text-slate-50 p-0 text-sm; }
+
+/* Tables — responsive and contained */
+.blog-content table {
+  @apply w-full my-6 text-sm border-collapse;
+  display: block;
+  overflow-x: auto;
+  max-width: 100% !important;
+}
+.blog-content th { @apply bg-slate-50 text-left p-3 font-bold text-slate-900 border border-slate-200; }
+.blog-content td { @apply p-3 border border-slate-100 text-slate-600; }
+.blog-content tr:hover td { @apply bg-slate-50/50; }
+
+/* Iframes (YouTube embeds, etc.) — responsive */
+.blog-content iframe {
+  max-width: 100% !important;
+  width: 100% !important;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  border: none !important;
+}
+
+/* Divs from Blogger — prevent them from escaping */
+.blog-content div {
+  max-width: 100% !important;
+  position: static !important;
+  z-index: auto !important;
+  float: none !important;
+}
+
+/* Separator */
+.blog-content hr { @apply border-t border-slate-100 my-8; }
+
+/* Nuke any rogue fixed/absolute elements inside blog content */
+.blog-content [style*="position: fixed"],
+.blog-content [style*="position:fixed"],
+.blog-content [style*="position: absolute"],
+.blog-content [style*="position:absolute"],
+.blog-content [style*="position: sticky"],
+.blog-content [style*="position:sticky"] {
+  position: static !important;
+  z-index: auto !important;
+}
+

@@ -287,15 +287,31 @@ const Navbar = () => {
               >
                 <div className="relative">
                   {(() => {
-                    const avatar = userData?.avatar;
-                    if (avatar) {
+                    let avatar = userData?.avatar;
+                    if (avatar && avatar.includes("ui-avatars.com")) {
+                      avatar = ""; // Force Dicebear fallback
+                    }
+                    const streak = userData?.currentStreak || 0;
+                    const isAdmin = userData?.isAdmin || userData?.username?.toLowerCase() === 'yatishydv' || user?.email === 'yatishydv@gmail.com';
+                    const isCustomAvatar = avatar && !avatar.includes("api.dicebear.com") && !avatar.includes("robohash.org");
+                    const canUseCustom = isAdmin || streak >= 365;
+
+                    if (avatar && (!isCustomAvatar || canUseCustom)) {
                       return (
-                        <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full border border-slate-200/50 object-cover" />
-                      )
+                        <img
+                          src={avatar}
+                          className="w-8 h-8 rounded-full border border-slate-100 shadow-sm group-hover:border-indigo-600 transition-all object-cover"
+                          alt="Profile"
+                        />
+                      );
                     }
                     return (
-                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userData?.username || userData?.name || user.displayName || "User"}&backgroundColor=b6e3f4,c0aede,d1d4f9`} alt="Avatar" className="w-8 h-8 rounded-full border border-slate-100 shadow-sm group-hover:border-indigo-600 transition-all object-cover bg-slate-50" />
-                    )
+                      <img
+                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userData?.username || userData?.name || user.displayName || "User"}&backgroundColor=b6e3f4,c0aede,d1d4f9`}
+                        className="w-8 h-8 rounded-full border border-slate-100 shadow-sm group-hover:border-indigo-600 transition-all object-cover bg-slate-50"
+                        alt="Profile"
+                      />
+                    );
                   })()}
                   <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-card rounded-full" />
                 </div>

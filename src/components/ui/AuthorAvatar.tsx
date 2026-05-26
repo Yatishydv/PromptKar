@@ -46,10 +46,19 @@ export const AuthorAvatar = ({
 
   const isTeam = safeName.toLowerCase().includes("promptkar") || safeName.toLowerCase().includes("team");
   
+  // 365-day streak requirement to display custom/Google photos
+  const isCustomAvatar = avatar && !avatar.includes("api.dicebear.com") && !avatar.includes("robohash.org") && !avatar.includes("ui-avatars.com");
+  const canUseCustom = isAdmin || streak >= 365;
+  
   let finalAvatar = avatar;
   
   // If their avatar in DB is ui-avatars.com (from our old reset script), forcibly convert it to Dicebear.
   if (finalAvatar && finalAvatar.includes("ui-avatars.com")) {
+    finalAvatar = "";
+  }
+
+  if (isCustomAvatar && !canUseCustom) {
+    // If they have a custom photo but haven't earned the streak, strip the custom avatar so they get the default Dicebear avatar.
     finalAvatar = "";
   }
 

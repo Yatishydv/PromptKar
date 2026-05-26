@@ -2,6 +2,9 @@ import { MetadataRoute } from 'next';
 import dbConnect from '@/lib/mongodb';
 import Prompt from '@/models/Prompt';
 
+// Revalidate the sitemap every hour so it always includes new prompts/blogs/users
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.promptkar.site';
 
@@ -39,7 +42,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticRoutes, ...promptEntries, ...blogEntries];
+    // Query users and generate sitemap entries
+    const User = (await import('@/models/User')).default;
+    const users = await User.find({}).select('username updatedAt').lean();
+    const userEntries = users.map((u: any) => ({
+      url: `${baseUrl}/profile/${u.username}`,
+      lastModified: u.updatedAt || new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    }));
+
+    return [...staticRoutes, ...promptEntries, ...blogEntries, ...userEntries];
   } catch (error) {
     console.error('Sitemap generation error:', error);
     return staticRoutes;

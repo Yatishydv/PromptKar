@@ -491,7 +491,7 @@ const AdminPanel = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         {/* Sidebar Nav */}
-        <div className="lg:col-span-1 space-y-2 sticky top-24">
+        <div className="lg:col-span-1 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 pb-4 lg:pb-0 sticky top-20 lg:top-24 z-20 hide-scrollbar bg-background">
           {[
             { id: "dashboard", name: "Overview", icon: <LayoutDashboard className="w-4 h-4" /> },
             { id: "prompts", name: "Prompts", icon: <Sparkles className="w-4 h-4" /> },
@@ -507,9 +507,9 @@ const AdminPanel = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border-none ${activeTab === item.id
+              className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border-none shrink-0 lg:w-full ${activeTab === item.id
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100"
-                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                  : "text-slate-400 hover:bg-slate-50 hover:text-slate-600 bg-card lg:bg-transparent"
                 }`}
             >
               {item.icon} {item.name}
@@ -664,12 +664,12 @@ const AdminPanel = () => {
                 </CardContent>
               </Card>
 
-              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
-                <div className="relative flex-1 max-w-md">
+              <div className="flex flex-col sm:flex-row items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm gap-4">
+                <div className="relative w-full sm:flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search prompts to manage..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
                 </div>
-                <div className="text-xs font-black text-slate-400 uppercase tracking-widest px-4">{recentPrompts.length} TOTAL</div>
+                <div className="text-xs font-black text-slate-400 uppercase tracking-widest px-2 sm:px-4 w-full sm:w-auto text-center sm:text-right">{recentPrompts.length} TOTAL</div>
               </div>
 
               <div className="grid grid-cols-1 gap-3">
@@ -715,12 +715,12 @@ const AdminPanel = () => {
           {/* BLOGS TAB */}
           {activeTab === "blogs" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
-                <div className="relative flex-1 max-w-md">
+              <div className="flex flex-col sm:flex-row items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm gap-4">
+                <div className="relative w-full sm:flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search articles..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto justify-end">
                   <Button
                     onClick={handleSyncBlogger}
                     disabled={syncing}
@@ -877,17 +877,18 @@ const AdminPanel = () => {
                 </CardContent>
               </Card>
 
-              <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
-                <div className="relative flex-1 max-w-md">
+              <div className="flex flex-col sm:flex-row items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm gap-4">
+                <div className="relative w-full sm:flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
                   <input type="text" placeholder="Search community members..." className="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold placeholder-slate-300 focus:ring-2 focus:ring-indigo-100 transition-all" />
                 </div>
-                <div className="text-xs font-black text-slate-400 uppercase tracking-widest px-4">{recentUsers.length} MEMBERS</div>
+                <div className="text-xs font-black text-slate-400 uppercase tracking-widest px-2 sm:px-4 w-full sm:w-auto text-center sm:text-right">{recentUsers.length} MEMBERS</div>
               </div>
 
               <div className="bg-card border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm">
-                <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50/50">
+                <div className="overflow-x-auto hide-scrollbar">
+                  <table className="w-full text-left border-collapse whitespace-nowrap min-w-[700px]">
+                    <thead className="bg-slate-50/50">
                     <tr>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">User</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Email</th>
@@ -955,6 +956,7 @@ const AdminPanel = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
               </div>
             </div>
           )}

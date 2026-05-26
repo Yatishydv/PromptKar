@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       senderName: senderName || "PromptKar Admin",
       senderUsername: "admin",
       senderAvatar: senderAvatar || "https://ui-avatars.com/api/?name=Admin&background=4F46E5&color=fff",
-      type: "admin_message",
+      type: "admin_message" as const,
       targetId: "broadcast",
       message,
       linkType: linkType || "none",

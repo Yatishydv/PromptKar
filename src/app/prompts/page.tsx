@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Search, Filter, SlidersHorizontal, Eye, Heart, Bookmark, ArrowRight, Grid, List as ListIcon, Loader2, Copy } from "lucide-react";
 import Link from "next/link";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { CardSkeleton } from "@/components/ui/Skeleton";
 import { toast } from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
@@ -112,7 +113,9 @@ const PromptsContent = () => {
 
       {/* Grid View */}
       {loading ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-slate-200" /></div>
+        <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
+          {[1, 2, 3, 4, 5, 6].map(i => <CardSkeleton key={i} />)}
+        </div>
       ) : (
         <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
           {filteredPrompts.map((p) => (

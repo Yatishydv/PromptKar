@@ -9,6 +9,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
 import { Dialog } from "@/components/ui/Dialog";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const ADMIN_EMAIL = "yatishydv@gmail.com"; // ← set to your email
 
@@ -149,9 +150,23 @@ const BlogPage = () => {
 
       {/* Content */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-3">
-          <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-          <p className="text-slate-400 font-bold text-xs uppercase tracking-widest animate-pulse">Loading articles...</p>
+        <div className="space-y-10 w-full">
+          <div>
+            <div className="flex items-center gap-2 mb-5">
+              <Skeleton className="w-24 h-5" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[1, 2].map(i => <Skeleton key={i} className="h-[280px] rounded-3xl" />)}
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-5">
+              <Skeleton className="w-32 h-5" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-[280px] rounded-3xl" />)}
+            </div>
+          </div>
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-24">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import useSWR from "swr";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
@@ -49,9 +50,23 @@ export const CreatorsWidget = () => {
       
       <div className="space-y-5">
         {isLoading ? (
-          <div className="py-8 flex flex-col items-center gap-2">
-            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
-            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Ranking Creators...</p>
+          <div className="space-y-5">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-5 h-3" />
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <div className="flex flex-col gap-1">
+                    <Skeleton className="w-16 h-3" />
+                    <Skeleton className="w-10 h-2" />
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <Skeleton className="w-10 h-3" />
+                  <Skeleton className="w-8 h-2" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : creators.length === 0 ? (
           <p className="text-center py-4 text-xs font-bold text-slate-400 italic">No creators found yet.</p>

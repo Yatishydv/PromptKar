@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "react-hot-toast";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { CardSkeleton } from "@/components/ui/Skeleton";
 
 // Shared metadata mapping
 const CATEGORY_METADATA: Record<string, any> = {
@@ -182,9 +183,8 @@ const CategoryDetailPage = () => {
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-          <p className="text-slate-400 font-black uppercase tracking-widest text-[10px] animate-pulse">Filtering Data Hub...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {[1, 2, 3, 4].map(i => <CardSkeleton key={i} />)}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

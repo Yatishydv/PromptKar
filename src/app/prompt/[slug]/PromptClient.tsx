@@ -21,6 +21,7 @@ import { useAuth } from "@/lib/auth-context";
 import { likePrompt, bookmarkPrompt, trackView } from "@/lib/engagement";
 import { useRouter } from "next/navigation";
 import { formatDateTime } from "@/lib/utils";
+import { Skeleton, CardSkeleton } from "@/components/ui/Skeleton";
 
 const PromptClient = ({ initialData }: { initialData: any }) => {
   const { slug } = useParams();
@@ -183,9 +184,27 @@ const PromptClient = ({ initialData }: { initialData: any }) => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="text-foreground/40 font-medium animate-pulse">Decrypting prompt data...</p>
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pb-24 mt-8">
+        <Skeleton className="h-6 w-32 mb-8" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-24 rounded-full" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+            <div className="flex gap-4">
+              <Skeleton className="h-12 w-24" />
+              <Skeleton className="h-12 w-24" />
+              <Skeleton className="h-12 w-24" />
+            </div>
+            <Skeleton className="h-96 w-full rounded-[2rem]" />
+          </div>
+          <div className="space-y-8">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+        </div>
       </div>
     );
   }
@@ -571,7 +590,7 @@ const PromptClient = ({ initialData }: { initialData: any }) => {
 const LikersList = ({ slug }: { slug: string }) => {
   const { data, error, isLoading } = useSWR(`/api/prompts/${slug}/interactions/all`, fetcher);
 
-  if (isLoading) return <div className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Loading supporters...</div>;
+  if (isLoading) return <div className="flex items-center gap-4"><Skeleton className="h-12 w-32 rounded-2xl" /><Skeleton className="h-12 w-32 rounded-2xl" /></div>;
   if (error) return <div className="text-rose-500 text-[10px] font-bold uppercase tracking-widest">Failed to load interactions</div>;
 
   const users = data?.users || [];

@@ -18,7 +18,7 @@ import { useAuth } from "@/lib/auth-context";
 import useSWR from "swr";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { CardSkeleton } from "@/components/ui/Skeleton";
+import { Skeleton, CardSkeleton } from "@/components/ui/Skeleton";
 import { getRankTitle, getRankBadge } from "@/lib/permissions";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -135,9 +135,16 @@ const UsersModal = ({ isOpen, onClose, title, userIds }: { isOpen: boolean, onCl
 
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
            {loading ? (
-             <div className="py-20 flex flex-col items-center justify-center gap-4">
-                <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading Community...</p>
+             <div className="grid gap-3">
+               {[1, 2, 3].map((i) => (
+                 <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-slate-50">
+                   <Skeleton className="w-12 h-12 rounded-xl" />
+                   <div className="flex-1 space-y-2">
+                     <Skeleton className="h-4 w-24" />
+                     <Skeleton className="h-3 w-16" />
+                   </div>
+                 </div>
+               ))}
              </div>
            ) : filteredUsers.length > 0 ? (
               <div className="grid gap-3">
@@ -245,17 +252,17 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
-        <div className="h-[400px] w-full bg-slate-100 rounded-[3rem] animate-pulse" />
+        <Skeleton className="h-[400px] w-full rounded-[3rem]" />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           <div className="lg:col-span-1 space-y-6">
-             <div className="aspect-square bg-slate-100 rounded-[2.5rem] animate-pulse" />
-             <div className="h-40 bg-slate-100 rounded-3xl animate-pulse" />
+             <Skeleton className="aspect-square w-full rounded-[2.5rem]" />
+             <Skeleton className="h-40 w-full rounded-3xl" />
           </div>
           <div className="lg:col-span-3 space-y-12">
-             <div className="h-20 bg-slate-100 rounded-3xl animate-pulse" />
+             <Skeleton className="h-20 w-full rounded-3xl" />
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="h-80 bg-slate-100 rounded-[2.5rem] animate-pulse" />
-                <div className="h-80 bg-slate-100 rounded-[2.5rem] animate-pulse" />
+                <CardSkeleton />
+                <CardSkeleton />
              </div>
           </div>
         </div>
@@ -522,7 +529,7 @@ export default function ProfilePage() {
                     className="grid grid-cols-1 md:grid-cols-2 gap-8 col-span-full"
                   >
                     {promptsLoading ? (
-                      [1, 2, 3, 4].map(i => <div key={i} className="h-64 bg-slate-50 rounded-2xl animate-pulse" />)
+                      [1, 2, 3, 4].map(i => <CardSkeleton key={i} />)
                     ) : promptsData?.length > 0 ? (
                       promptsData.map((p: any) => (
                         <Link key={p.slug} href={`/prompt/${p.slug}`} className="group">

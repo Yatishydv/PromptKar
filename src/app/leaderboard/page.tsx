@@ -5,6 +5,7 @@ import { Trophy, Medal, Star, Heart, Eye, Loader2, Sparkles, ArrowRight } from "
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 const LeaderboardPage = () => {
   const [activeType, setActiveType] = useState<"users" | "prompts">("users");
@@ -84,9 +85,10 @@ const LeaderboardPage = () => {
 
       {/* Content */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-          <p className="text-slate-400 font-bold text-xs uppercase tracking-widest animate-pulse">Calculating rankings...</p>
+        <div className="space-y-3">
+          {[1, 2, 3, 4, 5].map(i => (
+            <Skeleton key={i} className="w-full h-[88px] rounded-2xl" />
+          ))}
         </div>
       ) : activeType === "users" ? (
         <div className="space-y-3">

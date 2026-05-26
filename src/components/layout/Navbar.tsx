@@ -81,7 +81,7 @@ const RESOURCES_ITEMS = [
 
 // ── Navbar ────────────────────────────────────────────────────────────
 const Navbar = () => {
-  const { user, userData, logout, isAdmin } = useAuth();
+  const { user, userData, logout, isAdmin, loading } = useAuth();
   const { settings } = useSystem();
   const pathname = usePathname();
   const router = useRouter();
@@ -269,13 +269,17 @@ const Navbar = () => {
         {/* Right actions — Sun, Bell, Profile */}
         <div className="flex items-center gap-4 ml-8">
           <div className="flex items-center gap-1.5">
-            <button className="w-10 h-10 flex items-center justify-center hover:bg-slate-50 rounded-xl transition-all text-slate-400">
-              <Sun className="w-5 h-5" />
-            </button>
             <NotificationDropdown />
           </div>
 
-          {user ? (
+          {loading ? (
+            <div className="flex items-center gap-2 sm:pl-4 sm:border-l border-slate-100 cursor-wait">
+              <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse"></div>
+              <div className="hidden sm:flex flex-col gap-1">
+                <div className="w-20 h-3 bg-slate-100 animate-pulse rounded-full"></div>
+              </div>
+            </div>
+          ) : user ? (
             <div className="relative">
               <div
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -447,7 +451,9 @@ const Navbar = () => {
               </div>
 
               <div className="p-6 border-t border-slate-100 bg-slate-50/50 space-y-4">
-                {!user ? (
+                {loading ? (
+                  <div className="w-full bg-slate-100 animate-pulse rounded-xl h-12"></div>
+                ) : !user ? (
                   <Link href="/login" onClick={() => setShowMobileMenu(false)}>
                     <Button className="w-full bg-indigo-600 text-white rounded-xl h-12 font-black uppercase tracking-widest text-[11px] shadow-lg shadow-indigo-100">Sign In to Platform</Button>
                   </Link>

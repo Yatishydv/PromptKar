@@ -7,6 +7,7 @@ import {
   Sparkles, Loader2, FileText, PenTool, Terminal, Heart, Eye, Rocket
 } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 // ── Category metadata (icon + colour + description) ─────────────────
 const CATEGORY_META: Record<string, { icon: any; color: string; bg: string; desc: string }> = {
@@ -143,9 +144,10 @@ const CategoriesPage = () => {
 
       {/* Grid */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-          <p className="text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Syncing Directory...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+            <Skeleton key={i} className="h-[220px] rounded-[2.5rem]" />
+          ))}
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20">

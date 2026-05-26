@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { AIWidget, CreatorsWidget, CommunityWidget, TipWidget } from "@/components/home/Widgets";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { Skeleton, CardSkeleton } from "@/components/ui/Skeleton";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "react-hot-toast";
 import useSWR from "swr";
@@ -216,10 +217,26 @@ export default function Home() {
         </section>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-            <p className="text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Syncing Platform Data...</p>
-          </div>
+          <>
+            <section className="space-y-6">
+              <div className="flex items-center justify-between px-1">
+                <Skeleton className="w-32 h-7" />
+                <Skeleton className="w-16 h-4" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+                {[1, 2, 3, 4].map(i => <CardSkeleton key={i} />)}
+              </div>
+            </section>
+            <section className="space-y-6">
+              <div className="flex items-center justify-between px-1">
+                <Skeleton className="w-32 h-7" />
+                <Skeleton className="w-16 h-4" />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-40 rounded-[1.5rem]" />)}
+              </div>
+            </section>
+          </>
         ) : (
           <>
             {/* Trending */}

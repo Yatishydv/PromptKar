@@ -422,6 +422,22 @@ const Navbar = () => {
                 </div>
 
                 <div className="space-y-6">
+                  {/* Streak Widget Mobile */}
+                  {user && (
+                    <Link href="/streak" onClick={() => setShowMobileMenu(false)} className="block group/streak">
+                      <div className="bg-card border border-slate-50 rounded-[1.5rem] p-4 shadow-sm shadow-slate-100/50 space-y-2 hover:border-indigo-100 transition-all cursor-pointer">
+                         <div className="flex items-center justify-between">
+                            <span className="text-xs font-black text-slate-900 flex items-center gap-1.5 group-hover/streak:text-indigo-600 transition-colors">
+                              Your Streak <span className="text-orange-500 text-sm">🔥</span>
+                            </span>
+                            <div className="text-sm font-black text-slate-900">{userData?.currentStreak || 0} Day{(userData?.currentStreak || 0) !== 1 ? 's' : ''}</div>
+                         </div>
+                         <p className="text-[9px] text-slate-400 font-bold">
+                           {(userData?.currentStreak || 0) === 0 ? "Start your journey today!" : (userData?.currentStreak || 0) > 5 ? "You're on fire! Keep it up." : "Keep it up! You're doing great."}
+                         </p>
+                      </div>
+                    </Link>
+                  )}
                   <div className="space-y-3">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2">Prompts</p>
                     <div className="grid gap-1">

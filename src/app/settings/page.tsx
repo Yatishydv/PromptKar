@@ -412,20 +412,6 @@ const SettingsPage = () => {
         </div>
         
         <div className="flex items-center gap-4 bg-card p-2 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
-          <button 
-            onClick={() => {
-              const text = `Check out my Identity Vault on PromptKar! I'm on a ${streakStatus.streak} day streak.`;
-              if (navigator.share) {
-                navigator.share({ title: 'PromptKar Identity', text, url: window.location.href });
-              } else {
-                navigator.clipboard.writeText(`${text} ${window.location.href}`);
-                toast.success("Identity link copied!");
-              }
-            }}
-            className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all ml-2"
-          >
-            <Share2 className="w-5 h-5" />
-          </button>
           <div className="px-6 py-2">
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Streak</p>
              <p className="text-lg font-black text-slate-900">{streakStatus.streak} Days</p>

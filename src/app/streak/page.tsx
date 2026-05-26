@@ -38,7 +38,7 @@ const StreakPage = () => {
     const shareData = {
       title: 'My PromptKar Streak',
       text: `I'm on a ${streak} day streak at PromptKar! Join me and master the community.`,
-      url: window.location.href,
+      url: `${window.location.origin}/profile/${userData?.username || user?.uid}`,
     };
 
     try {

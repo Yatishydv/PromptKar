@@ -565,6 +565,7 @@ const AdminPanel = () => {
                               <AuthorAvatar
                                 userId={p.authorId}
                                 name={p.authorName}
+                                username={p.authorUsername || p.authorName}
                                 avatar={p.authorAvatar}
                                 className="w-10 h-10 relative border-2 border-card shadow-sm"
                                 isAdmin={true}
@@ -603,6 +604,7 @@ const AdminPanel = () => {
                               <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur-[2px] opacity-20 group-hover:opacity-40 transition-opacity" />
                               <AuthorAvatar 
                                 name={u.name || u.username} 
+                                username={u.username}
                                 avatar={u.avatar} 
                                 className="w-10 h-10 relative border-2 border-card shadow-sm" 
                                 isAdmin={u.isAdmin}
@@ -633,13 +635,13 @@ const AdminPanel = () => {
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
               {/* Recalculate Likes Card */}
               <Card className="border-indigo-100 bg-indigo-50/20 shadow-sm overflow-hidden mb-6">
-                <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                   <div className="space-y-1">
                     <h3 className="text-xl font-black text-indigo-900 flex items-center gap-2">
-                      <Heart className="w-6 h-6 text-indigo-500" />
+                      <Heart className="w-6 h-6 text-indigo-500 shrink-0" />
                       Recalculate Like Counts
                     </h3>
-                    <p className="text-xs font-bold text-indigo-600/70 uppercase tracking-widest">Sync all user totalLikes from actual prompt data (fixes drift from deleted prompts)</p>
+                    <p className="text-xs font-bold text-indigo-600/70 uppercase tracking-widest">Sync all user totalLikes from actual prompt data</p>
                   </div>
                   <Button
                     onClick={async () => {
@@ -657,7 +659,7 @@ const AdminPanel = () => {
                         toast.error(err.message || "Recalculation failed", { id: loadingToast });
                       }
                     }}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-indigo-100 flex items-center gap-2"
+                    className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-indigo-100 flex justify-center items-center gap-2 shrink-0"
                   >
                     <BarChart3 className="w-4 h-4" /> Recalculate Now
                   </Button>
@@ -679,6 +681,7 @@ const AdminPanel = () => {
                         <AuthorAvatar
                           userId={p.authorId}
                           name={p.authorName}
+                          username={p.authorUsername || p.authorName}
                           avatar={p.authorAvatar}
                           className="w-14 h-14"
                         />
@@ -745,13 +748,13 @@ const AdminPanel = () => {
                 {blogPosts.map((b, i) => (
                   <div key={i} className="space-y-2">
                     <Card className="border-slate-100 hover:border-indigo-100 shadow-sm transition-all group overflow-hidden">
-                      <div className="flex items-center gap-4 p-3">
-                        <div className="w-24 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-100 shadow-inner group-hover:shadow-[0_0_15px_rgba(79,70,229,0.2)] transition-all">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 sm:p-3">
+                        <div className="w-full sm:w-24 h-40 sm:h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-100 shadow-inner group-hover:shadow-[0_0_15px_rgba(79,70,229,0.2)] transition-all">
                           <img src={b.coverImage || "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=200&auto=format&fit=crop"} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" alt="" />
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 w-full min-w-0">
                           <h4 className="font-black text-sm text-slate-900 truncate">{b.title}</h4>
-                          <div className="flex flex-wrap gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                          <div className="flex flex-wrap gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-2 sm:mt-1">
                             {b.tags?.length > 0 ? (
                               b.tags.slice(0, 3).map((t: string) => (
                                 <span key={t} className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md">{t}</span>
@@ -773,7 +776,7 @@ const AdminPanel = () => {
                             </button>
                           </div>
                         </div>
-                        <div className="flex gap-2 pr-2">
+                        <div className="flex w-full sm:w-auto gap-2 sm:pr-2 justify-end border-t border-slate-50 sm:border-none pt-3 sm:pt-0 mt-1 sm:mt-0">
                           {/* Content Edit (Blogger) */}
                           <a
                             href="https://www.blogger.com/u/1/blog/posts/6418707625664438874"
@@ -820,6 +823,7 @@ const AdminPanel = () => {
                               <div key={u.userId} className="flex items-center gap-2 bg-card px-2.5 py-1.5 rounded-xl border border-indigo-100 shadow-sm">
                                 <AuthorAvatar 
                                   name={u.name} 
+                                  username={u.username || u.name}
                                   avatar={u.avatar} 
                                   className="w-6 h-6" 
                                   isAdmin={u.isAdmin}
@@ -846,13 +850,13 @@ const AdminPanel = () => {
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
               {/* Reset Avatars Card */}
               <Card className="border-orange-100 bg-orange-50/20 shadow-sm overflow-hidden mb-6">
-                <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                   <div className="space-y-1">
                     <h3 className="text-xl font-black text-orange-900 flex items-center gap-2">
-                      <ShieldCheck className="w-6 h-6 text-orange-500" />
+                      <ShieldCheck className="w-6 h-6 text-orange-500 shrink-0" />
                       Enforce Avatar Streak Rules
                     </h3>
-                    <p className="text-xs font-bold text-orange-600/70 uppercase tracking-widest">Strip custom/Google photos from users who haven't reached the 365-day streak</p>
+                    <p className="text-xs font-bold text-orange-600/70 uppercase tracking-widest">Strip custom/Google photos from users lacking a 365-day streak</p>
                   </div>
                   <Button
                     onClick={async () => {
@@ -870,7 +874,7 @@ const AdminPanel = () => {
                         toast.error(err.message || "Audit failed", { id: loadingToast });
                       }
                     }}
-                    className="bg-orange-600 hover:bg-orange-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100 flex items-center gap-2"
+                    className="w-full md:w-auto bg-orange-600 hover:bg-orange-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100 flex justify-center items-center gap-2 shrink-0"
                   >
                     <ShieldCheck className="w-4 h-4" /> Audit & Reset Avatars
                   </Button>
@@ -904,6 +908,7 @@ const AdminPanel = () => {
                           <div className="flex items-center gap-3">
                             <AuthorAvatar 
                               name={u.name || u.username} 
+                              username={u.username}
                               avatar={u.avatar} 
                               className="w-10 h-10" 
                               isAdmin={u.isAdmin}
@@ -1006,8 +1011,8 @@ const AdminPanel = () => {
                   {/* Announcement Manager */}
                   {systemSettings.announcementsEnabled && (
                     <div className="space-y-6 bg-slate-50/50 p-8 rounded-[40px] border border-slate-100 animate-in zoom-in-95 duration-500">
-                      <div className="flex items-center justify-between border-b border-slate-200/50 pb-6">
-                        <div className="flex items-center gap-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200/50 pb-6 gap-4">
+                        <div className="flex flex-wrap items-center gap-4">
                           <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Live Broadcasts</h3>
                           <div className="flex items-center gap-2 px-4 py-1.5 bg-card border border-slate-100 text-indigo-600 rounded-full text-[10px] font-black uppercase shadow-sm">
                             <button
@@ -1026,7 +1031,7 @@ const AdminPanel = () => {
                               announcements: [...(prev.announcements || []), { text: "Enter message here...", enabled: true }]
                             }));
                           }}
-                          className="bg-slate-900 text-white rounded-2xl h-12 px-8 font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl"
+                          className="w-full sm:w-auto bg-slate-900 text-white rounded-2xl h-12 px-8 font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl"
                         >
                           <Plus className="w-4 h-4 mr-2" /> Add Message
                         </Button>
@@ -1034,8 +1039,8 @@ const AdminPanel = () => {
 
                       <div className="space-y-4">
                         {(systemSettings.announcements || []).map((ann: any, idx: number) => (
-                          <div key={idx} className="flex gap-4 items-center animate-in fade-in slide-in-from-top-4 duration-300">
-                            <div className="w-12 h-12 rounded-2xl bg-card border border-slate-100 text-slate-900 shadow-sm flex items-center justify-center font-black text-sm shrink-0">{idx + 1}</div>
+                          <div key={idx} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center animate-in fade-in slide-in-from-top-4 duration-300 relative">
+                            <div className="hidden sm:flex w-12 h-12 rounded-2xl bg-card border border-slate-100 text-slate-900 shadow-sm items-center justify-center font-black text-sm shrink-0">{idx + 1}</div>
                             <input
                               type="text"
                               value={ann.text}
@@ -1046,7 +1051,7 @@ const AdminPanel = () => {
                                   return { ...prev, announcements: arr };
                                 });
                               }}
-                              className="flex-1 bg-card border border-slate-200 rounded-[20px] px-6 py-4 text-sm font-bold text-slate-700 focus:ring-8 focus:ring-indigo-50 focus:border-indigo-200 transition-all outline-none shadow-sm"
+                              className="w-full sm:flex-1 bg-card border border-slate-200 rounded-[20px] px-6 py-4 text-sm font-bold text-slate-700 focus:ring-8 focus:ring-indigo-50 focus:border-indigo-200 transition-all outline-none shadow-sm pr-14 sm:pr-6"
                               placeholder="Message text with [link text](url)..."
                             />
                             <Button
@@ -1056,9 +1061,9 @@ const AdminPanel = () => {
                                   announcements: prev.announcements.filter((_: any, i: number) => i !== idx)
                                 }));
                               }}
-                              className="w-12 h-12 p-0 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-[20px] transition-all shadow-sm"
+                              className="absolute right-2 top-2 sm:relative sm:top-auto sm:right-auto w-10 h-10 sm:w-12 sm:h-12 p-0 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-[16px] sm:rounded-[20px] transition-all shadow-sm shrink-0"
                             >
-                              <Trash2 className="w-5 h-5" />
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                             </Button>
                           </div>
                         ))}
@@ -1398,7 +1403,7 @@ const AdminPanel = () => {
               <div className="bg-slate-900 p-8 text-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <AuthorAvatar name={editingUser.username} avatar={editingUser.avatar} className="w-14 h-14 border-2 border-white/10" />
+                    <AuthorAvatar name={editingUser.username} username={editingUser.username} avatar={editingUser.avatar} className="w-14 h-14 border-2 border-white/10" />
                     <div>
                       <h3 className="text-xl font-black">Edit Member Identity</h3>
                       <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">@{editingUser.username} • {editingUser.email}</p>

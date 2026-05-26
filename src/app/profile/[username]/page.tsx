@@ -407,7 +407,7 @@ export default function ProfilePage() {
                      <p className="text-base md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">{profileData.following?.length || 0}</p>
                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Following</p>
                   </div>
-                  <div className="flex-1 text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-card hover:shadow-sm group">
+                  <Link href="/streak" className="flex-1 text-center p-3 md:p-4 bg-indigo-50 rounded-2xl border border-indigo-100 transition-all hover:bg-card hover:shadow-sm group block">
                      <div className="flex flex-col items-center justify-center">
                         <div className="flex items-center gap-1">
                            <Flame className="w-3.5 h-3.5 text-indigo-600" />
@@ -415,7 +415,7 @@ export default function ProfilePage() {
                         </div>
                         <p className="text-[9px] font-black uppercase tracking-tighter text-indigo-400">Streak</p>
                      </div>
-                  </div>
+                  </Link>
                </div>
 
               <div className="space-y-4 pt-4 border-t border-slate-50">

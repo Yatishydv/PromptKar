@@ -321,6 +321,7 @@ const CreatePromptPage = () => {
                     <AuthorAvatar 
                       userId={user.uid} 
                       name={userData?.name || user.displayName || "Engineer"} 
+                      username={userData?.username}
                       avatar={userData?.avatar || ""} 
                       showName={true}
                       nameClassName="text-[12px] font-black text-slate-900"

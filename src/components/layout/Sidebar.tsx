@@ -83,7 +83,7 @@ const Sidebar = () => {
                   <h4 className="font-extrabold text-white text-[15px]">Create Prompt</h4>
                   <p className="text-[11px] text-indigo-50/80 leading-relaxed font-bold">Share your ideas with the community and get likes.</p>
                </div>
-               <Button className="w-full bg-card text-primary hover:bg-card text-[12.5px] font-black h-9.5 rounded-xl shadow-lg border-none flex items-center justify-center gap-1.5">
+               <Button className="w-full bg-card text-primary hover:bg-card text-[11px] font-black h-9.5 rounded-xl shadow-lg border-none flex items-center justify-center gap-1.5 whitespace-nowrap">
                   Create Now <ChevronRight className="w-3.5 h-3.5" />
                </Button>
             </div>

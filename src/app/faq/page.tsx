@@ -1,153 +1,193 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import { toast } from "react-hot-toast";
 import {
   Plus, Minus, Search, HelpCircle, MessageCircle,
   Sparkles, BookOpen, Zap, Shield, User, CreditCard,
-  ChevronRight
+  ChevronRight, Bell, PlusCircle
 } from "lucide-react";
 
-// ── FAQ data with categories ─────────────────────────────────────────
-const FAQS = [
-  {
-    category: "Getting Started",
-    icon: Sparkles,
-    color: "text-indigo-600",
-    bg: "bg-indigo-50",
-    questions: [
-      {
-        q: "What is PromptKar?",
-        a: "PromptKar is a social platform and directory for AI prompt engineering. We help you discover high-quality prompts for tools like ChatGPT, Midjourney, Claude, and Stable Diffusion — and provide AI-powered tools to improve your own prompts.",
-      },
-      {
-        q: "How do I get started?",
-        a: "Simply create a free account, browse the prompt library, and start exploring. You can like, save, and copy any prompt instantly. To share your own prompts, click 'Create' in the navigation bar.",
-      },
-      {
-        q: "Do I need an account to browse prompts?",
-        a: "No! You can browse, view, and copy prompts without an account. However, you'll need to register to like prompts, save them to your profile, follow creators, and publish your own.",
-      },
-    ],
-  },
-  {
-    category: "Prompts & AI Tools",
-    icon: Zap,
-    color: "text-amber-600",
-    bg: "bg-amber-50",
-    questions: [
-      {
-        q: "How do I improve my prompts with AI?",
-        a: "Visit the 'AI Enhancer' page (under the Prompts menu in the navbar), paste your basic prompt, and our Gemini-powered engine will rewrite it into a more effective, detailed version. You can also visit any prompt page and click 'Enhance with AI'.",
-      },
-      {
-        q: "What AI tools are supported?",
-        a: "PromptKar supports prompts for ChatGPT (GPT-3.5 & GPT-4), Claude, Gemini, Midjourney, Stable Diffusion, DALL-E 3, GitHub Copilot, and more. Browse by category to find prompts for your specific tool.",
-      },
-      {
-        q: "How is the prompt ranking score calculated?",
-        a: "Our trending score uses the formula: Score = Likes + (Views ÷ 10) + (Saves × 2). This balances community engagement with reach and long-term bookmarking value.",
-      },
-      {
-        q: "Can I edit my prompts after publishing?",
-        a: "Yes! Navigate to any of your prompts on your profile page, click the three-dot menu, and select 'Edit'. You can update the title, content, description, tags, and category at any time.",
-      },
-    ],
-  },
-  {
-    category: "Account & Profile",
-    icon: User,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-    questions: [
-      {
-        q: "How do I customise my profile?",
-        a: "Go to Settings (click your avatar → Settings). From there you can upload a profile photo, add a banner image, write a bio, add your location, and link your social accounts (Twitter/X, GitHub, Instagram, and website).",
-      },
-      {
-        q: "What is the profile URL format?",
-        a: "Your profile URL is promptkar.app/profile/[your-username]. Your username is set during registration and can be updated in Settings. It's unique to your account.",
-      },
-      {
-        q: "How do I follow another creator?",
-        a: "Visit any creator's profile page and click the 'Follow' button. They'll receive a real-time notification. You can unfollow at any time by clicking 'Following ✓' which will toggle back.",
-      },
-      {
-        q: "How do saved prompts work?",
-        a: "Click the bookmark icon on any prompt to save it. Saved prompts appear in the 'Saved' tab on your profile page, so you can access them anytime without searching.",
-      },
-    ],
-  },
-  {
-    category: "Pricing & Usage",
-    icon: CreditCard,
-    color: "text-green-600",
-    bg: "bg-green-50",
-    questions: [
-      {
-        q: "Is PromptKar free to use?",
-        a: "Yes! Browsing, saving, following creators, and publishing prompts is completely free. Our AI Enhancer tool is also free for standard usage. We may introduce premium features in the future, but core functionality will always remain free.",
-      },
-      {
-        q: "Can I use these prompts for commercial projects?",
-        a: "Generally, yes. Prompts shared on PromptKar are intended for public use. However, always respect the specific AI tool's terms of service (e.g., OpenAI, Anthropic) when using their outputs commercially.",
-      },
-      {
-        q: "Is there a limit on how many prompts I can publish?",
-        a: "Currently there is no hard limit. We ask that all prompts are original, high-quality, and not spam. Low-quality or duplicate prompts may be removed by our moderation team.",
-      },
-    ],
-  },
-  {
-    category: "Privacy & Security",
-    icon: Shield,
-    color: "text-purple-600",
-    bg: "bg-purple-50",
-    questions: [
-      {
-        q: "How is my data stored?",
-        a: "User authentication is handled securely via Firebase Auth. Profile data and prompts are stored in MongoDB with standard encryption. We never sell your personal data to third parties.",
-      },
-      {
-        q: "Can I delete my account?",
-        a: "Yes. Go to Settings → Account → Delete Account. This will permanently remove your profile, prompts, and all associated data. This action cannot be undone.",
-      },
-      {
-        q: "Who can see my saved prompts?",
-        a: "Saved prompts are visible on your public profile. If you'd like them to be private, we recommend using the browser bookmark feature instead until we ship private collections.",
-      },
-    ],
-  },
-];
+// Helper to resolve icon by string name
+const getIconByName = (name: string) => {
+  switch (name) {
+    case 'sparkles': return Sparkles;
+    case 'zap': return Zap;
+    case 'shield': return Shield;
+    case 'user': return User;
+    case 'creditcard': return CreditCard;
+    case 'bell': return Bell;
+    default: return HelpCircle;
+  }
+};
 
-const ALL_QUESTIONS = FAQS.flatMap(cat =>
-  cat.questions.map(q => ({ ...q, category: cat.category }))
-);
+const getCategoryStyles = (category: string) => {
+  switch (category) {
+    case "Getting Started": return { color: "text-indigo-600", bg: "bg-indigo-50" };
+    case "Prompts & AI Tools": return { color: "text-amber-600", bg: "bg-amber-50" };
+    case "Account & Profile": return { color: "text-blue-600", bg: "bg-blue-50" };
+    case "Pricing & Usage": return { color: "text-green-600", bg: "bg-green-50" };
+    case "Privacy & Security": return { color: "text-purple-600", bg: "bg-purple-50" };
+    case "Administration": return { color: "text-red-600", bg: "bg-red-50" };
+    default: return { color: "text-slate-600", bg: "bg-slate-50" };
+  }
+};
 
 const FAQPage = () => {
+  const { user } = useAuth();
+  const isHeadAdmin = user?.email === "yatishydv@gmail.com";
+
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [openKey, setOpenKey] = useState<string | null>("0-0");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const filteredFAQs = useMemo(() => {
-    if (!search.trim() && activeCategory === "All") return FAQS;
+  // Admin Add Form State
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newFaq, setNewFaq] = useState({ question: "", answer: "", category: "Getting Started", iconName: "sparkles" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    return FAQS.map(cat => ({
+  // Admin Edit Form State
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editFaq, setEditFaq] = useState({ question: "", answer: "", category: "Getting Started", iconName: "sparkles" });
+
+  const fetchFaqs = async () => {
+    try {
+      const res = await fetch("/api/faqs");
+      const data = await res.json();
+      if (res.ok) setFaqs(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFaqs();
+  }, []);
+
+  const handleAddFaq = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isHeadAdmin) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/faqs", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "x-requester-email": user.email
+        },
+        body: JSON.stringify(newFaq)
+      });
+      if (res.ok) {
+        toast.success("FAQ Added Successfully!");
+        setNewFaq({ question: "", answer: "", category: "Getting Started", iconName: "sparkles" });
+        setShowAddForm(false);
+        fetchFaqs();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to add FAQ");
+      }
+    } catch (e) {
+      toast.error("Network error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateFaq = async (e: React.FormEvent, id: string) => {
+    e.preventDefault();
+    if (!isHeadAdmin) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/faqs/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "x-requester-email": user.email
+        },
+        body: JSON.stringify(editFaq)
+      });
+      if (res.ok) {
+        toast.success("FAQ Updated Successfully!");
+        setEditingId(null);
+        fetchFaqs();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to update FAQ");
+      }
+    } catch (e) {
+      toast.error("Network error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteFaq = async (id: string) => {
+    if (!isHeadAdmin || !confirm("Are you sure you want to delete this FAQ?")) return;
+    try {
+      const res = await fetch(`/api/faqs/${id}`, {
+        method: "DELETE",
+        headers: { 
+          "x-requester-email": user.email
+        }
+      });
+      if (res.ok) {
+        toast.success("FAQ Deleted Successfully!");
+        fetchFaqs();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to delete FAQ");
+      }
+    } catch (e) {
+      toast.error("Network error");
+    }
+  };
+
+  // Group FAQS dynamically
+  const groupedFaqs = useMemo(() => {
+    const groups: Record<string, any> = {};
+    faqs.forEach(faq => {
+      if (!groups[faq.category]) {
+        groups[faq.category] = {
+          category: faq.category,
+          icon: getIconByName(faq.iconName),
+          ...getCategoryStyles(faq.category),
+          questions: []
+        };
+      }
+      groups[faq.category].questions.push({ q: faq.question, a: faq.answer, _id: faq._id, iconName: faq.iconName });
+    });
+    return Object.values(groups);
+  }, [faqs]);
+
+  const filteredFAQs = useMemo(() => {
+    if (!search.trim() && activeCategory === "All") return groupedFaqs;
+
+    return groupedFaqs.map(cat => ({
       ...cat,
-      questions: cat.questions.filter(q =>
+      questions: cat.questions.filter((q: any) =>
         (activeCategory === "All" || cat.category === activeCategory) &&
         (q.q.toLowerCase().includes(search.toLowerCase()) ||
          q.a.toLowerCase().includes(search.toLowerCase()))
       ),
     })).filter(cat => cat.questions.length > 0);
-  }, [search, activeCategory]);
+  }, [search, activeCategory, groupedFaqs]);
 
   const totalFiltered = filteredFAQs.reduce((a, c) => a + c.questions.length, 0);
 
+  if (loading) {
+    return <div className="max-w-4xl mx-auto py-24 text-center text-slate-400 font-medium">Loading FAQs...</div>;
+  }
+
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-24">
+    <div className="max-w-4xl mx-auto space-y-10 pb-24 px-4 sm:px-6">
       {/* Hero */}
-      <div className="text-center space-y-5 py-10">
+      <div className="text-center space-y-5 py-10 relative">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-black uppercase tracking-widest border border-indigo-100">
           <HelpCircle className="w-3 h-3" /> Support Center
         </div>
@@ -157,6 +197,21 @@ const FAQPage = () => {
         <p className="text-slate-400 max-w-xl mx-auto text-sm font-medium leading-relaxed">
           Everything you need to know about PromptKar, prompt engineering, and making the most of AI tools.
         </p>
+
+        {isHeadAdmin && (
+          <div className="absolute right-0 top-0 mt-8">
+            <button 
+              onClick={() => {
+                setEditingId(null);
+                setShowAddForm(!showAddForm);
+              }}
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-md transition-all active:scale-95"
+            >
+              <PlusCircle className="w-4 h-4" />
+              {showAddForm ? "Cancel" : "Add FAQ"}
+            </button>
+          </div>
+        )}
 
         {/* Search */}
         <div className="relative max-w-xl mx-auto mt-4">
@@ -174,6 +229,89 @@ const FAQPage = () => {
         </div>
       </div>
 
+      {/* Admin Add FAQ Form */}
+      {isHeadAdmin && showAddForm && (
+        <div className="bg-white border-2 border-indigo-100 rounded-[2rem] p-8 shadow-xl shadow-indigo-100/50 mb-10 animate-in fade-in slide-in-from-top-4">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+              <PlusCircle className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div>
+              <h3 className="font-black text-lg text-slate-900">Head Admin Options</h3>
+              <p className="text-xs font-medium text-slate-400">Add a new dynamic FAQ directly to the database</p>
+            </div>
+          </div>
+          
+          <form onSubmit={handleAddFaq} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Category</label>
+                <select 
+                  value={newFaq.category} 
+                  onChange={(e) => setNewFaq({...newFaq, category: e.target.value})}
+                  className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                >
+                  <option value="Getting Started">Getting Started</option>
+                  <option value="Prompts & AI Tools">Prompts & AI Tools</option>
+                  <option value="Account & Profile">Account & Profile</option>
+                  <option value="Pricing & Usage">Pricing & Usage</option>
+                  <option value="Privacy & Security">Privacy & Security</option>
+                  <option value="Administration">Administration</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Icon Name</label>
+                <select 
+                  value={newFaq.iconName} 
+                  onChange={(e) => setNewFaq({...newFaq, iconName: e.target.value})}
+                  className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                >
+                  <option value="sparkles">Sparkles</option>
+                  <option value="zap">Lightning (Zap)</option>
+                  <option value="user">User</option>
+                  <option value="shield">Shield</option>
+                  <option value="bell">Bell</option>
+                  <option value="creditcard">Credit Card</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Question</label>
+              <input 
+                required
+                type="text" 
+                value={newFaq.question}
+                onChange={(e) => setNewFaq({...newFaq, question: e.target.value})}
+                placeholder="e.g. How does the AI Enhancer work?"
+                className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+              />
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Answer</label>
+              <textarea 
+                required
+                value={newFaq.answer}
+                onChange={(e) => setNewFaq({...newFaq, answer: e.target.value})}
+                placeholder="Provide a detailed, accurate response..."
+                rows={3}
+                className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+              />
+            </div>
+            
+            <button 
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+            >
+              {isSubmitting ? 'Saving to Database...' : 'Publish New FAQ'}
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Category filter */}
       <div className="flex flex-wrap gap-2 justify-center">
         <button
@@ -182,9 +320,9 @@ const FAQPage = () => {
             activeCategory === "All" ? "bg-indigo-600 text-white border-indigo-600" : "bg-card text-slate-400 border-slate-100 hover:border-indigo-200 hover:text-indigo-600"
           }`}
         >
-          All ({ALL_QUESTIONS.length})
+          All ({faqs.length})
         </button>
-        {FAQS.map(cat => (
+        {groupedFaqs.map(cat => (
           <button
             key={cat.category}
             onClick={() => setActiveCategory(cat.category)}
@@ -239,9 +377,91 @@ const FAQPage = () => {
 
               {/* Questions */}
               <div className="space-y-2">
-                {cat.questions.map((item, qi) => {
+                {cat.questions.map((item: any, qi: number) => {
                   const key = `${ci}-${qi}`;
                   const isOpen = openKey === key;
+                  
+                  if (editingId === item._id) {
+                    return (
+                      <div key={key} className="bg-white border-2 border-indigo-200 rounded-2xl p-6 shadow-md shadow-indigo-50">
+                        <form onSubmit={(e) => handleUpdateFaq(e, item._id)} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-1">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Category</label>
+                                <select 
+                                  value={editFaq.category} 
+                                  onChange={(e) => setEditFaq({...editFaq, category: e.target.value})}
+                                  className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                                >
+                                  <option value="Getting Started">Getting Started</option>
+                                  <option value="Prompts & AI Tools">Prompts & AI Tools</option>
+                                  <option value="Account & Profile">Account & Profile</option>
+                                  <option value="Pricing & Usage">Pricing & Usage</option>
+                                  <option value="Privacy & Security">Privacy & Security</option>
+                                  <option value="Administration">Administration</option>
+                                  <option value="Other">Other</option>
+                                </select>
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Icon Name</label>
+                                <select 
+                                  value={editFaq.iconName} 
+                                  onChange={(e) => setEditFaq({...editFaq, iconName: e.target.value})}
+                                  className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                                >
+                                  <option value="sparkles">Sparkles</option>
+                                  <option value="zap">Lightning (Zap)</option>
+                                  <option value="user">User</option>
+                                  <option value="shield">Shield</option>
+                                  <option value="bell">Bell</option>
+                                  <option value="creditcard">Credit Card</option>
+                                </select>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Question</label>
+                              <input 
+                                required
+                                type="text" 
+                                value={editFaq.question}
+                                onChange={(e) => setEditFaq({...editFaq, question: e.target.value})}
+                                className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                              />
+                            </div>
+                            
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Answer</label>
+                              <textarea 
+                                required
+                                value={editFaq.answer}
+                                onChange={(e) => setEditFaq({...editFaq, answer: e.target.value})}
+                                rows={3}
+                                className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                              />
+                            </div>
+                            
+                            <div className="flex gap-2">
+                                <button 
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="flex-1 h-11 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                                >
+                                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                                </button>
+                                <button 
+                                type="button"
+                                onClick={() => setEditingId(null)}
+                                className="flex-1 h-11 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                                >
+                                Cancel
+                                </button>
+                            </div>
+                        </form>
+                      </div>
+                    )
+                  }
+
                   return (
                     <div
                       key={key}
@@ -261,6 +481,26 @@ const FAQPage = () => {
                       {isOpen && (
                         <div className="px-6 pb-5 animate-in fade-in slide-in-from-top-1 duration-150">
                           <p className="text-slate-600 text-sm leading-relaxed">{item.a}</p>
+                          {isHeadAdmin && (
+                            <div className="mt-4 pt-4 border-t border-slate-100 flex gap-3">
+                                <button 
+                                    onClick={() => {
+                                        setEditFaq({ question: item.q, answer: item.a, category: cat.category, iconName: item.iconName || 'sparkles' });
+                                        setEditingId(item._id);
+                                        setShowAddForm(false);
+                                    }}
+                                    className="text-xs font-black text-indigo-600 hover:text-indigo-700 uppercase tracking-widest"
+                                >
+                                    Edit
+                                </button>
+                                <button 
+                                    onClick={() => handleDeleteFaq(item._id)}
+                                    className="text-xs font-black text-red-500 hover:text-red-600 uppercase tracking-widest"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -298,10 +538,10 @@ const FAQPage = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": ALL_QUESTIONS.map(q => ({
+            "mainEntity": faqs.map(q => ({
               "@type": "Question",
-              "name": q.q,
-              "acceptedAnswer": { "@type": "Answer", "text": q.a },
+              "name": q.question,
+              "acceptedAnswer": { "@type": "Answer", "text": q.answer },
             })),
           }),
         }}

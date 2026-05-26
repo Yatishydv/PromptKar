@@ -344,7 +344,7 @@ const EditPromptPage = () => {
                     <AuthorAvatar 
                       userId={user.uid} 
                       name={userData?.name || user.displayName || "Engineer"} 
-                      avatar={userData?.avatar || user.photoURL || ""} 
+                      avatar={userData?.avatar || ""} 
                       showName={true}
                       nameClassName="text-[12px] font-black text-slate-900"
                     />

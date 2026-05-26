@@ -10,8 +10,16 @@ export async function GET(request: Request) {
     const sort = searchParams.get("sort") || "createdAt";
     const limit = parseInt(searchParams.get("limit") || "20");
     const ids = searchParams.get("ids");
+    const search = searchParams.get("search");
 
     let query: any = { firebaseUid: { $ne: null } };
+    
+    if (search) {
+      query.$or = [
+        { username: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } }
+      ];
+    }
     
     if (ids) {
       const idArray = ids.split(",").map(id => id.trim()).filter(Boolean);

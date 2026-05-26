@@ -671,8 +671,8 @@ const AIEnhancerContent = () => {
                   </div>
                   {msg.role === "user" && (
                     <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-slate-200">
-                      {userData?.avatar || user?.photoURL ? (
-                        <img src={userData?.avatar || user?.photoURL} alt="User" className="w-full h-full object-cover" />
+                      {userData?.avatar ? (
+                        <img src={userData?.avatar} alt="User" className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-indigo-600 text-white flex items-center justify-center font-black text-sm">
                           {userData?.name?.charAt(0) || user?.displayName?.charAt(0) || "U"}

@@ -38,16 +38,33 @@ export const AuthorAvatar = ({
 }: AuthorAvatarProps) => {
   const router = useRouter();
   
+  const safeName = name || "Anonymous";
   const isAdmin = forceIsAdmin || 
-                  name.toLowerCase() === "yatishydv" || 
-                  name === "Yatishydv" || 
+                  safeName.toLowerCase() === "yatishydv" || 
+                  safeName === "Yatishydv" || 
                   username?.toLowerCase() === "yatishydv";
 
-  const isTeam = name.toLowerCase().includes("promptkar") || name.toLowerCase().includes("team");
+  const isTeam = safeName.toLowerCase().includes("promptkar") || safeName.toLowerCase().includes("team");
   
+  // 365-day streak requirement to display custom/Google photos
+  const isCustomAvatar = avatar && !avatar.includes("api.dicebear.com") && !avatar.includes("robohash.org") && !avatar.includes("ui-avatars.com");
+  const canUseCustom = isAdmin || streak >= 365;
+  
+  let finalAvatar = avatar;
+  
+  // If their avatar in DB is ui-avatars.com (from our old reset script), forcibly convert it to Dicebear.
+  if (finalAvatar && finalAvatar.includes("ui-avatars.com")) {
+    finalAvatar = "";
+  }
+
+  if (isCustomAvatar && !canUseCustom) {
+    // If they have a custom photo but haven't earned the streak, strip the custom avatar so they get the default Dicebear avatar.
+    finalAvatar = "";
+  }
+
   const displayAvatar = isTeam 
     ? "/team_avatar.png" 
-    : (avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username || name}&backgroundColor=b6e3f4,c0aede,d1d4f9`);
+    : (finalAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username || safeName}&backgroundColor=b6e3f4,c0aede,d1d4f9`);
 
   const hasAvatar = !!displayAvatar;
 
@@ -72,13 +89,13 @@ export const AuthorAvatar = ({
           {hasAvatar ? (
             <img 
               src={displayAvatar} 
-              alt={name} 
+              alt={safeName} 
               className="w-full h-full object-cover rounded-full"
             />
           ) : (
             <div className="w-full h-full bg-slate-200 flex items-center justify-center rounded-full">
               <span className="text-[40%] font-bold text-slate-400 uppercase">
-                {name[0] || "U"}
+                {safeName[0] || "U"}
               </span>
             </div>
           )}
@@ -101,7 +118,7 @@ export const AuthorAvatar = ({
       {showName && (
         <div className="flex flex-col min-w-0">
           <div className={`${nameClassName} flex items-center gap-1 text-slate-900 leading-none`}>
-            <span className="font-bold truncate group-hover/avatar:text-indigo-600">{name}</span>
+            <span className="font-bold truncate group-hover/avatar:text-indigo-600">{safeName}</span>
             {isAdmin && <span className="text-[8px] bg-indigo-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-tighter">Owner</span>}
           </div>
           <span className="text-[10px] font-medium text-slate-400 lowercase">@{username}</span>

@@ -83,15 +83,11 @@ export async function PATCH(
     if (updateData.banner) allowedUpdates.banner = updateData.banner;
     if (updateData.location) allowedUpdates.location = updateData.location;
     if (updateData.socialLinks) allowedUpdates.socialLinks = updateData.socialLinks;
-    if (updateData.isAdmin !== undefined) allowedUpdates.isAdmin = updateData.isAdmin;
-    if (updateData.isPro !== undefined) allowedUpdates.isPro = updateData.isPro;
-    if (updateData.role !== undefined) allowedUpdates.role = updateData.role;
-    if (updateData.customBadge !== undefined) allowedUpdates.customBadge = updateData.customBadge;
-    if (updateData.customTitle !== undefined) allowedUpdates.customTitle = updateData.customTitle;
     if (updateData.selectedTheme !== undefined) allowedUpdates.selectedTheme = updateData.selectedTheme;
     if (updateData.featuredPromptId !== undefined) allowedUpdates.featuredPromptId = updateData.featuredPromptId;
-    if (updateData.isVerifiedActive !== undefined) allowedUpdates.isVerifiedActive = updateData.isVerifiedActive;
-    if (updateData.isGlowActive !== undefined) allowedUpdates.isGlowActive = updateData.isGlowActive;
+    
+    // Removed isAdmin, isPro, role, customBadge, customTitle, isVerifiedActive, isGlowActive from here to prevent privilege escalation!
+    // These fields must ONLY be modified via the protected /api/admin/users/update API.
 
     const user = await User.findOneAndUpdate(
       { firebaseUid: id },
@@ -120,6 +116,12 @@ export async function DELETE(
   try {
     await dbConnect();
     const { id } = await params;
+
+    // Protect Head Admin from being deleted (must be the VERY FIRST check!)
+    const targetUser = await User.findOne({ firebaseUid: id }).lean();
+    if (targetUser && (targetUser.email === "yatishydv@gmail.com" || targetUser.username?.toLowerCase() === "yatishydv")) {
+      return NextResponse.json({ error: "The Head Admin account cannot be deleted." }, { status: 403 });
+    }
 
     // 1. Delete user's prompts
     const Prompt = (await import("@/models/Prompt")).default;

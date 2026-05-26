@@ -9,6 +9,8 @@ import { SystemProvider } from "@/lib/system-context";
 import { Toaster } from "react-hot-toast";
 import { ThemeWrapper } from "@/components/layout/ThemeWrapper";
 import { ThemePreviewProvider } from "@/lib/theme-preview-context";
+import { GlobalModal } from "@/components/layout/GlobalModal";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -117,6 +119,9 @@ export default function RootLayout({
                 </div>
               </div>
               <Toaster position="top-right" />
+              <Suspense fallback={null}>
+                <GlobalModal />
+              </Suspense>
             </ThemeWrapper>
             </ThemePreviewProvider>
           </SystemProvider>

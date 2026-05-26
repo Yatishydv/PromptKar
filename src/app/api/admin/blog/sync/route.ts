@@ -8,6 +8,24 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     
+    // Auth Check
+    const requesterId = request.headers.get('x-requester-id');
+    const requesterEmail = request.headers.get('x-requester-email');
+    const requesterName = request.headers.get('x-requester-name');
+    
+    if (requesterId && requesterEmail !== "yatishydv@gmail.com") {
+      const PendingAction = (await import("@/models/PendingAction")).default;
+      await PendingAction.create({
+        actionType: 'SYNC_BLOGGER',
+        payload: {},
+        requestedBy: requesterId,
+        requestedByName: requesterName || 'Sub-Admin',
+        requestedByEmail: requesterEmail || 'Unknown',
+        status: 'PENDING'
+      });
+      return NextResponse.json({ message: "Action queued. Waiting for Head Admin approval.", queued: true });
+    }
+    
     // 1. Fetch from FREE Blogger RSS JSON Feed (No API Key required!)
     console.log(`Syncing from Blog ID: ${BLOGGER_BLOG_ID}...`);
     

@@ -35,12 +35,35 @@ export async function PATCH(request: Request) {
     await dbConnect();
     const body = await request.json();
     
+    // Auth Check
+    const { requesterEmail, requesterId, requesterName, ...updates } = body;
+    
+    const isHeadAdmin = requesterEmail === "yatishydv@gmail.com";
+    
+    if (!isHeadAdmin && requesterId) {
+      // Create a PendingAction instead of executing
+      const PendingAction = (await import("@/models/PendingAction")).default;
+      await PendingAction.create({
+        actionType: 'UPDATE_SETTINGS',
+        payload: updates,
+        requestedBy: requesterId,
+        requestedByName: requesterName || 'Sub-Admin',
+        requestedByEmail: requesterEmail || 'Unknown',
+        status: 'PENDING'
+      });
+      
+      return NextResponse.json({ 
+        message: "Action queued. Waiting for Head Admin approval.",
+        queued: true 
+      });
+    }
+
     // Find the current active settings document
     const settings = await Settings.findOne();
     
     const updatedSettings = await Settings.findOneAndUpdate(
       settings ? { _id: settings._id } : {}, 
-      { $set: body },
+      { $set: updates },
       { upsert: true, new: true, runValidators: true }
     );
     

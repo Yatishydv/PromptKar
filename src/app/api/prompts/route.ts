@@ -15,6 +15,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "20");
 
     const slugs = searchParams.get("slugs");
+    const search = searchParams.get("search");
 
     const query: any = {};
     if (slugs) {
@@ -23,6 +24,7 @@ export async function GET(request: Request) {
       if (category && category !== "All") query.category = new RegExp(`^${category}$`, "i");
       if (authorId) query.authorId = authorId;
       if (likedBy) query.likedBy = likedBy;
+      if (search) query.title = { $regex: search, $options: 'i' };
     }
 
     let sort: any = { createdAt: -1 };

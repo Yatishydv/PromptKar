@@ -107,6 +107,25 @@ export async function DELETE(
   try {
     await dbConnect();
     const { slug } = await context.params;
+
+    // Auth Check
+    const requesterId = request.headers.get('x-requester-id');
+    const requesterEmail = request.headers.get('x-requester-email');
+    const requesterName = request.headers.get('x-requester-name');
+    
+    if (requesterId && requesterEmail !== "yatishydv@gmail.com") {
+      const PendingAction = (await import("@/models/PendingAction")).default;
+      await PendingAction.create({
+        actionType: 'DELETE_BLOG',
+        payload: { slug },
+        requestedBy: requesterId,
+        requestedByName: requesterName || 'Sub-Admin',
+        requestedByEmail: requesterEmail || 'Unknown',
+        status: 'PENDING'
+      });
+      return NextResponse.json({ message: "Action queued. Waiting for Head Admin approval.", queued: true });
+    }
+
     const post = await Blog.findOneAndDelete({ slug });
     if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
     return NextResponse.json({ message: "Post deleted successfully" });

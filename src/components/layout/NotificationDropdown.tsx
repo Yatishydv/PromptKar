@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bell, Heart, Bookmark, Zap, User, Check } from "lucide-react";
+import { Bell, Heart, Bookmark, Zap, User, Check, Megaphone, Target, Award } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
 import useSWR from "swr";
 import { socket } from "@/lib/socket";
 import { toast } from "react-hot-toast";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
+import { useRouter } from "next/navigation";
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
@@ -28,11 +29,23 @@ function NotifIcon({ type }: { type: string }) {
     case "save": return <Bookmark className="w-3.5 h-3.5 text-indigo-500 fill-indigo-500" />;
     case "follow": return <User className="w-3.5 h-3.5 text-indigo-600 fill-indigo-100" />;
     case "comment": return <Zap className="w-3.5 h-3.5 text-yellow-500" />;
+    case "admin_message": return <Megaphone className="w-3.5 h-3.5 text-blue-500 fill-blue-100" />;
+    case "system": return <Target className="w-3.5 h-3.5 text-slate-500" />;
+    case "milestone": return <Award className="w-3.5 h-3.5 text-amber-500 fill-amber-100" />;
     default: return <Bell className="w-3.5 h-3.5 text-slate-400" />;
   }
 }
 
 function notifMessage(n: any): React.ReactNode {
+  if (n.message) {
+    return (
+      <span>
+        {n.type === 'admin_message' && <span className="font-black text-blue-600 mr-1">ADMIN:</span>}
+        <span className="text-slate-700">{n.message}</span>
+      </span>
+    );
+  }
+
   return (
     <span>
       <span className="font-black text-slate-900">{n.senderName}</span>
@@ -99,8 +112,16 @@ export const NotificationDropdown = () => {
   };
 
   const getNotifLink = (n: any) => {
+    if (n.linkType) {
+      if (n.linkType === 'url') return n.linkTarget || "#";
+      if (n.linkType === 'profile') return `/profile/${n.linkTarget}`;
+      if (n.linkType === 'prompt') return `/prompt/${n.linkTarget}`;
+      if (n.linkType === 'modal') return `?modal=${n.linkTarget}`;
+      if (n.linkType === 'none') return "#";
+    }
+    
     if (n.type === "follow") return `/profile/${n.senderName}`;
-    if (n.targetId) return `/prompt/${n.targetId}`;
+    if (n.targetId && n.targetId !== 'broadcast' && n.targetId !== 'system') return `/prompt/${n.targetId}`;
     return "#";
   };
 

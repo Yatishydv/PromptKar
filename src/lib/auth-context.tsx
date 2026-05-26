@@ -81,51 +81,59 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             try {
               const isAdminUser = firebaseUser.email === "yatishydv@gmail.com";
               
-              // 1. Check existing
+              // 1. Fetch existing user
               const checkRes = await fetch(`/api/users/${firebaseUser.uid}`, { cache: 'no-store' });
               let existingMongoData = null;
               if (checkRes.ok) {
                 existingMongoData = await checkRes.json();
+                setUserData(existingMongoData); // Display UI immediately
+                setLoading(false);              // Unlock UI immediately
               }
 
               const isNewUser = !existingMongoData || !existingMongoData.firebaseUid;
+              let needsPatch = false;
 
-              const payload: any = {
-                firebaseUid: firebaseUser.uid,
-                email: firebaseUser.email,
-              };
+              const payload: any = {};
 
               if (isNewUser) {
+                payload.firebaseUid = firebaseUser.uid;
+                payload.email = firebaseUser.email;
                 payload.name = firebaseUser.displayName || "User";
                 payload.username = (firebaseUser.displayName?.toLowerCase().replace(/\s+/g, '_') || firebaseUser.email?.split('@')[0].toLowerCase() || "user");
                 if (firebaseUser.photoURL) payload.avatar = firebaseUser.photoURL;
+                needsPatch = true;
               }
 
-              // Only force username for admin, not the display name
-              if (isAdminUser) {
+              // Enforce admin privileges if not already set correctly in DB
+              if (isAdminUser && (!existingMongoData?.isAdmin || existingMongoData?.username !== "yatishydv")) {
                 payload.username = "yatishydv";
                 payload.isAdmin = true;
+                needsPatch = true;
               }
 
-              await fetch(`/api/users/${firebaseUser.uid}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-
-              await fetchUserData(firebaseUser.uid);
+              // Only run an expensive PATCH operation if something actually needs updating
+              if (needsPatch) {
+                await fetch(`/api/users/${firebaseUser.uid}`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+                await fetchUserData(firebaseUser.uid); // Fetch updated data silently
+              }
             } catch (err) {
               console.error("MongoDB Identity Sync Error:", err);
+            } finally {
+              setLoading(false); // Ensure loading is disabled even if sync fails
             }
           };
 
-          await syncIdentity();
+          syncIdentity(); // Don't await this, let it run in the background if possible, or await it but it unblocks loading early.
         } else {
           setUserData(null);
+          setLoading(false);
         }
       } catch (err) {
         console.error("Auth State Changed Error:", err);
-      } finally {
         setLoading(false);
       }
     });

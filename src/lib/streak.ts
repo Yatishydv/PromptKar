@@ -45,7 +45,28 @@ export async function updateStreak(firebaseUid: string) {
       { new: true }
     );
 
-    return updatedUser.currentStreak;
+    // Milestone Hook
+    if (newStreak !== user.currentStreak) {
+      const milestones = [10, 30, 60, 100, 365];
+      if (milestones.includes(newStreak)) {
+        // dynamic import or require to avoid circular deps if any, but regular import at top works since it's just a model
+        const NotificationModel = (await import("@/models/Notification")).default;
+        await NotificationModel.create({
+          recipientId: firebaseUid,
+          senderId: "system",
+          senderName: "PromptKar Admin",
+          senderUsername: "system",
+          type: "milestone",
+          targetId: "streak_milestone",
+          message: `Incredible! You've hit a ${newStreak}-day streak! Keep up the great work! 🔥`,
+          linkType: "profile",
+          linkTarget: updatedUser?.username || "",
+          isRead: false,
+        });
+      }
+    }
+
+    return updatedUser?.currentStreak || newStreak;
   } catch (error) {
     console.error("Streak Update Error:", error);
     return null;

@@ -74,7 +74,7 @@ export async function PATCH(
       const hasLiked = prompt.likedBy.includes(userId);
       if (hasLiked) {
         prompt.likedBy = prompt.likedBy.filter((id: string) => id !== userId);
-        prompt.likes = Math.max(0, prompt.likes - 1);
+        prompt.likes = prompt.likedBy.length; // Always sync with source of truth
 
         // Update User's totalLikes (decrement)
         await User.findOneAndUpdate(
@@ -90,13 +90,31 @@ export async function PATCH(
         });
       } else {
         prompt.likedBy.push(userId);
-        prompt.likes += 1;
+        prompt.likes = prompt.likedBy.length; // Always sync with source of truth
 
         // Update User's totalLikes (increment)
-        await User.findOneAndUpdate(
+        const updatedAuthor = await User.findOneAndUpdate(
           { firebaseUid: prompt.authorId },
-          { $inc: { totalLikes: 1 } }
-        );
+          { $inc: { totalLikes: 1 } },
+          { new: true }
+        ).lean();
+
+        // Check for Milestone (100, 500, 1000 likes)
+        if (updatedAuthor && [100, 500, 1000].includes(updatedAuthor.totalLikes)) {
+          await Notification.create({
+            recipientId: prompt.authorId,
+            senderId: "system",
+            senderName: "PromptKar Admin",
+            senderUsername: "system",
+            type: "milestone",
+            targetId: "milestone",
+            message: `Congratulations! You just hit ${updatedAuthor.totalLikes} total likes on your prompts! 🚀`,
+            linkType: "profile",
+            linkTarget: updatedAuthor.username,
+            isRead: false,
+          });
+        }
+
 
         // Trigger Notification
         if (userId !== prompt.authorId) {
@@ -173,23 +191,50 @@ export async function DELETE(
   try {
     await dbConnect();
     const { slug } = await params;
+
+    // Check headers for Head Admin validation (if this was triggered from the admin dashboard)
+    const requesterId = request.headers.get('x-requester-id');
+    const requesterEmail = request.headers.get('x-requester-email');
+    const requesterName = request.headers.get('x-requester-name');
+
+    if (requesterId && requesterEmail !== "yatishydv@gmail.com") {
+      const PendingAction = (await import("@/models/PendingAction")).default;
+      await PendingAction.create({
+        actionType: 'DELETE_PROMPT',
+        payload: { slug },
+        requestedBy: requesterId,
+        requestedByName: requesterName || 'Sub-Admin',
+        requestedByEmail: requesterEmail || 'Unknown',
+        status: 'PENDING'
+      });
+      return NextResponse.json({ message: "Action queued. Waiting for Head Admin approval.", queued: true });
+    }
+
     const prompt = await Prompt.findOne({ slug });
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt not found" }, { status: 404 });
     }
 
-    const likesCount = prompt.likes || 0;
+    // Use likedBy.length as the source of truth, NOT the likes counter
+    // The likes counter can drift out of sync; likedBy is the actual list
+    const actualLikesCount = prompt.likedBy?.length || 0;
     const authorId = prompt.authorId;
 
     // Delete the prompt
     await Prompt.deleteOne({ slug });
 
-    // Subtract the deleted prompt's likes from the author's totalLikes
-    if (authorId && likesCount > 0) {
+    // Recalculate the author's totalLikes from scratch (sum of all remaining prompts' likes)
+    // This is more reliable than decrementing, which can drift over time
+    if (authorId) {
+      const remainingPrompts = await Prompt.find({ authorId }).select('likedBy').lean();
+      const recalculatedTotal = remainingPrompts.reduce(
+        (sum: number, p: any) => sum + (p.likedBy?.length || 0), 0
+      );
+
       await User.findOneAndUpdate(
         { firebaseUid: authorId },
-        { $inc: { totalLikes: -likesCount } }
+        { $set: { totalLikes: recalculatedTotal } }
       );
     }
 

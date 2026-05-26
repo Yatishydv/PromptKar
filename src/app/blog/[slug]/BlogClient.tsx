@@ -247,7 +247,7 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
         body: JSON.stringify({
           userId: user.uid,
           userName: userData?.name || user.displayName || "User",
-          userAvatar: userData?.avatar || user.photoURL || "",
+          userAvatar: userData?.avatar || "",
           content: commentInput
         }),
       });
@@ -545,7 +545,7 @@ const BlogClient = ({ initialData }: { initialData: any }) => {
                  <div className="flex items-center gap-3">
                     <AuthorAvatar 
                       name={userData?.name || user.displayName || "User"}
-                      avatar={userData?.avatar || user.photoURL}
+                      avatar={userData?.avatar}
                       className="w-8 h-8"
                     />
                     <span className="text-sm font-black text-slate-900">Posting as {userData?.name || user.displayName || "Anonymous"}</span>

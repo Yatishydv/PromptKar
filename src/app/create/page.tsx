@@ -108,7 +108,7 @@ const CreatePromptPage = () => {
       authorId: user.uid,
       authorName: userData?.displayName || user.displayName || "Anonymous",
       authorUsername: userData?.username || user.displayName || "user",
-      authorAvatar: userData?.photoURL || user.photoURL || "",
+      authorAvatar: userData?.avatar || "",
       likes: 0,
       views: 0,
       createdAt: new Date(),
@@ -321,7 +321,7 @@ const CreatePromptPage = () => {
                     <AuthorAvatar 
                       userId={user.uid} 
                       name={userData?.name || user.displayName || "Engineer"} 
-                      avatar={userData?.avatar || user.photoURL || ""} 
+                      avatar={userData?.avatar || ""} 
                       showName={true}
                       nameClassName="text-[12px] font-black text-slate-900"
                     />

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { AuthorAvatar } from "@/components/ui/AuthorAvatar";
 import { Dialog } from "@/components/ui/Dialog";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { AutocompleteInput } from "@/components/ui/AutocompleteInput";
 
 const ADMIN_EMAIL = "yatishydv@gmail.com";
 
@@ -30,6 +31,7 @@ const AdminPanel = () => {
   const [recentPrompts, setRecentPrompts] = useState<any[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
+  const [approvals, setApprovals] = useState<any[]>([]);
   const [systemSettings, setSystemSettings] = useState<any>({
     maintenanceMode: false,
     announcementsEnabled: true,
@@ -45,6 +47,19 @@ const AdminPanel = () => {
   const [syncing, setSyncing] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isUpdatingUser, setIsUpdatingUser] = useState(false);
+
+  // Broadcast state
+  const [broadcastForm, setBroadcastForm] = useState({
+    targetAudience: 'all',
+    username: '',
+    message: '',
+    linkType: 'none',
+    linkTarget: '',
+    modalTitle: '',
+    modalIcon: 'zap',
+    modalBody: ''
+  });
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
 
   // Dialog State
   const [dialogConfig, setDialogConfig] = useState<{
@@ -90,15 +105,17 @@ const AdminPanel = () => {
     }
   }, [isAdmin, authLoading, router]);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
-      const [statsRes, pRes, uRes, bRes, settingsRes] = await Promise.all([
+      const [statsRes, pRes, uRes, bRes, settingsRes, approvalsRes] = await Promise.all([
         fetch("/api/admin/stats"),
         fetch("/api/prompts?limit=10"),
         fetch("/api/users?limit=10"),
         fetch("/api/blogs?limit=10"),
-        fetch("/api/admin/settings")
+        fetch("/api/admin/settings"),
+        // Only fetch approvals if Head Admin
+        user?.email === "yatishydv@gmail.com" ? fetch("/api/admin/approvals") : Promise.resolve({ ok: true, json: () => Promise.resolve([]) })
       ]);
 
       if (statsRes.ok) {
@@ -109,12 +126,16 @@ const AdminPanel = () => {
           { name: "Blog Posts", value: sData.blogs, icon: <FileText className="w-5 h-5 text-green-500" /> },
           { name: "Total Platform Views", value: sData.views, icon: <Eye className="w-5 h-5 text-emerald-500" /> },
         ]);
-        setLoading(false);
+        if (showLoading) setLoading(false);
       }
 
       if (settingsRes.ok) {
         const sData = await settingsRes.json();
         setSystemSettings(sData);
+      }
+
+      if (approvalsRes && approvalsRes.ok) {
+        setApprovals(await approvalsRes.json());
       }
 
       if (pRes.ok) {
@@ -132,10 +153,20 @@ const AdminPanel = () => {
 
     } catch (err) {
       console.error("Admin fetch error:", err);
-      toast.error("Failed to refresh real-time stats");
+      if (showLoading) toast.error("Failed to refresh real-time stats");
     } finally {
-      setLoading(false); // Ensure loading is false even on total failure
+      if (showLoading) setLoading(false); // Ensure loading is false even on total failure
     }
+  };
+
+  const adminFetch = async (url: string, options: RequestInit = {}) => {
+    const headers = {
+      ...options.headers,
+      'x-requester-id': user?.uid || '',
+      'x-requester-email': user?.email || '',
+      'x-requester-name': user?.displayName || ''
+    };
+    return fetch(url, { ...options, headers });
   };
 
   const handleUpdateSettings = async (updates: any) => {
@@ -143,17 +174,19 @@ const AdminPanel = () => {
       // Merge updates with current local state to ensure we always send a complete object
       const fullPayload = { ...systemSettings, ...updates };
 
-      console.log("SENDING FULL PAYLOAD:", fullPayload);
-      const res = await fetch("/api/admin/settings", {
+      const res = await adminFetch("/api/admin/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fullPayload)
       });
 
-      if (!res.ok) throw new Error("Update failed");
-
       const updated = await res.json();
-      console.log("FINAL SUCCESS! DATABASE SAVED:", updated);
+      if (!res.ok) throw new Error(updated.error || "Update failed");
+
+      if (updated.queued) {
+        toast.success(updated.message);
+        return;
+      }
 
       // Update local state with the exact object returned by the database
       setSystemSettings(updated);
@@ -167,8 +200,22 @@ const AdminPanel = () => {
   };
 
   useEffect(() => {
-    if (isAdmin) fetchData();
-  }, [isAdmin]);
+    if (isAdmin) {
+      fetchData();
+      
+      // Auto-refresh for Head Admin approvals and stats in the background without loading indicator
+      let interval: NodeJS.Timeout;
+      if (user?.email === "yatishydv@gmail.com") {
+        interval = setInterval(() => {
+          fetchData(false);
+        }, 15000); // 15 seconds
+      }
+      
+      return () => {
+        if (interval) clearInterval(interval);
+      };
+    }
+  }, [isAdmin, user?.email]);
 
   const handleDeletePrompt = async (slug: string) => {
     openDialog({
@@ -177,10 +224,15 @@ const AdminPanel = () => {
       variant: "danger",
       onConfirm: async () => {
         try {
-          const res = await fetch(`/api/prompts/${slug}`, { method: "DELETE" });
+          const res = await adminFetch(`/api/prompts/${slug}`, { method: "DELETE" });
+          const data = await res.json();
           if (res.ok) {
-            toast.success("Prompt deleted");
-            setRecentPrompts(prev => prev.filter(p => p.slug !== slug));
+            if (data.queued) {
+              toast.success(data.message);
+            } else {
+              toast.success("Prompt deleted");
+              setRecentPrompts(prev => prev.filter(p => p.slug !== slug));
+            }
           }
         } catch {
           toast.error("Failed to delete prompt");
@@ -196,10 +248,15 @@ const AdminPanel = () => {
       variant: "danger",
       onConfirm: async () => {
         try {
-          const res = await fetch(`/api/blogs/${slug}`, { method: "DELETE" });
+          const res = await adminFetch(`/api/blogs/${slug}`, { method: "DELETE" });
+          const data = await res.json();
           if (res.ok) {
-            toast.success("Blog deleted");
-            setBlogPosts(prev => prev.filter(b => b.slug !== slug));
+            if (data.queued) {
+              toast.success(data.message);
+            } else {
+              toast.success("Blog deleted");
+              setBlogPosts(prev => prev.filter(b => b.slug !== slug));
+            }
           }
         } catch {
           toast.error("Failed to delete blog");
@@ -211,11 +268,11 @@ const AdminPanel = () => {
   const handleSyncBlogger = async () => {
     setSyncing(true);
     try {
-      const res = await fetch("/api/admin/blog/sync", { method: "POST" });
+      const res = await adminFetch("/api/admin/blog/sync", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
         toast.success(data.message);
-        fetchData(); // Refresh list
+        if (!data.queued) fetchData(); // Refresh list only if actually executed
       } else {
         throw new Error(data.error);
       }
@@ -223,6 +280,57 @@ const AdminPanel = () => {
       toast.error(err.message || "Sync failed");
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const handleBroadcast = async () => {
+    if (!broadcastForm.message) {
+      toast.error("Message is required");
+      return;
+    }
+    if (broadcastForm.targetAudience === 'specific' && !broadcastForm.username) {
+      toast.error("Username is required for specific targets");
+      return;
+    }
+
+    setIsBroadcasting(true);
+    try {
+      let finalLinkTarget = broadcastForm.linkTarget;
+      if (broadcastForm.linkType === 'modal') {
+        const modalData = {
+          title: broadcastForm.modalTitle || 'System Notification',
+          icon: broadcastForm.modalIcon || 'bell',
+          content: broadcastForm.modalBody || broadcastForm.message
+        };
+        finalLinkTarget = Buffer.from(JSON.stringify(modalData)).toString('base64');
+      }
+
+      const res = await adminFetch("/api/admin/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...broadcastForm,
+          linkTarget: finalLinkTarget
+        })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success(data.message);
+        setBroadcastForm({
+          targetAudience: 'all',
+          username: '',
+          message: '',
+          linkType: 'none',
+          linkTarget: ''
+        });
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Broadcast failed");
+    } finally {
+      setIsBroadcasting(false);
     }
   };
 
@@ -236,7 +344,7 @@ const AdminPanel = () => {
       onConfirm: async () => {
         const loadingToast = toast.loading(resetAll ? "Resetting all streaks..." : "Resetting streak...");
         try {
-          const res = await fetch("/api/admin/reset-streaks", {
+          const res = await adminFetch("/api/admin/reset-streaks", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, resetAll })
@@ -245,7 +353,7 @@ const AdminPanel = () => {
           const data = await res.json();
           if (res.ok) {
             toast.success(data.message, { id: loadingToast });
-            fetchData(); // Refresh data to show 0
+            if (!data.queued) fetchData(); // Refresh data to show 0
           } else {
             throw new Error(data.error);
           }
@@ -260,7 +368,7 @@ const AdminPanel = () => {
     if (!editingUser) return;
     setIsUpdatingUser(true);
     try {
-      const res = await fetch("/api/admin/users/update", {
+      const res = await adminFetch("/api/admin/users/update", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -279,7 +387,7 @@ const AdminPanel = () => {
       if (res.ok) {
         toast.success(data.message);
         setEditingUser(null);
-        fetchData(); // Refresh list
+        if (!data.queued) fetchData(); // Refresh list
       } else {
         throw new Error(data.error);
       }
@@ -287,6 +395,31 @@ const AdminPanel = () => {
       toast.error(err.message || "Update failed");
     } finally {
       setIsUpdatingUser(false);
+    }
+  };
+
+  const handleApproval = async (actionId: string, decision: 'APPROVED' | 'REJECTED') => {
+    const loadingToast = toast.loading(`Processing action...`);
+    try {
+      const res = await adminFetch("/api/admin/approvals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          actionId,
+          decision,
+          headAdminEmail: user?.email
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message, { id: loadingToast });
+        fetchData();
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Approval failed", { id: loadingToast });
     }
   };
 
@@ -363,6 +496,10 @@ const AdminPanel = () => {
             { id: "users", name: "Users", icon: <Users className="w-4 h-4" /> },
             { id: "streaks", name: "Streaks", icon: <Flame className="w-4 h-4" /> },
             { id: "settings", name: "Settings", icon: <Settings className="w-4 h-4" /> },
+            ...(user?.email === "yatishydv@gmail.com" ? [
+              { id: "approvals", name: "Approvals", icon: <ShieldCheck className="w-4 h-4 text-emerald-500" /> },
+              { id: "broadcasts", name: "Broadcasts", icon: <Bell className="w-4 h-4 text-blue-500" /> }
+            ] : [])
           ].map(item => (
             <button
               key={item.id}
@@ -491,6 +628,39 @@ const AdminPanel = () => {
           {/* PROMPTS TAB */}
           {activeTab === "prompts" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+              {/* Recalculate Likes Card */}
+              <Card className="border-indigo-100 bg-indigo-50/20 shadow-sm overflow-hidden mb-6">
+                <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black text-indigo-900 flex items-center gap-2">
+                      <Heart className="w-6 h-6 text-indigo-500" />
+                      Recalculate Like Counts
+                    </h3>
+                    <p className="text-xs font-bold text-indigo-600/70 uppercase tracking-widest">Sync all user totalLikes from actual prompt data (fixes drift from deleted prompts)</p>
+                  </div>
+                  <Button
+                    onClick={async () => {
+                      const loadingToast = toast.loading("Recalculating all like counts...");
+                      try {
+                        const res = await adminFetch("/api/admin/recalculate-likes", { method: "POST" });
+                        const data = await res.json();
+                        if (res.ok) {
+                          toast.success(data.message, { id: loadingToast });
+                          if (!data.queued) fetchData(); // Refresh data
+                        } else {
+                          throw new Error(data.error);
+                        }
+                      } catch (err: any) {
+                        toast.error(err.message || "Recalculation failed", { id: loadingToast });
+                      }
+                    }}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-indigo-100 flex items-center gap-2"
+                  >
+                    <BarChart3 className="w-4 h-4" /> Recalculate Now
+                  </Button>
+                </CardContent>
+              </Card>
+
               <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
@@ -671,6 +841,39 @@ const AdminPanel = () => {
           {/* USERS TAB */}
           {activeTab === "users" && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+              {/* Reset Avatars Card */}
+              <Card className="border-orange-100 bg-orange-50/20 shadow-sm overflow-hidden mb-6">
+                <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black text-orange-900 flex items-center gap-2">
+                      <ShieldCheck className="w-6 h-6 text-orange-500" />
+                      Enforce Avatar Streak Rules
+                    </h3>
+                    <p className="text-xs font-bold text-orange-600/70 uppercase tracking-widest">Strip custom/Google photos from users who haven't reached the 365-day streak</p>
+                  </div>
+                  <Button
+                    onClick={async () => {
+                      const loadingToast = toast.loading("Auditing user avatars...");
+                      try {
+                        const res = await adminFetch("/api/admin/reset-avatars", { method: "POST" });
+                        const data = await res.json();
+                        if (res.ok) {
+                          toast.success(data.message, { id: loadingToast });
+                          if (!data.queued) fetchData(); // Refresh data
+                        } else {
+                          throw new Error(data.error);
+                        }
+                      } catch (err: any) {
+                        toast.error(err.message || "Audit failed", { id: loadingToast });
+                      }
+                    }}
+                    className="bg-orange-600 hover:bg-orange-700 text-white border-none h-14 px-8 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-orange-100 flex items-center gap-2"
+                  >
+                    <ShieldCheck className="w-4 h-4" /> Audit & Reset Avatars
+                  </Button>
+                </CardContent>
+              </Card>
+
               <div className="flex items-center justify-between bg-card border border-slate-100 p-4 rounded-2xl shadow-sm">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4" />
@@ -718,20 +921,29 @@ const AdminPanel = () => {
                         </td>
                         <td className="px-6 py-4 text-xs font-bold text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
                         <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
-                          <Button
-                            onClick={() => setEditingUser(u)}
-                            variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-100 text-indigo-500 hover:border-indigo-100 hover:bg-indigo-50 rounded-lg"
-                            title="Edit Role & Badges"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            onClick={() => handleResetStreak(u.firebaseUid)}
-                            variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-100 text-orange-500 hover:border-orange-100 hover:bg-orange-50 rounded-lg"
-                            title="Reset Streak"
-                          >
-                            <Flame className="w-4 h-4" />
-                          </Button>
+                          {/* Hide actions for Head Admin if viewed by Sub-Admin */}
+                          {!(u.email === "yatishydv@gmail.com" && user?.email !== "yatishydv@gmail.com") ? (
+                            <>
+                              <Button
+                                onClick={() => setEditingUser(u)}
+                                variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-100 text-indigo-500 hover:border-indigo-100 hover:bg-indigo-50 rounded-lg"
+                                title="Edit Role & Badges"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                onClick={() => handleResetStreak(u.firebaseUid)}
+                                variant="outline" size="sm" className="h-8 w-8 p-0 border-slate-100 text-orange-500 hover:border-orange-100 hover:bg-orange-50 rounded-lg"
+                                title="Reset Streak"
+                              >
+                                <Flame className="w-4 h-4" />
+                              </Button>
+                            </>
+                          ) : (
+                            <div className="flex items-center gap-1 text-[10px] font-black uppercase text-slate-300 pr-2">
+                              <ShieldCheck className="w-3 h-3 text-emerald-500" /> Protected
+                            </div>
+                          )}
                           <Link href={`/profile/${u.username}`}>
                             <Button variant="outline" size="sm" className="h-8 text-[10px] font-black uppercase tracking-widest px-3 border-slate-100 hover:border-indigo-100 hover:text-indigo-600">View</Button>
                           </Link>
@@ -867,6 +1079,222 @@ const AdminPanel = () => {
               </Card>
             </div>
           )}
+
+          {/* APPROVALS TAB */}
+          {activeTab === "approvals" && user?.email === "yatishydv@gmail.com" && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">Pending Actions</h2>
+                  <p className="text-xs font-black uppercase text-slate-400 tracking-widest mt-1">Review actions requested by sub-admins</p>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl">
+                  <ShieldCheck className="w-4 h-4" /> Head Admin Access
+                </div>
+              </div>
+
+              {approvals.length === 0 ? (
+                <div className="flex flex-col items-center justify-center p-20 text-center bg-white border border-slate-100 rounded-[2rem] shadow-sm">
+                  <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[2rem] flex items-center justify-center mb-6">
+                    <Check className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">Queue is Clear</h3>
+                  <p className="text-sm font-bold text-slate-500 max-w-sm">No pending actions require your approval at this time.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {approvals.map((action) => (
+                    <Card key={action._id} className="border-slate-100 shadow-sm hover:border-emerald-100 transition-all overflow-hidden group">
+                      <CardContent className="p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest">
+                                {action.actionType.replace(/_/g, ' ')}
+                              </span>
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                                <Users className="w-3 h-3" /> BY: {action.requestedByName} ({action.requestedByEmail})
+                              </span>
+                            </div>
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs font-mono text-slate-600 overflow-x-auto">
+                              <pre>{JSON.stringify(action.payload, null, 2)}</pre>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-row md:flex-col gap-3 shrink-0">
+                            <Button
+                              onClick={() => handleApproval(action._id, 'APPROVED')}
+                              className="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl h-11 px-6 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 flex items-center gap-2"
+                            >
+                              <Check className="w-4 h-4" /> Approve
+                            </Button>
+                            <Button
+                              onClick={() => handleApproval(action._id, 'REJECTED')}
+                              className="flex-1 md:flex-none bg-red-50 text-red-600 hover:bg-red-500 hover:text-white rounded-xl h-11 px-6 font-black text-[10px] uppercase tracking-widest transition-all shadow-sm flex items-center gap-2"
+                            >
+                              <X className="w-4 h-4" /> Reject
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* BROADCASTS TAB (HEAD ADMIN ONLY) */}
+          {activeTab === "broadcasts" && user?.email === "yatishydv@gmail.com" && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+              <Card className="border-slate-100 shadow-sm overflow-hidden">
+                <CardHeader className="border-b border-slate-50 bg-slate-50/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                      <Bell className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-black text-slate-900">Broadcast Notifications</CardTitle>
+                      <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">Send custom alerts directly to users</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Target Audience</label>
+                        <select
+                          value={broadcastForm.targetAudience}
+                          onChange={(e) => setBroadcastForm({ ...broadcastForm, targetAudience: e.target.value })}
+                          className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                        >
+                          <option value="all">All Users (Global Broadcast)</option>
+                          <option value="specific">Specific User</option>
+                        </select>
+                      </div>
+
+                      {broadcastForm.targetAudience === 'specific' && (
+                        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Target Username</label>
+                          <AutocompleteInput
+                            type="users"
+                            placeholder="e.g. johndoe"
+                            value={broadcastForm.username}
+                            onChange={(val) => setBroadcastForm({ ...broadcastForm, username: val })}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Message Text</label>
+                      <textarea
+                        placeholder="Type your notification message here..."
+                        value={broadcastForm.message}
+                        onChange={(e) => setBroadcastForm({ ...broadcastForm, message: e.target.value })}
+                        rows={3}
+                        className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">On Click Action</label>
+                        <select
+                          value={broadcastForm.linkType}
+                          onChange={(e) => setBroadcastForm({ ...broadcastForm, linkType: e.target.value })}
+                          className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                        >
+                          <option value="none">None (Just Info)</option>
+                          <option value="url">Open External URL</option>
+                          <option value="modal">Open Interactive Modal</option>
+                          <option value="profile">Go to Profile</option>
+                          <option value="prompt">Go to Prompt</option>
+                        </select>
+                      </div>
+
+                      {broadcastForm.linkType !== 'none' && (
+                        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                            {broadcastForm.linkType === 'url' ? 'Link URL' :
+                             broadcastForm.linkType === 'modal' ? 'Modal ID / Parameter' :
+                             broadcastForm.linkType === 'profile' ? 'Username' :
+                             'Prompt Slug'}
+                          </label>
+                          {broadcastForm.linkType === 'profile' || broadcastForm.linkType === 'prompt' ? (
+                            <AutocompleteInput
+                              type={broadcastForm.linkType === 'profile' ? "users" : "prompts"}
+                              placeholder={broadcastForm.linkType === 'profile' ? 'johndoe' : 'my-cool-prompt'}
+                              value={broadcastForm.linkTarget}
+                              onChange={(val) => setBroadcastForm({ ...broadcastForm, linkTarget: val })}
+                            />
+                          ) : broadcastForm.linkType === 'modal' ? (
+                            <div className="space-y-4 pt-2">
+                              <input
+                                type="text"
+                                placeholder="Modal Title (e.g. New Feature!)"
+                                value={broadcastForm.modalTitle}
+                                onChange={(e) => setBroadcastForm({ ...broadcastForm, modalTitle: e.target.value })}
+                                className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                              />
+                              <select
+                                value={broadcastForm.modalIcon}
+                                onChange={(e) => setBroadcastForm({ ...broadcastForm, modalIcon: e.target.value })}
+                                className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                              >
+                                <option value="zap">Lightning (Zap)</option>
+                                <option value="award">Award / Trophy</option>
+                                <option value="check">Success Check</option>
+                                <option value="bell">Notification Bell</option>
+                              </select>
+                              <textarea
+                                placeholder="Modal Body (Optional, defaults to message text)"
+                                value={broadcastForm.modalBody}
+                                onChange={(e) => setBroadcastForm({ ...broadcastForm, modalBody: e.target.value })}
+                                rows={2}
+                                className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                              />
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              placeholder={
+                                broadcastForm.linkType === 'url' ? 'https://...' :
+                                ''
+                              }
+                              value={broadcastForm.linkTarget}
+                              onChange={(e) => setBroadcastForm({ ...broadcastForm, linkTarget: e.target.value })}
+                              className="w-full h-11 bg-slate-50 border-slate-100 text-sm font-medium rounded-xl px-4 focus:ring-2 focus:ring-indigo-500/20"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <Button
+                      onClick={handleBroadcast}
+                      disabled={isBroadcasting || !broadcastForm.message || (broadcastForm.targetAudience === 'specific' && !broadcastForm.username)}
+                      className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-indigo-200 mt-4"
+                    >
+                      {isBroadcasting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Sending Broadcast...
+                        </>
+                      ) : (
+                        <>
+                          <Bell className="w-5 h-5 mr-2" />
+                          Send Notification Now
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {/* STREAKS TAB */}
           {activeTab === "streaks" && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -893,7 +1321,14 @@ const AdminPanel = () => {
                   <Card key={i} className="border-slate-100 shadow-sm hover:border-indigo-100 transition-all group">
                     <CardContent className="p-5 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <AuthorAvatar name={u.name || u.username} avatar={u.avatar} className="w-10 h-10" />
+                        <AuthorAvatar 
+                          name={u.name || u.username} 
+                          username={u.username}
+                          avatar={u.avatar} 
+                          streak={u.currentStreak || 0}
+                          isAdmin={u.isAdmin || u.username?.toLowerCase() === "yatishydv" || u.email?.toLowerCase() === "yatishydv@gmail.com"}
+                          className="w-10 h-10" 
+                        />
                         <div>
                           <div className="text-xs font-black text-slate-900">@{u.username}</div>
                           <div className="flex items-center gap-2 mt-0.5">
@@ -903,14 +1338,21 @@ const AdminPanel = () => {
                           </div>
                         </div>
                       </div>
-                      <Button
-                        onClick={() => handleResetStreak(u.firebaseUid)}
-                        variant="outline"
-                        size="sm"
-                        className="h-9 px-3 rounded-xl border-slate-100 text-slate-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all text-[10px] font-black uppercase tracking-widest"
-                      >
-                        Reset
-                      </Button>
+                      {/* Hide actions for Head Admin if viewed by Sub-Admin */}
+                      {!(u.email === "yatishydv@gmail.com" && user?.email !== "yatishydv@gmail.com") ? (
+                        <Button
+                          onClick={() => handleResetStreak(u.firebaseUid)}
+                          variant="outline"
+                          size="sm"
+                          className="h-9 px-3 rounded-xl border-slate-100 text-slate-400 hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all text-[10px] font-black uppercase tracking-widest"
+                        >
+                          Reset
+                        </Button>
+                      ) : (
+                        <div className="flex items-center gap-1 text-[10px] font-black uppercase text-slate-300 pr-2">
+                          <ShieldCheck className="w-3 h-3 text-emerald-500" /> Protected
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}

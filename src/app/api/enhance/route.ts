@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ai, getGeminiModel } from "@/lib/gemini";
+import { ai, getGeminiModel, isAiConfigured } from "@/lib/gemini";
 
 export async function POST(req: NextRequest) {
   try {
+    if (!isAiConfigured) {
+      return NextResponse.json(
+        { error: "GEMINI_API_KEY is not defined in environment variables. Please check your deployment (Vercel/Render) configuration." },
+        { status: 500 }
+      );
+    }
     const { prompt, option } = await req.json();
 
     if (!prompt) {

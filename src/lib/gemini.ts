@@ -24,7 +24,9 @@ if (!apiKey && process.env.NODE_ENV !== "production") {
 
 if (apiKey) process.env.GEMINI_API_KEY = apiKey;
 
-export const ai = new GoogleGenAI(apiKey ? { apiKey } : {});
+export const isAiConfigured = !!apiKey;
+
+export const ai = new GoogleGenAI(apiKey ? { apiKey } : { apiKey: "dummy_key" });
 
 // Helper for sleep/delay
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -32,6 +34,9 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const getGeminiModel = () => "gemini-2.5-flash"; // Stable model for single-call routes
 
 export const enhancePromptWithHistory = async (prompt: string, history: any[], style: string = "Standard", isChatMode: boolean = false) => {
+  if (!isAiConfigured) {
+    throw new Error("GEMINI_API_KEY is not defined in environment variables. Please check your deployment (Vercel/Render) configuration.");
+  }
   const styleInstructions: Record<string, string> = {
     "Standard": "Transform the prompt into a professional, clear, and structured directive.",
     "Creative": "Add imaginative details, metaphors, and artistic flair to the prompt. Focus on storytelling and unique perspectives.",
